@@ -7,8 +7,8 @@ class Mutate {
 
 public:
 
-    //static constexpr float mutationrate = 0.02f;
-    static constexpr float mutationrate = 0.99f;
+    static constexpr float mutationrate = 0.02f;
+    //static constexpr float mutationrate = 0.99f;
 
     //static constexpr float pointrate = 0.01f;
 

@@ -24,10 +24,9 @@ int main(int argc, char *argv[]) {
     //istream& infile = cin;
     //ifstream infile("1.in");
 
-    rep(i, 10) {
+   // rep(i, 10) {
         init(8, 4, 10);
-        Innovator::getInstance().reset();
-    }
+    //}
 
    
 
@@ -45,6 +44,7 @@ int main(int argc, char *argv[]) {
 
 
 vector<NEAT> neats;
+vector<float> outputs;
 
 void init(int numIn, int numOut, int numAI) {
     srand(static_cast <unsigned> (time(0)));
@@ -55,7 +55,7 @@ void init(int numIn, int numOut, int numAI) {
     NEAT neat(numIn, numOut);
     float test[] = { 1.f,1.f,1.f,1.f,1.f,1.f,1.f,1.f };
 
-    neat.calcOut(test);
+  
 
    // for (int i = 0; i < numIn; i++) {
        // cout << "TEST: " << test[i] << endl;
@@ -64,52 +64,46 @@ void init(int numIn, int numOut, int numAI) {
           //  cout << "TEST: " << gen.weight << endl;
      //   }
    // }
+    outputs = neat.topSortCalc(test);
 
     for (int i = 0; i < numOut; i++) {
-         cout << "TEST: " << neat.outputs[i] << endl;
-        // cout << "WOO "<< neat.outputs.data() << endl;
+         cout << "TEST: " << outputs[i] << endl;
     }
     cout << endl;
-    neat.reset();
 
-  /*  std::clock_t start;
+    std::clock_t start;
     double duration;
-    start = std::clock();*/
-
-
-    rep(i, 1) {
-        rep(j, neat.gencopies.size()) {
-            
-            Genome& gen = neat.gencopies[j];
-            gen.enabled = !gen.enabled;
-            gen.childNodes++;
-            gen.weight++;
-            neat.updateGene(gen);
-        }
-    }
-    /*duration = (std::clock() - start) / (double)((clock_t)1000);
-    std::cout << "printf: " << duration << '\n';*/
+    start = std::clock();
 
 
 
-    rep(i, 6000) {
+
+
+
+    rep(i, 3000) {
          //   cout << i << " " << neat.nodes.size() << " g: " << neat.gencopies.size() << " busy " << neat.busyEdges.size()
           //      << "\n";
         //cout << i << " _ " << neat.nodes.size() << " " << neat.gencopies.size() << " " << neat.busyEdges.size() << " " << Innovator::getInstance().getMaxNodeNum() << " _ " << Innovator::getInstance().getMaxEdgeNum() << "\n";
         Mutate::allMutations(neat);
     }
+
+    duration = (std::clock() - start) / (double)((clock_t)1000);
+    std::cout << "printf: " << duration << '\n';
     
-    //neat.addGene(0, 1);
-    //neat.addGene(1, 0);
+
     cout << "NODES " << neat.nodes.size() << " edges " << neat.gencopies.size() << endl;
     bool looped = neat.hasLoop();
     cout << "NEAT LOOP " << looped << endl;
 
 
- //   neat.calcOut(test);
+    outputs = neat.topSortCalc(test);
+
     for (int i = 0; i < numOut; i++) {
-        cout << "TESTB: " << neat.outputs[i] << endl;
+        cout << "TESTB: " << outputs[i] << endl;
     }
+    cout << endl;
+
+    neat.reset();
 
 
 }

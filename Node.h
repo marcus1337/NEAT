@@ -10,15 +10,16 @@ class Node {
 public:
     static const int INPUT = 1, HIDDEN = 2, OUTPUT = 3;
 
-    int getType() {
+    int getType() const {
         return nodTyp;
     }
 
-    int getID() {
+    int getID() const {
         return id;
     }
 
     std::set<Genome> genomes;
+    float value = 0;
  
     Node() : nodTyp(0), id(0){}
 

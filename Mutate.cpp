@@ -18,7 +18,7 @@ bool Mutate::isCircle(NEAT& neat, int from, int to) {
     Genome gene(from, to); //ATM genes.size() may not reflect innocationNumber for genes
     neat.nodes[from].genomes.insert(gene);
     
-    if (Helper::hasLoop(neat)) {
+    if (Helper::hasLoopEasy(neat,to)) {
         result = true;
     }
 
@@ -47,6 +47,10 @@ void Mutate::linkMutate(NEAT& neat) {
                 if (!isCircle(neat, from, to)) {
                     neat.addGene(from, to);
                 }
+                else {
+                    neat.busyEdges[std::make_pair(from, to)] = true;
+                    neat.busyEdges[std::make_pair(to, from)] = true;
+                }
             }
 
         }
@@ -72,11 +76,6 @@ void Mutate::nodeMutate(NEAT& neat) {
     neat.nodes[node.getID()] = node;
     neat.addGene(neat.gencopies[randEdge].getFrom(), node.getID());
     neat.addGene(node.getID(), neat.gencopies[randEdge].getTo());
-
-    /*if (Helper::hasLoop(neat)) {
-        std::cout << "HMM " << neat.nodes.size() << " " << neat.gencopies.size() << std::endl;
-        abort();
-    }*/
 
 }
 
@@ -115,22 +114,14 @@ void Mutate::pointMutate(NEAT& neat) {
 
 
 void Mutate::allMutations(NEAT& neat) {
-    //enableDisableMutate(neat);
-    //pointMutate(neat);
-    
+    enableDisableMutate(neat);
+    pointMutate(neat);
     linkMutate(neat);
-   
-  //  std::cout << "BEFORE " << Helper::hasLoop(neat) << "\n";
+    nodeMutate(neat);
 
-    /*if (Helper::hasLoop(neat)) {
-        std::cout << "BEFORE " << std::endl;
-        abort();
-    }*/
-
-     nodeMutate(neat);
      /*if (Helper::hasLoop(neat)) {
          std::cout << "AFTER " << neat.nodes.size() << " " << neat.gencopies.size() << std::endl;
          abort();
      }*/
-    // std::cout << "AFTER " << Helper::hasLoop(neat) << "\n";
+
 }

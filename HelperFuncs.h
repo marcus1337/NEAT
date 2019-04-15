@@ -3,6 +3,10 @@
 #include <map>
 #include <set>
 
+#include <list> 
+#include <stack> 
+#include <vector>
+
 class NEAT;
 
 class Helper {
@@ -29,5 +33,10 @@ public:
     }
 
     static bool hasLoop(NEAT& neat);
+    static bool hasLoopEasy(NEAT& neat, int start);
+
+    static void topologicalSortUtil(int v, std::vector<bool>& visited, std::stack<int>& topstack, NEAT& neat);
+
+    static std::stack<int> topSort(NEAT& neat);
 
 };

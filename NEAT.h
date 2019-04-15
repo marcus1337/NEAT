@@ -11,23 +11,11 @@
 #include <functional>
 #include <list>
 
+
+
 class NEAT {
 
     int numIn, numOut;
-
-    void calc(int nowID, float value) {
-
-        float res = 0;
-        Node& n = nodes[nowID];
-        if (n.getType() == Node::OUTPUT) {
-            outputs[nowID - numIn] += value;
-        }
-        else {
-            for (Genome genome : n.genomes) {
-                calc(genome.getTo(), value*genome.weight);
-            }
-        }
-    }
 
 public:
 
@@ -35,10 +23,7 @@ public:
         return Helper::hasLoop(*this);
     }
 
-
-
     std::map<int, Node> nodes;
-    std::vector<float> outputs;
     std::vector<Genome> gencopies;
     std::map<std::pair<int,int>, bool> busyEdges;
 
@@ -48,18 +33,45 @@ public:
         nowNode.genomes.insert(updatedGene);
     }
 
-    void calcOut(float* inputs) {
+    std::vector<float> topSortCalc(float* inputs) {
+
+        std::vector<float> result(numOut,0);
+
         for (int i = 0; i < numIn; i++) {
-            calc(i, inputs[i]);
+            nodes[i].value = inputs[i];
         }
+
+        std::stack<int> topstack = Helper::topSort(*this);
+        while(!topstack.empty())
+        {
+            //std::cout << topstack.top() << " ";
+            int nowID = topstack.top();
+            topstack.pop();
+
+            for (const Genome& genome : nodes[nowID].genomes) {
+                if (!genome.enabled)
+                    continue;
+                int to = genome.getTo();
+                nodes[to].value += nodes[nowID].value*genome.weight;
+            }
+        }
+
+        for (int i = numIn; i < numIn + numOut; i++) {
+            result[i - numIn] = nodes[i].value;
+        }
+
+        reset();
+        return result;
     }
 
     void reset() {
-        for (size_t i = 0; i < outputs.size(); i++)
-            outputs[i] = 0;
+        for (auto& n : nodes)
+        {
+            n.second.value = 0;
+        }
     }
 
-    NEAT(int _numIn, int _numOut) : numIn(_numIn), numOut(_numOut), outputs(_numOut)  {
+    NEAT(int _numIn, int _numOut) : numIn(_numIn), numOut(_numOut) {
         for (int i = 0; i < numIn; i++) {
             Node node(i, Node::INPUT);
             nodes[i] = node;
