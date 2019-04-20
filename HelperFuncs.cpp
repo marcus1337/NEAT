@@ -7,7 +7,7 @@ bool Helper::hasLoop(NEAT& neat) {
     std::set<int> grey;
     std::set<int> black;
 
-    for (int i = 0; i < neat.nodes.size(); i++) {
+    for (size_t i = 0; i < neat.nodes.size(); i++) {
         white.insert(neat.nodes[i].getID());
     }
 

@@ -7,6 +7,9 @@
 #include <stack> 
 #include <vector>
 
+#include <random>
+#include <functional> 
+
 class NEAT;
 
 class Helper {
@@ -16,6 +19,11 @@ protected:
     static void move_vertex(int vertex, std::set<int>& source_set, std::set<int>& destination_set);
 
 public:
+
+    static bool randomBool() {
+        static auto gen = std::bind(std::uniform_int_distribution<>(0, 1), std::default_random_engine());
+        return gen();
+    }
 
     static float randf(float LO, float HI) {
         float r3 = LO + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (HI - LO)));

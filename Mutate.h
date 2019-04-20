@@ -15,7 +15,6 @@ public:
     static bool shouldMutate(float chance);
 
     static bool isCircle(NEAT& neat, int from, int to);
-   // static bool isCircle2(NEAT& neat, int to, int start, std::vector<bool>& visited);
 
     static void linkMutate(NEAT& neat);
     static void nodeMutate(NEAT& neat);

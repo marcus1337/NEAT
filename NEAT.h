@@ -14,7 +14,6 @@
 
 
 class NEAT {
-
     int numIn, numOut;
 
 public:
@@ -22,10 +21,12 @@ public:
     bool hasLoop() {
         return Helper::hasLoop(*this);
     }
+    int fitness;
 
     std::map<int, Node> nodes;
     std::vector<Genome> gencopies;
     std::map<std::pair<int,int>, bool> busyEdges;
+    std::vector<float> outputs;
 
     void updateGene(Genome updatedGene) { 
         Node& nowNode = nodes[updatedGene.getFrom()];
@@ -33,10 +34,7 @@ public:
         nowNode.genomes.insert(updatedGene);
     }
 
-    std::vector<float> topSortCalc(float* inputs) {
-
-        std::vector<float> result(numOut,0);
-
+    void topSortCalc(float* inputs) {
         for (int i = 0; i < numIn; i++) {
             nodes[i].value = inputs[i];
         }
@@ -44,7 +42,6 @@ public:
         std::stack<int> topstack = Helper::topSort(*this);
         while(!topstack.empty())
         {
-            //std::cout << topstack.top() << " ";
             int nowID = topstack.top();
             topstack.pop();
 
@@ -57,11 +54,9 @@ public:
         }
 
         for (int i = numIn; i < numIn + numOut; i++) {
-            result[i - numIn] = nodes[i].value;
+            outputs[i - numIn] = nodes[i].value;
         }
-
         reset();
-        return result;
     }
 
     void reset() {
@@ -71,7 +66,21 @@ public:
         }
     }
 
-    NEAT(int _numIn, int _numOut) : numIn(_numIn), numOut(_numOut) {
+    void copyPointer(NEAT* np) {
+        if (np == nullptr)
+            return;
+        nodes = np->nodes;
+        gencopies = np->gencopies;
+        busyEdges = np->busyEdges;
+        outputs = np->outputs;
+        numIn = np->numIn;
+        numOut = np->numOut;
+        fitness = np->fitness;
+    }
+
+    NEAT() :numIn(-1), numOut(-1) {}
+
+    NEAT(int _numIn, int _numOut) : numIn(_numIn), numOut(_numOut), fitness(0), outputs(_numOut) {
         for (int i = 0; i < numIn; i++) {
             Node node(i, Node::INPUT);
             nodes[i] = node;
