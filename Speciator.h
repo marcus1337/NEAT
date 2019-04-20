@@ -50,6 +50,7 @@ public:
     void speciate(std::vector<NEAT>& neats) {
 
         for (NEAT& neat : neats) {
+
             std::sort(neat.gencopies.begin(), neat.gencopies.end());
         }
         
@@ -139,8 +140,12 @@ public:
 
     void newGeneration() {
 
+        pool.erase(std::remove_if(pool.begin(), pool.end(),
+                [](const Specie& o) { return o.neats.size() == 0; }), pool.end());
+
         while(true)
         for (Specie& spec : pool) {
+           
             if (children.size() == numAI)
                 return;
 
@@ -177,11 +182,12 @@ public:
 
     void removeStaleSpecies() {
         std::vector<Specie> survived;
+  
         std::sort(pool.begin(), pool.end(), [](const Specie& lhs, const Specie& rhs)
         {
             return lhs.topFitness > rhs.topFitness;
         });
-        for (size_t i = 0; i < pool.size() && i < 15 ; i++) {
+        for (size_t i = 0; i < pool.size() && i < 10 ; i++) {
             survived.push_back(pool[i]);
         }
         pool = survived;
@@ -193,18 +199,19 @@ public:
         for (Specie& spec : pool) {
             std::sort(spec.neats.begin(), spec.neats.end(), [](const NEAT* lhs, const NEAT* rhs) //smallest fitness in beginning
             {
-                return lhs->fitness < rhs->fitness;
+                return lhs->fitness > rhs->fitness;
             });
 
-            int remaining = spec.neats.size() / 2;
-            if (remaining == 0)
-                remaining = 1;
-            int counter = 0;
+            int remaining = spec.neats.size() / 4;
             std::vector<NEAT*> survivors;
-            while (!(spec.neats.size()-counter == remaining)) {
-                survivors.push_back(spec.neats[spec.neats.size()-1-counter]);
-                counter++;
+            if (remaining == 0) {
+                survivors.push_back(spec.neats[0]);
             }
+                
+            for (int i = 0; i < spec.neats.size() - remaining; i++) {
+                survivors.push_back(spec.neats[i]);
+            }
+
             spec.neats = survivors;
             
         }
@@ -240,7 +247,7 @@ public:
         //int LN = n1.gencopies.size() > n2.gencopies.size() ? n1.gencopies.size() : n2.gencopies.size();
         float dd = c1*(float)disjointDiff(n1,n2);
         float dw = c2*weightDiff(n1,n2);
-        return (dd+dw) < 20.0f;
+        return (dd+dw) < 80.0f;
     }
 
 

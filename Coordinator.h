@@ -34,9 +34,9 @@ public:
 
     void evolve() {
 
-        std::cout << "BEFORE " << neats.size() << std::endl;
+       // std::cout << "BEFORE " << neats.size() << std::endl;
         speciator.speciate(neats);
-        std::cout << "AFTER " << neats.size() << std::endl;
+      //  std::cout << "AFTER " << neats.size() << std::endl;
     }
 
 

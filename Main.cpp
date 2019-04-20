@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
     std::ios_base::sync_with_stdio(false);
     std::cin.tie(nullptr);
 
-    init(8, 4, 400);
+    init(41, 4, 50);
 
     std::cout << std::flush;
 
@@ -28,11 +28,15 @@ int main(int argc, char *argv[]) {
 
 
 
-float test[] = { 1.f,1.f,1.f,1.f,1.f,1.f,1.f,1.f };
+float test[] = { 1.f,1.f,1.f,1.f,1.f,1.f,1.f,1.f, 1.f,1.f,1.f,1.f,1.f,1.f,1.f,1.f };
 
 
 void init(int numIn, int numOut, int numAI) {
     coordinator.init(numIn, numOut, numAI);
+
+    rep(i, coordinator.neats.size()) {
+        coordinator.neats[i].fitness = Helper::randi(0,1000);
+    }
 
     rep(i, 3000) {
 
