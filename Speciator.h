@@ -18,7 +18,7 @@ public:
 
     Speciator() {
         rng = std::default_random_engine{};
-        
+
     }
     void init(int _numIn, int _numOut, int _numAI) {
         numOut = _numOut;
@@ -54,7 +54,7 @@ public:
 
             std::sort(neat.gencopies.begin(), neat.gencopies.end());
         }
-        
+
         specieNum = 0;
         pool.clear();
         children.clear();
@@ -89,25 +89,33 @@ public:
             swap<NEAT*>(n1, n2);
         }
 
+        for (auto const& x : n1->nodes) {
+            Node nod(x.second.getID());
+            child.nodes[nod.getID()] = nod;
+        }
+        for (auto const& x : n2->nodes) {
+            Node nod(x.second.getID());
+            child.nodes[nod.getID()] = nod;
+        }
+
+        std::vector<Genome>& g1 = n1->gencopies;
+        std::vector<Genome>& g2 = n2->gencopies;
+
         if (n1->fitness == n2->fitness) {
-
-            for (auto const& x : n1->nodes) {
-                Node nod(x.second.getID());
-                child.nodes[nod.getID()] = nod;
-            }
-            for (auto const& x : n2->nodes) {
-                Node nod(x.second.getID());
-                child.nodes[nod.getID()] = nod;
-            }
-
-            std::vector<Genome>& g1 = n1->gencopies;
-            std::vector<Genome>& g2 = n2->gencopies;
 
             for (int i = 0, j = 0;;) {
                 if (i == g1.size() - 1) {
+                    for (int jj = j; jj < g2.size(); jj++) {
+                        child.addGeneNoLoop(g2[jj]);
+                    }
+
                     break;
                 }
                 if (j == g2.size() - 1) {
+                    for (int ii = i; ii < g1.size(); ii++) {
+                        child.addGeneNoLoop(g1[ii]);
+                    }
+
                     break;
                 }
 
@@ -121,10 +129,13 @@ public:
                     }
                     i++;
                     j++;
-                }else if (g1[i].getID() < g2[j].getID()) {
+                }
+                else if (g1[i].getID() < g2[j].getID()) {
+                    child.addGeneNoLoop(g1[i]);
                     i++;
                 }
                 else if (g1[i].getID() > g2[j].getID()) {
+                    child.addGeneNoLoop(g2[j]);
                     j++;
                 }
             }
@@ -132,8 +143,33 @@ public:
         else {
             child.copyPointer(n1);
 
+            for (int i = 0, j = 0;;) {
+                if (i == g1.size() - 1) {
+                    for (int jj = j; jj < g2.size(); jj++) {
+                        child.addGeneNoLoop(g2[jj]);
+                    }
+                    break;
+                }
+                if (j == g2.size() - 1) {
+                    break;
+                }
+
+                if (g1[i].getID() == g2[j].getID()) {
+                    i++;
+                    j++;
+                }
+                else if (g1[i].getID() < g2[j].getID()) {
+                    i++;
+                }
+                else if (g1[i].getID() > g2[j].getID()) {
+                    child.addGeneNoLoop(g2[j]);
+                    j++;
+                }
+            }
+
         }
 
+        child.removeRedundants();
         Mutate::allMutations(child);
         children.push_back(child);
 
@@ -144,53 +180,53 @@ public:
     void newGeneration() {
 
         pool.erase(std::remove_if(pool.begin(), pool.end(),
-                [](const Specie& o) { return o.neats.size() == 0; }), pool.end());
+            [](const Specie& o) { return o.neats.size() == 0; }), pool.end());
 
-        while(true)
-        for (Specie& spec : pool) {
-           
-            if (children.size() == numAI)
-                return;
+        while (true)
+            for (Specie& spec : pool) {
 
-            if (spec.neats.empty())
-                continue;
-            if (spec.neats.size() == 1) {
-                NEAT child(numIn, numOut);
-                child.copyPointer(spec.neats[0]);
-                Mutate::allMutations(child);
-                children.push_back(child);
-                continue;
-            }
-            std::shuffle(std::begin(spec.neats), std::end(spec.neats), rng);
-            for (int i = 0; i < spec.neats.size() - 1; i++) {
-                float randf = Helper::randf(0,100);
-
-                if (randf > crossChance) {
-                    NEAT child(numIn, numOut);
-                    child.copyPointer(spec.neats[i]);
-                    Mutate::allMutations(child);
-                    children.push_back(child);
-                }
-                else {
-                    crossOver(std::ref(spec.neats[i]), std::ref(spec.neats[i + 1]));
-                }
-               
                 if (children.size() == numAI)
                     return;
-            }
 
-        }
+                if (spec.neats.empty())
+                    continue;
+                if (spec.neats.size() == 1) {
+                    NEAT child(numIn, numOut);
+                    child.copyPointer(spec.neats[0]);
+                    Mutate::allMutations(child);
+                    children.push_back(child);
+                    continue;
+                }
+                std::shuffle(std::begin(spec.neats), std::end(spec.neats), rng);
+                for (int i = 0; i < spec.neats.size() - 1; i++) {
+                    float randf = Helper::randf(0, 100);
+
+                    if (randf > crossChance) {
+                        NEAT child(numIn, numOut);
+                        child.copyPointer(spec.neats[i]);
+                        Mutate::allMutations(child);
+                        children.push_back(child);
+                    }
+                    else {
+                        crossOver(std::ref(spec.neats[i]), std::ref(spec.neats[i + 1]));
+                    }
+
+                    if (children.size() == numAI)
+                        return;
+                }
+
+            }
 
     }
 
     void removeStaleSpecies() {
         std::vector<Specie> survived;
-  
+
         std::sort(pool.begin(), pool.end(), [](const Specie& lhs, const Specie& rhs)
         {
             return lhs.topFitness > rhs.topFitness;
         });
-        for (size_t i = 0; i < pool.size() && i < 10 ; i++) {
+        for (size_t i = 0; i < pool.size() && i < 200; i++) {
             survived.push_back(pool[i]);
         }
         pool = survived;
@@ -205,18 +241,18 @@ public:
                 return lhs->fitness > rhs->fitness;
             });
 
-            int remaining = spec.neats.size() / 4;
+            int remaining = spec.neats.size() / 2;
             std::vector<NEAT*> survivors;
             if (remaining == 0) {
                 survivors.push_back(spec.neats[0]);
             }
-                
+
             for (int i = 0; i < spec.neats.size() - remaining; i++) {
                 survivors.push_back(spec.neats[i]);
             }
 
             spec.neats = survivors;
-            
+
         }
 
     }
@@ -248,9 +284,9 @@ public:
 
     bool sameSpecie(NEAT& n1, NEAT& n2) {
         //int LN = n1.gencopies.size() > n2.gencopies.size() ? n1.gencopies.size() : n2.gencopies.size();
-        float dd = c1*(float)disjointDiff(n1,n2);
-        float dw = c2*weightDiff(n1,n2);
-        return (dd+dw) < 80.0f;
+        float dd = c1 * (float)disjointDiff(n1, n2);
+        float dw = c2 * weightDiff(n1, n2);
+        return (dd + dw) < 80.0f;
     }
 
 
@@ -274,7 +310,8 @@ public:
                 res += diff;
                 i++;
                 j++;
-            }else if (g1[i].getID() < g2[j].getID()) {
+            }
+            else if (g1[i].getID() < g2[j].getID()) {
                 i++;
             }
             else if (g1[i].getID() > g2[j].getID()) {
@@ -303,7 +340,8 @@ public:
             if (g1[i].getID() == g2[j].getID()) {
                 i++;
                 j++;
-            }else if (g1[i].getID() < g2[j].getID()) {
+            }
+            else if (g1[i].getID() < g2[j].getID()) {
                 i++;
                 res++;
             }

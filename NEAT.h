@@ -23,10 +23,10 @@ public:
 
     std::map<int, Node> nodes;
     std::vector<Genome> gencopies;
-    std::map<std::pair<int,int>, bool> busyEdges;
+    std::map<std::pair<int, int>, bool> busyEdges;
     std::vector<float> outputs;
 
-    void updateGene(Genome updatedGene) { 
+    void updateGene(Genome updatedGene) {
         Node& nowNode = nodes[updatedGene.getFrom()];
         auto found = nowNode.genomes.find(updatedGene);
         nowNode.genomes.insert(updatedGene);
@@ -39,7 +39,7 @@ public:
 
         std::stack<int> topstack = Helper::topSort(*this);
 
-        while(!topstack.empty())
+        while (!topstack.empty())
         {
             int nowID = topstack.top();
             topstack.pop();
@@ -127,7 +127,7 @@ public:
             nodes[i + numIn] = node;
         }
     }
-    
+
 
     NEAT(int _numIn, int _numOut) : numIn(_numIn), numOut(_numOut), fitness(0), outputs(_numOut) {
         initBaseNodes();
@@ -143,19 +143,73 @@ public:
     }
 
     void addGene(int from, int to, bool enabled, float weight, int childnodes) {
-        Genome gene(from, to,enabled,weight,childnodes);
+        Genome gene(from, to, enabled, weight, childnodes);
         nodes[from].genomes.insert(gene);
         gencopies.push_back(gene);
         busyEdges[std::make_pair(from, to)] = true;
         busyEdges[std::make_pair(to, from)] = true;
     }
-    
+
     void addGene(int from, int to) {
         Genome gene(from, to);
         nodes[from].genomes.insert(gene);
         gencopies.push_back(gene);
         busyEdges[std::make_pair(from, to)] = true;
         busyEdges[std::make_pair(to, from)] = true;
+    }
+
+    void addGeneNoLoop(Genome gene) { //can cause loops, should be excess gene before add
+        int from = gene.getFrom();
+        int to = gene.getTo();
+        if (Helper::mapContains<std::pair<int, int>, bool>(busyEdges, std::make_pair(from, to))) {
+            return;
+        }
+
+        if (!Helper::mapContains<int, Node>(nodes, from)) {
+            nodes[from] = Node(from);
+        }
+        if (!Helper::mapContains<int, Node>(nodes, to)) {
+            nodes[to] = Node(to);
+        }
+        if (!Mutate::isCircle(*this, from, to)) {
+            addGene(from, to, gene.enabled, gene.weight, gene.childNodes);
+        }
+    }
+
+    void removeRedundants() { //removes edges and nodes with dead ends
+        std::set<int> badFroms;
+
+        for (const auto& x : nodes) {
+            if (x.second.genomes.size() == 0 && !(x.second.getType() == Node::OUTPUT)
+                && !(x.second.getType() == Node::INPUT)) {
+                badFroms.insert(x.second.getID());
+            }
+        }
+        std::set<int> toBeRemoved;
+        for (int i = 0; i < gencopies.size(); i++) {
+            int from = gencopies[i].getFrom();
+            int to = gencopies[i].getTo();
+            const bool is_in = (badFroms.find(from) != badFroms.end()) || (badFroms.find(to) != badFroms.end());
+            if (is_in) {
+                toBeRemoved.insert(i);
+                nodes[from].genomes.erase(gencopies[i]);
+            }
+        }
+        std::vector<Genome> savedCopies;
+
+        for (int i = 0; i < gencopies.size(); i++) {
+            bool is_in = toBeRemoved.find(i) != toBeRemoved.end();
+            if (!is_in) {
+                savedCopies.push_back(gencopies[i]);
+            }
+        }
+
+        gencopies = savedCopies;
+
+        for (int x : badFroms) {
+            nodes.erase(x);
+        }
+
     }
 
 
