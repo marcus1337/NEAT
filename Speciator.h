@@ -49,6 +49,7 @@ public:
 
     void speciate(std::vector<NEAT>& neats) {
 
+
         for (NEAT& neat : neats) {
 
             std::sort(neat.gencopies.begin(), neat.gencopies.end());
@@ -56,6 +57,7 @@ public:
         
         specieNum = 0;
         pool.clear();
+        children.clear();
         Specie spec(specieNum);
         spec.topFitness = neats[0].fitness;
         specieNum++;
@@ -68,6 +70,8 @@ public:
 
         removeStaleSpecies();
         cullSpecies();
+
+        //std::cout << "WAT " << neats.size() << " , " << neats[0].fitness << std::endl;
 
         newGeneration();
         neats = std::vector<NEAT>(children);
@@ -117,8 +121,7 @@ public:
                     }
                     i++;
                     j++;
-                }
-                if (g1[i].getID() < g2[j].getID()) {
+                }else if (g1[i].getID() < g2[j].getID()) {
                     i++;
                 }
                 else if (g1[i].getID() > g2[j].getID()) {
@@ -271,8 +274,7 @@ public:
                 res += diff;
                 i++;
                 j++;
-            }
-            if (g1[i].getID() < g2[j].getID()) {
+            }else if (g1[i].getID() < g2[j].getID()) {
                 i++;
             }
             else if (g1[i].getID() > g2[j].getID()) {
@@ -301,8 +303,7 @@ public:
             if (g1[i].getID() == g2[j].getID()) {
                 i++;
                 j++;
-            }
-            if (g1[i].getID() < g2[j].getID()) {
+            }else if (g1[i].getID() < g2[j].getID()) {
                 i++;
                 res++;
             }

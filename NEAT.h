@@ -12,11 +12,9 @@
 #include <list>
 
 
-
 class NEAT {
-    int numIn, numOut;
-
 public:
+    int numIn, numOut;
 
     bool hasLoop() {
         return Helper::hasLoop(*this);
@@ -40,6 +38,7 @@ public:
         }
 
         std::stack<int> topstack = Helper::topSort(*this);
+
         while(!topstack.empty())
         {
             int nowID = topstack.top();
@@ -80,16 +79,58 @@ public:
 
     NEAT() :numIn(-1), numOut(-1) {}
 
-    NEAT(int _numIn, int _numOut) : numIn(_numIn), numOut(_numOut), fitness(0), outputs(_numOut) {
+    NEAT(std::istream& stream) {
+        /*        myfile << neat.numIn << " " << neat.numOut << "\n";
+        myfile << neat.fitness << "\n" << neat.gencopies.size() << "\n";
+        for (int i = 0; i < neat.gencopies.size(); i++) {
+            myfile << neat.gencopies[i].getFrom() << " " << neat.gencopies[i].getTo() << " " << neat.gencopies[i].enabled
+                << " " << neat.gencopies[i].weight << " " << neat.gencopies[i].childNodes << "\n";
+        }*/
+        stream >> numIn >> numOut >> fitness;
+        outputs.resize(numOut);
+        int totalSize;
+        stream >> totalSize;
+        initBaseNodes();
+
+        for (int i = 0; i < totalSize; i++) {
+            int from, to, childnodes;
+            bool enabled;
+            float weight;
+            stream >> from >> to >> enabled >> weight >> childnodes;
+            if (!Helper::mapContains<int, Node>(nodes, from)) {
+                nodes[from] = Node(from);
+            }
+            if (!Helper::mapContains<int, Node>(nodes, to)) {
+                nodes[to] = Node(to);
+            }
+
+            if (nodes[from].getType() == Node::INPUT && nodes[to].getType() == Node::OUTPUT) {
+                Genome genome(from, to, enabled, weight, childnodes);
+                updateGene(genome);
+            }
+            else {
+                addGene(from, to, enabled, weight, childnodes);
+            }
+
+        }
+
+    }
+
+    void initBaseNodes() {
         for (int i = 0; i < numIn; i++) {
             Node node(i, Node::INPUT);
             nodes[i] = node;
         }
 
         for (int i = 0; i < numOut; i++) {
-            Node node(i+numIn, Node::OUTPUT);
+            Node node(i + numIn, Node::OUTPUT);
             nodes[i + numIn] = node;
         }
+    }
+    
+
+    NEAT(int _numIn, int _numOut) : numIn(_numIn), numOut(_numOut), fitness(0), outputs(_numOut) {
+        initBaseNodes();
 
         for (int i = 0; i < numIn; i++) {
             for (int j = numIn; j < numIn + numOut; j++) {
@@ -101,6 +142,13 @@ public:
 
     }
 
+    void addGene(int from, int to, bool enabled, float weight, int childnodes) {
+        Genome gene(from, to,enabled,weight,childnodes);
+        nodes[from].genomes.insert(gene);
+        gencopies.push_back(gene);
+        busyEdges[std::make_pair(from, to)] = true;
+        busyEdges[std::make_pair(to, from)] = true;
+    }
     
     void addGene(int from, int to) {
         Genome gene(from, to);

@@ -69,6 +69,7 @@ void Helper::topologicalSortUtil(int v, std::vector<bool>& visited, std::stack<i
     std::list<int>::iterator i;
 
     for (const Genome& genome : neat.nodes[v].genomes) {
+
         if (!visited[genome.getTo()])
             topologicalSortUtil(genome.getTo(), visited, topstack, neat);
     }
@@ -79,7 +80,7 @@ void Helper::topologicalSortUtil(int v, std::vector<bool>& visited, std::stack<i
 std::stack<int> Helper::topSort(NEAT& neat) {
     std::stack<int> topstack;
 
-    std::vector<bool> visited(neat.nodes.size(), false);
+    std::vector<bool> visited(neat.nodes.size()*5 +neat.gencopies.size()*10 , false);
 
     for (const auto& n : neat.nodes)
     {

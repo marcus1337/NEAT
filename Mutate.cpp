@@ -6,6 +6,8 @@
 
 typedef std::pair<int, int> par;
 
+float Mutate::mutationrate = 0.02f;
+
 bool Mutate::shouldMutate(float chance) {
     float r = Helper::randf(0.f, 100.f);
     if (r > chance)
@@ -17,8 +19,8 @@ bool Mutate::isCircle(NEAT& neat, int from, int to) {
     bool result = false;
     Genome gene(from, to); //ATM genes.size() may not reflect innocationNumber for genes
     neat.nodes[from].genomes.insert(gene);
-    
-    if (Helper::hasLoopEasy(neat,to)) {
+
+    if (Helper::hasLoopEasy(neat, to)) {
         result = true;
     }
 
@@ -62,21 +64,22 @@ void Mutate::linkMutate(NEAT& neat) {
 
 void Mutate::nodeMutate(NEAT& neat) {
 
-    float r = Helper::randf(0.f, 100.f);
-    if (r > mutationrate)
-       return;
+    for (size_t i = 0; i < neat.gencopies.size()/3; i++) {
+        if (!shouldMutate(mutationrate))
+            continue;
 
-    int randEdge = Helper::randi(0, neat.gencopies.size() - 1);
-    neat.gencopies[randEdge].enabled = false;
-    neat.gencopies[randEdge].childNodes++;
-    neat.updateGene(neat.gencopies[randEdge]);
+        int randEdge = Helper::randi(0, neat.gencopies.size() - 1);
+        neat.gencopies[randEdge].enabled = false;
+        neat.gencopies[randEdge].childNodes++;
+        neat.updateGene(neat.gencopies[randEdge]);
 
-    Node node(Innovator::getInstance().getNewNodeNum(neat.gencopies[randEdge].getFrom(), neat.gencopies[randEdge].getTo(), neat.gencopies[randEdge].childNodes));
-    
-    neat.nodes[node.getID()] = node;
-    neat.addGene(neat.gencopies[randEdge].getFrom(), node.getID());
-    neat.addGene(node.getID(), neat.gencopies[randEdge].getTo());
+        Node node(Innovator::getInstance().getNewNodeNum(neat.gencopies[randEdge].getFrom(), neat.gencopies[randEdge].getTo(), neat.gencopies[randEdge].childNodes));
 
+        neat.nodes[node.getID()] = node;
+        neat.addGene(neat.gencopies[randEdge].getFrom(), node.getID());
+        neat.addGene(node.getID(), neat.gencopies[randEdge].getTo());
+
+    }
 }
 
 
@@ -94,7 +97,7 @@ void Mutate::pointMutate(NEAT& neat) {
     for (size_t i = 0; i < neat.gencopies.size(); i++) {
         if (!shouldMutate(mutationrate))
             continue;
-        
+
         if (shouldMutate(0.07f)) {
             neat.gencopies[i].weight = Helper::randf(-2.f, 2.f);
         }
@@ -119,9 +122,9 @@ void Mutate::allMutations(NEAT& neat) {
     linkMutate(neat);
     nodeMutate(neat);
 
-     /*if (Helper::hasLoop(neat)) {
-         std::cout << "AFTER " << neat.nodes.size() << " " << neat.gencopies.size() << std::endl;
-         abort();
-     }*/
+    /*if (Helper::hasLoop(neat)) {
+        std::cout << "AFTER " << neat.nodes.size() << " " << neat.gencopies.size() << std::endl;
+        abort();
+    }*/
 
 }

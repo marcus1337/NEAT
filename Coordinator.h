@@ -8,6 +8,7 @@
 #include <tuple>
 #include <vector>
 #include "Speciator.h"
+#include "IOstuff.h"
 
 class Coordinator {
 
@@ -16,9 +17,11 @@ public:
     int _numAI, _numOut, _numIn;
 
     Speciator speciator;
+    int generation;
 
     void init(int numIn, int numOut, int numAI) {
         srand(static_cast <unsigned> (time(0)));
+        generation = 1;
         _numAI = numAI;
         _numOut = numOut;
         _numIn = numIn;
@@ -33,12 +36,20 @@ public:
     }
 
     void evolve() {
+        Mutate::mutationrate = 0.8f;
+        if (generation > 10 && generation < 40) {
+            Mutate::mutationrate = 0.5f;
+        }
+        if (generation > 40 && generation < 80) {
+            Mutate::mutationrate = 0.2f;
+        }
+        if (generation > 80) {
+            Mutate::mutationrate = 0.02f;
+        }
 
-       // std::cout << "BEFORE " << neats.size() << std::endl;
+        generation++;
         speciator.speciate(neats);
-      //  std::cout << "AFTER " << neats.size() << std::endl;
     }
-
 
     void calcInput(int index, float* inputs) {
         neats[index].topSortCalc(inputs);
@@ -52,5 +63,16 @@ public:
         neats[index].fitness = fitness;
     }
 
+    void save(int index, int fileID) {
+        IOstuff::save(neats[index], fileID);
+    }
+
+    void load(std::string filename) {
+        NEAT neat = IOstuff::load(filename);
+        neats.clear();
+        for (int i = 0; i < _numAI; i++) {
+            neats.push_back(neat);
+        }
+    }
 
 };
