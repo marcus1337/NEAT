@@ -36,17 +36,6 @@ public:
     }
 
     void evolve() {
-        Mutate::mutationrate = 0.8f;
-        if (generation > 10 && generation < 40) {
-            Mutate::mutationrate = 0.5f;
-        }
-        if (generation > 40 && generation < 80) {
-            Mutate::mutationrate = 0.2f;
-        }
-        if (generation > 80) {
-            Mutate::mutationrate = 0.02f;
-        }
-
         generation++;
         speciator.speciate(neats);
     }
@@ -73,6 +62,12 @@ public:
         for (int i = 0; i < _numAI; i++) {
             neats.push_back(neat);
         }
+        for (auto const& x : neat.nodes) {
+            int id = x.second.getID();
+            Innovator::getInstance().innovNodeNum = std::max<int>(Innovator::getInstance().innovNodeNum, id);
+        }
+        Innovator::getInstance().innovNodeNum += 1;
+
     }
 
 };

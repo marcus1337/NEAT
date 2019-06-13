@@ -53,18 +53,15 @@ float test[] = { 1.f,1.f,1.f,1.f,1.f,1.f,1.f,1.f, 1.f,1.f,1.f,1.f,1.f,1.f,1.f,1.
 
 void init(int numIn, int numOut, int numAI) {
     coordinator.init(numIn, numOut, numAI);
-    //coordinator.load("NEAT_SAVE220");
+    coordinator.load("NEAT_SAVE220");
 
     rep(i, coordinator.neats.size()) {
-        coordinator.neats[i].fitness = Helper::randi(1,1000);
+       // coordinator.neats[i].fitness = Helper::randi(1,1000);
     }
 
     rep(i, 100) {
 
-        coordinator.evolve();
-        rep(i, coordinator.neats.size()) {
-            coordinator.neats[i].fitness = Helper::randi(1, 1000);
-        }
+       // Mutate::allMutations(coordinator.neats[0]);
         //coordinator.evolve();
         //cout << "A" << endl;
         //cout << "WAT " << coordinator.neats[0].nodes.size() << " e " << coordinator.neats[0].gencopies.size() << endl;
