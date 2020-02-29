@@ -41,22 +41,16 @@ int Speciator::totalAvgFit() {
     return total;
 }
 
+void Speciator::addRemainingGenesToNeat(NEAT& _neat, int fromIndex, std::vector<Genome>& genes) {
+    for (int i = fromIndex; i < genes.size(); i++) {
+        _neat.addGeneNoLoop(genes[i]);
+    }
+}
+
 void Speciator::childFromEqualParents(NEAT& child, std::vector<Genome>& g1, std::vector<Genome>& g2) {
-    for (int i = 0, j = 0;;) {
-        if (i == g1.size() - 1) {
-            for (int jj = j; jj < g2.size(); jj++) {
-                child.addGeneNoLoop(g2[jj]);
-            }
-
-            break;
-        }
-        if (j == g2.size() - 1) {
-            for (int ii = i; ii < g1.size(); ii++) {
-                child.addGeneNoLoop(g1[ii]);
-            }
-
-            break;
-        }
+    
+    int i = 0; int j = 0;
+    while (i != g1.size() - 1 && j != g2.size() - 1) {
 
         if (g1[i].getID() == g2[j].getID()) {
             bool b = Utils::randomBool();
@@ -64,7 +58,7 @@ void Speciator::childFromEqualParents(NEAT& child, std::vector<Genome>& g1, std:
                 child.addGene(g1[i].getFrom(), g1[i].getTo());
             }
             else {
-                child.addGene(g2[i].getFrom(), g2[i].getTo());
+                child.addGene(g2[j].getFrom(), g2[j].getTo());
             }
             i++;
             j++;
@@ -78,6 +72,8 @@ void Speciator::childFromEqualParents(NEAT& child, std::vector<Genome>& g1, std:
             j++;
         }
     }
+    addRemainingGenesToNeat(child, j, g2);
+    addRemainingGenesToNeat(child, i, g1);
 }
 
 void Speciator::crossOver(NEAT* n1, NEAT* n2) {
@@ -109,9 +105,7 @@ void Speciator::crossOver(NEAT* n1, NEAT* n2) {
 
         for (int i = 0, j = 0;;) {
             if (i == g1.size() - 1) {
-                for (int jj = j; jj < g2.size(); jj++) {
-                    child.addGeneNoLoop(g2[jj]);
-                }
+                addRemainingGenesToNeat(child, j, g2);
                 break;
             }
             if (j == g2.size() - 1) {

@@ -8,6 +8,7 @@
 class Speciator {
     int numOut, numIn, numAI;
 
+    void addRemainingGenesToNeat(NEAT& _neat, int fromIndex, std::vector<Genome>& genes);
     void childFromEqualParents(NEAT& child, std::vector<Genome>& g1, std::vector<Genome>& g2);
 
 public:
