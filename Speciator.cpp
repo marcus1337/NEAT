@@ -41,6 +41,45 @@ int Speciator::totalAvgFit() {
     return total;
 }
 
+void Speciator::childFromEqualParents(NEAT& child, std::vector<Genome>& g1, std::vector<Genome>& g2) {
+    for (int i = 0, j = 0;;) {
+        if (i == g1.size() - 1) {
+            for (int jj = j; jj < g2.size(); jj++) {
+                child.addGeneNoLoop(g2[jj]);
+            }
+
+            break;
+        }
+        if (j == g2.size() - 1) {
+            for (int ii = i; ii < g1.size(); ii++) {
+                child.addGeneNoLoop(g1[ii]);
+            }
+
+            break;
+        }
+
+        if (g1[i].getID() == g2[j].getID()) {
+            bool b = Utils::randomBool();
+            if (b) {
+                child.addGene(g1[i].getFrom(), g1[i].getTo());
+            }
+            else {
+                child.addGene(g2[i].getFrom(), g2[i].getTo());
+            }
+            i++;
+            j++;
+        }
+        else if (g1[i].getID() < g2[j].getID()) {
+            child.addGeneNoLoop(g1[i]);
+            i++;
+        }
+        else if (g1[i].getID() > g2[j].getID()) {
+            child.addGeneNoLoop(g2[j]);
+            j++;
+        }
+    }
+}
+
 void Speciator::crossOver(NEAT* n1, NEAT* n2) {
     NEAT child(numIn, numOut);
 
@@ -50,11 +89,11 @@ void Speciator::crossOver(NEAT* n1, NEAT* n2) {
     }
 
     for (const auto &[key, value] : n1->nodes) {
-        Node nod(value);
+        Node nod(value.getID(), value.getType());
         child.nodes[nod.getID()] = nod;
     }
     for (const auto &[key, value] : n2->nodes) {
-        Node nod(value);
+        Node nod(value.getID(), value.getType());
         child.nodes[nod.getID()] = nod;
     }
 
@@ -62,43 +101,8 @@ void Speciator::crossOver(NEAT* n1, NEAT* n2) {
     std::vector<Genome>& g2 = n2->gencopies;
 
     if (n1->fitness == n2->fitness) {
-
-        for (int i = 0, j = 0;;) {
-            if (i == g1.size() - 1) {
-                for (int jj = j; jj < g2.size(); jj++) {
-                    child.addGeneNoLoop(g2[jj]);
-                }
-
-                break;
-            }
-            if (j == g2.size() - 1) {
-                for (int ii = i; ii < g1.size(); ii++) {
-                    child.addGeneNoLoop(g1[ii]);
-                }
-
-                break;
-            }
-
-            if (g1[i].getID() == g2[j].getID()) {
-                bool b = Utils::randomBool();
-                if (b) {
-                    child.addGene(g1[i].getFrom(), g1[i].getTo());
-                }
-                else {
-                    child.addGene(g2[i].getFrom(), g2[i].getTo());
-                }
-                i++;
-                j++;
-            }
-            else if (g1[i].getID() < g2[j].getID()) {
-                child.addGeneNoLoop(g1[i]);
-                i++;
-            }
-            else if (g1[i].getID() > g2[j].getID()) {
-                child.addGeneNoLoop(g2[j]);
-                j++;
-            }
-        }
+        childFromEqualParents(child, g1, g2);
+        
     }
     else {
         child.copyPointer(n1);

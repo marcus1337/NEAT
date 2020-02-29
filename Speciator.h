@@ -8,6 +8,8 @@
 class Speciator {
     int numOut, numIn, numAI;
 
+    void childFromEqualParents(NEAT& child, std::vector<Genome>& g1, std::vector<Genome>& g2);
+
 public:
 
     static constexpr float c1 = 1.8f;
