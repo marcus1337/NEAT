@@ -1,7 +1,6 @@
 #pragma once
-#include <vector>
 
-class NEAT;
+#include "NEAT.h"
 
 class Mutate {
 
@@ -12,8 +11,6 @@ public:
     //static constexpr float pointrate = 0.01f;
 
     static bool shouldMutate(float chance);
-
-    static bool isCircle(NEAT& neat, int from, int to);
 
     static void linkMutate(NEAT& neat);
     static void nodeMutate(NEAT& neat);
