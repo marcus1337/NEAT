@@ -1,9 +1,10 @@
-#pragma once
 
 #include <vector>
 #include <map>
 #include "Node.h"
 
+#ifndef NEAT_H
+#define NEAT_H
 
 class NEAT {
 public:
@@ -34,3 +35,5 @@ public:
     void removeRedundants();
 
 };
+
+#endif

@@ -1,7 +1,10 @@
-#pragma once
+
 #include "NEAT.h"
 #include "Specie.h"
 #include <random>
+
+#ifndef SPECIATOR_H
+#define SPECIATOR_H
 
 class Speciator {
     int numOut, numIn, numAI;
@@ -37,3 +40,5 @@ public:
     float disjointDiff(NEAT& n1, NEAT& n2);
 
 };
+
+#endif

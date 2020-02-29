@@ -1,6 +1,8 @@
-#pragma once
 
 #include "NEAT.h"
+
+#ifndef MUTATE_H
+#define MUTATE_H
 
 class Mutate {
 
@@ -18,5 +20,6 @@ public:
     static void pointMutate(NEAT& neat);
 
     static void allMutations(NEAT& neat);
-
 };
+
+#endif

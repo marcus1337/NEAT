@@ -1,6 +1,9 @@
-#pragma once
+
 #include <set>
 #include "Genome.h"
+
+#ifndef NODE_H
+#define NODE_H
 
 class Node {
 
@@ -24,3 +27,5 @@ public:
 protected:
 
 };
+
+#endif

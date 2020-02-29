@@ -1,10 +1,13 @@
-#pragma once
+
 #include <stack> 
 #include <map>
 #include <set>
 #include <vector>
 
 #include "Node.h"
+
+#ifndef UTILS_H
+#define UTILS_H
 
 class Utils {
 protected:
@@ -41,3 +44,5 @@ public:
     static bool isCircle(std::map<int, Node>& nodes, int from, int to);
 
 };
+
+#endif

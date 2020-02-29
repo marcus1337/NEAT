@@ -1,6 +1,8 @@
-#pragma once
 #include "NEAT.h"
 #include <vector>
+
+#ifndef SPECIE_H
+#define SPECIE_H
 
 struct Specie {
     int id;
@@ -15,3 +17,5 @@ struct Specie {
     bool operator < (const Specie &right) const;
     bool operator==(const Specie& rhs) const;
 };
+
+#endif

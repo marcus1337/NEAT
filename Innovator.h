@@ -1,6 +1,9 @@
-#pragma once
+
 #include <map>
 #include <utility> 
+
+#ifndef INNOVATOR_H
+#define INNOVATOR_H
 
 class Innovator {
     typedef std::pair<int, int> par;
@@ -27,3 +30,5 @@ public:
     void operator=(Innovator const&) = delete;
 
 };
+
+#endif

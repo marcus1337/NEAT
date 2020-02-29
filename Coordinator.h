@@ -1,7 +1,9 @@
-#pragma once
 #include "NEAT.h"
 #include "Speciator.h"
 #include <vector>
+
+#ifndef COORDINATOR_H
+#define COORDINATOR_H
 
 class Coordinator {
 
@@ -21,3 +23,5 @@ public:
     void load(std::string filename);
 
 };
+
+#endif

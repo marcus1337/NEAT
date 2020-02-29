@@ -1,4 +1,5 @@
-#pragma once
+#ifndef GENOME_H
+#define GENOME_H
 
 class Genome {
     int from, to, id;
@@ -20,3 +21,5 @@ public:
     bool operator==(const Genome& rhs) const;
 
 };
+
+#endif

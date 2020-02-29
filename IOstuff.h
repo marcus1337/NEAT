@@ -1,6 +1,9 @@
-#pragma once
+
 #include "NEAT.h"
 #include <string>
+
+#ifndef IOSTUFF_H
+#define IOSTUFF_H
 
 class IOstuff {
 
@@ -11,3 +14,5 @@ public:
     static NEAT load(std::string filename);
 
 };
+
+#endif
