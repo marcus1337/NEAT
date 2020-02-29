@@ -5,10 +5,8 @@
 #include "Innovator.h"
 #include "Utils.h"
 
-Speciator::Speciator() {
-    rng = std::default_random_engine{};
+Speciator::Speciator() {}
 
-}
 void Speciator::init(int _numIn, int _numOut, int _numAI) {
     numOut = _numOut;
     numIn = _numIn;

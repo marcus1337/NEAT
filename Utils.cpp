@@ -1,10 +1,8 @@
 #include "Utils.h"
-
-#include <cstdlib>
-#include <random>
 #include <functional> 
 #include <list>
 #include "Innovator.h"
+#include "Random.h"
 
 bool Utils::isCircle(std::map<int, Node>& nodes, int from, int to) {
     bool result = false;
@@ -110,15 +108,15 @@ std::stack<int> Utils::topSort(std::map<int, Node>& nodes) {
 
 
 bool Utils::randomBool() {
-    static auto gen = std::bind(std::uniform_int_distribution<>(0, 1), std::default_random_engine());
+    auto gen = std::bind(Random::boolDist, Random::mRng);
     return gen();
 }
 
 float Utils::randf(float LO, float HI) {
-    float r3 = LO + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (HI - LO)));
-    return r3;
+    auto gen = std::bind(std::uniform_real_distribution<>(LO, HI), Random::mRng);
+    return gen();
 }
 int Utils::randi(int LO, int HI) {
-    int randNum = rand() % (HI - LO + 1) + LO;
-    return randNum;
+    auto gen = std::bind(std::uniform_int_distribution<>(LO, HI), Random::mRng);
+    return gen();
 }

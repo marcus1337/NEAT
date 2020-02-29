@@ -1,7 +1,6 @@
 
 #include "NEAT.h"
 #include "Specie.h"
-#include <random>
 
 #ifndef SPECIATOR_H
 #define SPECIATOR_H
@@ -10,7 +9,7 @@ class Speciator {
     int numOut, numIn, numAI;
 
 public:
-    std::default_random_engine rng;
+
     static constexpr float c1 = 1.8f;
     static constexpr float c2 = 0.4f;
     static constexpr float crossChance = 0.75f;

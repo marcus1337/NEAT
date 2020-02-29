@@ -7,6 +7,7 @@
 #include "IOstuff.h"
 #include <string>
 #include "Utils.h"
+#include "Mutate.h"
 
 #define FOR(i,a,b) for(int i=a;i<b;i++)
 #define rep(i,n) FOR(i,0,n)
@@ -24,8 +25,8 @@ int main(int argc, char *argv[]) {
     std::ios_base::sync_with_stdio(false);
     std::cin.tie(nullptr);
 
-    //init(13, 4, 200);
-    tester();
+    init(13, 4, 200);
+    //tester();
 
     std::cout << std::flush;
 
@@ -65,7 +66,6 @@ void init(int numIn, int numOut, int numAI) {
         }
 
         cout << "TEST " << coordinator.neats[0].nodes.size() << " e " << coordinator.neats[0].gencopies.size() << endl;
-        //Mutate::allMutations(coordinator.neats[1]);
     }
 
 }

@@ -1,11 +1,10 @@
 #include "Coordinator.h"
-#include <cstdlib>
 #include <ctime>
 #include "Innovator.h"
 #include "IOstuff.h"
+#include <algorithm>
 
 void Coordinator::init(int numIn, int numOut, int numAI) {
-    srand(static_cast <unsigned> (time(0)));
     generation = 1;
     _numAI = numAI;
     _numOut = numOut;
