@@ -4,11 +4,13 @@
 #include <iterator>
 #include "Utils.h"
 #include <vector>
+#include <iostream>
 
 typedef std::pair<int, int> par;
 
 float Mutate::mutationrate = 0.02f;
 float Mutate::mutationrateNewNode = 0.01;
+
 
 bool Mutate::shouldMutate(float chance) {
     float r = Utils::randf(0.f, 100.f);
@@ -52,6 +54,7 @@ void Mutate::linkMutate(NEAT& neat) {
 void Mutate::nodeMutate(NEAT& neat) {
 
     for (size_t i = 0; i < neat.gencopies.size(); i++) {
+
         if (!shouldMutate(mutationrateNewNode))
             continue;
 

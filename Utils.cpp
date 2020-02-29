@@ -106,17 +106,15 @@ std::stack<int> Utils::topSort(std::map<int, Node>& nodes) {
     return topstack;
 }
 
-
 bool Utils::randomBool() {
-    auto gen = std::bind(Random::boolDist, Random::mRng);
-    return gen();
+    return Random::boolDist(Random::mRng);
 }
 
 float Utils::randf(float LO, float HI) {
-    auto gen = std::bind(std::uniform_real_distribution<>(LO, HI), Random::mRng);
-    return gen();
+    std::uniform_real_distribution<> distr(LO, HI);
+    return distr(Random::mRng);
 }
 int Utils::randi(int LO, int HI) {
-    auto gen = std::bind(std::uniform_int_distribution<>(LO, HI), Random::mRng);
-    return gen();
+    std::uniform_int_distribution<> distr(LO, HI);
+    return distr(Random::mRng);
 }

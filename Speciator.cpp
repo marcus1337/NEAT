@@ -25,7 +25,7 @@ void Speciator::speciate(std::vector<NEAT>& neats) {
 
     for (size_t i = 0; i < neats.size(); i++) {
         if (neats[i].gencopies.empty()) //bug-fix, unknown why this sometimes becomes empty.
-            continue;
+            abort();
         addToSpecies(neats[i]);
     }
 
