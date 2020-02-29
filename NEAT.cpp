@@ -162,8 +162,7 @@ void NEAT::removeRedundants() { //removes edges and nodes with dead ends
     std::set<int> badFroms;
 
     for (const auto& x : nodes) {
-        if (x.second.genomes.size() == 0 && !(x.second.getType() == Node::OUTPUT)
-            && !(x.second.getType() == Node::INPUT)) {
+        if (x.second.genomes.size() == 0 && x.second.getType() == Node::HIDDEN) {
             badFroms.insert(x.second.getID());
         }
     }

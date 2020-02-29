@@ -21,7 +21,7 @@ Coordinator coordinator;
 
 void tester();
 
-const int testNum = 100;
+const int testNum = 5;
 
 int main(int argc, char *argv[]) {
     std::ios_base::sync_with_stdio(false);
@@ -60,7 +60,7 @@ void init(int numIn, int numOut, int numAI) {
         coordinator.neats[i].fitness = Utils::randi(1,1000);
     }
 
-    rep(i, testNum) {
+    rep(i, 5000) {
 
         coordinator.evolve();
         rep(i, coordinator.neats.size()) {

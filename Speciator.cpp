@@ -24,8 +24,6 @@ void Speciator::speciate(std::vector<NEAT>& neats) {
     children.clear();
 
     for (size_t i = 0; i < neats.size(); i++) {
-        if (neats[i].gencopies.empty()) //bug-fix, unknown why this sometimes becomes empty.
-            abort();
         addToSpecies(neats[i]);
     }
 
@@ -51,12 +49,12 @@ void Speciator::crossOver(NEAT* n1, NEAT* n2) {
         Utils::swap<NEAT*>(n1, n2);
     }
 
-    for (auto const& x : n1->nodes) {
-        Node nod(x.second.getID());
+    for (const auto &[key, value] : n1->nodes) {
+        Node nod(value);
         child.nodes[nod.getID()] = nod;
     }
-    for (auto const& x : n2->nodes) {
-        Node nod(x.second.getID());
+    for (const auto &[key, value] : n2->nodes) {
+        Node nod(value);
         child.nodes[nod.getID()] = nod;
     }
 
