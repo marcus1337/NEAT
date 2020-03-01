@@ -47,30 +47,35 @@ void Speciator::addRemainingGenesToNeat(NEAT& _neat, int fromIndex, std::vector<
     }
 }
 
+void Speciator::incrementIDIndexes(int& i, int& j, int ID1, int ID2) {
+    if (ID1 == ID2) {
+        i++;
+        j++;
+    }
+    else if (ID1 < ID2)
+        i++;
+    else
+        j++;
+}
+
+void Speciator::addLowestGeneOrRandom(NEAT& _neat, Genome& gene1, Genome& gene2) {
+    if (gene1.getID() == gene2.getID()) {
+        if (Utils::randomBool())
+            _neat.addGene(gene1.getFrom(), gene1.getTo());
+        else
+            _neat.addGene(gene2.getFrom(), gene2.getTo());
+    }
+    else if (gene1.getID() < gene2.getID())
+        _neat.addGeneNoLoop(gene1);
+    else
+        _neat.addGeneNoLoop(gene2);
+}
+
 void Speciator::childFromEqualParents(NEAT& child, std::vector<Genome>& g1, std::vector<Genome>& g2) {
-    
     int i = 0; int j = 0;
     while (i != g1.size() - 1 && j != g2.size() - 1) {
-
-        if (g1[i].getID() == g2[j].getID()) {
-            bool b = Utils::randomBool();
-            if (b) {
-                child.addGene(g1[i].getFrom(), g1[i].getTo());
-            }
-            else {
-                child.addGene(g2[j].getFrom(), g2[j].getTo());
-            }
-            i++;
-            j++;
-        }
-        else if (g1[i].getID() < g2[j].getID()) {
-            child.addGeneNoLoop(g1[i]);
-            i++;
-        }
-        else if (g1[i].getID() > g2[j].getID()) {
-            child.addGeneNoLoop(g2[j]);
-            j++;
-        }
+        addLowestGeneOrRandom(child, g1[i], g2[j]);
+        incrementIDIndexes(i, j, g1[i].getID(), g2[j].getID());
     }
     addRemainingGenesToNeat(child, j, g2);
     addRemainingGenesToNeat(child, i, g1);
