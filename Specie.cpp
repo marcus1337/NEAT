@@ -1,4 +1,5 @@
 #include "Specie.h"
+#include "Utils.h"
 
 void Specie::calcAvgFit() {
     int total = 0;
@@ -10,6 +11,13 @@ void Specie::calcAvgFit() {
 
 Specie::Specie() : id(-1) {}
 Specie::Specie(int _id) : id(_id) {}
+
+NEAT* Specie::getRandomNeat() {
+    if (neats.empty())
+        return nullptr;
+    int index = Utils::randi(0, neats.size() - 1);
+    return neats[index];
+}
 
 bool Specie::operator < (const Specie &right) const
 {

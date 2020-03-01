@@ -123,22 +123,17 @@ void Speciator::crossOver(NEAT* n1, NEAT* n2) {
     children.push_back(child);
 }
 
-void Speciator::breedChild(const Specie& specie) {
-    float randf = Utils::randf(0, 100);
-    int index1 = Utils::randi(0, specie.neats.size() - 1);
-    int index2 = Utils::randi(0, specie.neats.size() - 1);
-    NEAT& g1 = *specie.neats[index1];
-    NEAT& g2 = *specie.neats[index2];
+void Speciator::breedChild(Specie& specie) {
+    NEAT* g1 = specie.getRandomNeat();
+    NEAT* g2 = specie.getRandomNeat();
 
-    if (randf > crossChance) {
-        NEAT child(g1);
+    if (Utils::randf(0, 100) > crossChance) {
+        NEAT child(*g1);
         Mutate::allMutations(child);
         children.push_back(child);
     }
-    else {
-        crossOver(&g1, &g2);
-    }
-
+    else
+        crossOver(g1, g2);
 }
 
 bool Speciator::isWeak(const Specie& o) {
@@ -252,78 +247,36 @@ void Speciator::addToSpecies(NEAT& neat) {
 }
 
 bool Speciator::sameSpecie(NEAT& n1, NEAT& n2) {
-    float dd = c1 * (float)disjointDiff(n1, n2);
-    float dw = c2 * weightDiff(n1, n2);
+    float dd = c1 * disjointDiff(n1.gencopies, n2.gencopies);
+    float dw = c2 * weightDiff(n1.gencopies, n2.gencopies);
     return (dd + dw) < 1.0f;
 }
 
-
-float Speciator::weightDiff(NEAT& n1, NEAT& n2) {
+float Speciator::weightDiff(std::vector<Genome>& g1, std::vector<Genome>& g2) {
     float res = 0;
-    std::vector<Genome>& g1 = n1.gencopies;
-    std::vector<Genome>& g2 = n2.gencopies;
     float coincident = 0;
-
-    for (int i = 0, j = 0;;) {
-        if (i == g1.size() - 1) {
-            break;
-        }
-        if (j == g2.size() - 1) {
-            break;
-        }
-
+    int i = 0, j = 0;
+    while (i != g1.size() - 1 && j != g2.size() - 1) {
         if (g1[i].getID() == g2[j].getID()) {
-            float w1 = g1[i].weight;
-            float w2 = g2[j].weight;
-            float diff = abs(w1 - w2);
-            res += diff;
-            i++;
-            j++;
+            res += abs(g1[i].weight - g2[j].weight);
             coincident++;
         }
-        else if (g1[i].getID() < g2[j].getID()) {
-            i++;
-        }
-        else if (g1[i].getID() > g2[j].getID()) {
-            j++;
-        }
+        incrementIDIndexes(i, j, g1[i].getID(), g2[j].getID());
     }
-
     if (coincident == 0)
         return 0;
-
     return res / coincident;
 }
 
-float Speciator::disjointDiff(NEAT& n1, NEAT& n2) {
+float Speciator::disjointDiff(std::vector<Genome>& g1, std::vector<Genome>& g2) {
     float res = 0;
-    std::vector<Genome>& g1 = n1.gencopies;
-    std::vector<Genome>& g2 = n2.gencopies;
-
-    for (int i = 0, j = 0;;) {
-        if (i == g1.size() - 1) {
-            res += g2.size() - i;
-            break;
-        }
-        if (j == g2.size() - 1) {
-            res += g1.size() - j;
-            break;
-        }
-
-        if (g1[i].getID() == g2[j].getID()) {
-            i++;
-            j++;
-        }
-        else if (g1[i].getID() < g2[j].getID()) {
-            i++;
+    int i = 0, j = 0;
+    while (i != g1.size() - 1 && j != g2.size() - 1) {
+        if (g1[i].getID() != g2[j].getID())
             res++;
-        }
-        else if (g1[i].getID() > g2[j].getID()) {
-            j++;
-            res++;
-        }
+        incrementIDIndexes(i, j, g1[i].getID(), g2[j].getID());
     }
-
+    res += g2.size() - i + g1.size() - j;
     float maxlen = (float)std::max<int>(g1.size(), g2.size());
     return res / maxlen;
 }

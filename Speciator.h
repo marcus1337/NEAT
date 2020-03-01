@@ -33,7 +33,7 @@ public:
     void speciate(std::vector<NEAT>& neats);
     void crossOver(NEAT* n1, NEAT* n2);
 
-    void breedChild(const Specie& specie);
+    void breedChild(Specie& specie);
     bool isWeak(const Specie& o);
     void removeWeakSpecies();
 
@@ -43,8 +43,8 @@ public:
     void addToSpecies(NEAT& neat);
 
     bool sameSpecie(NEAT& n1, NEAT& n2);
-    float weightDiff(NEAT& n1, NEAT& n2);
-    float disjointDiff(NEAT& n1, NEAT& n2);
+    float weightDiff(std::vector<Genome>& g1, std::vector<Genome>& g2);
+    float disjointDiff(std::vector<Genome>& g1, std::vector<Genome>& g2);
 
 };
 

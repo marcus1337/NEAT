@@ -7,6 +7,7 @@
 struct Specie {
     int id;
     std::vector<NEAT*> neats;
+    NEAT* getRandomNeat();
     int topFitness = 0;
     int averageFitness = 0;
 
