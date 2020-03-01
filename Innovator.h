@@ -10,25 +10,27 @@ class Innovator {
     typedef std::tuple<int,int,int> par3;
 
     Innovator();
-    std::map<par, int> takenIDs;
-    std::map<par3, int> takenMiddleIDs;
+    std::map<par, int> takenGeneIDs;
+    std::map<par3, int> takenNodeIDs;
 
 public:
 
-    int innovNum, innovNodeNum;
+    int geneNum, nodeNum;
 
     void reset();
     static Innovator& getInstance();
 
-    int getNewNodeNum(int from, int to, int children);
+    int getNodeNum(int from, int to, int children);
     int getAnyNodeNum();
     int getMaxNodeNum();
     int getMaxEdgeNum();
-    int getNum(int from, int to);
+    int getGeneNum(int from, int to);
+
+    std::map<par3, int> getAllNodeIDs();
+    void setTakenNodeIDs(std::map<par3, int> _takenNodeIDs);
 
     Innovator(Innovator const&) = delete;
     void operator=(Innovator const&) = delete;
-
 };
 
 #endif

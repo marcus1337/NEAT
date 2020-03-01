@@ -2,12 +2,12 @@
 #include "Innovator.h"
 #include "Utils.h"
 
-Innovator::Innovator() : innovNum(0), innovNodeNum(0) {}
+Innovator::Innovator() : geneNum(0), nodeNum(0) {}
 
 void Innovator::reset() {
-    innovNum = innovNodeNum = 0;
-    takenIDs.clear();
-    takenMiddleIDs.clear();
+    geneNum = nodeNum = 0;
+    takenGeneIDs.clear();
+    takenNodeIDs.clear();
 }
 
 Innovator& Innovator::getInstance()
@@ -16,34 +16,40 @@ Innovator& Innovator::getInstance()
     return instance;
 }
 
-int Innovator::getNewNodeNum(int from, int to, int children) {
+int Innovator::getNodeNum(int from, int to, int children) {
     par3 betweenEdges = std::make_tuple(from, to, children);
-    if (Utils::mapContains<par3>(takenMiddleIDs, betweenEdges)) {
-        return takenMiddleIDs[betweenEdges];
-    }
-    innovNodeNum++;
-    takenMiddleIDs[betweenEdges] = innovNodeNum;
-    return innovNodeNum;
+    if (Utils::mapContains<par3>(takenNodeIDs, betweenEdges))
+        return takenNodeIDs[betweenEdges];
+    nodeNum++;
+    takenNodeIDs[betweenEdges] = nodeNum;
+    return nodeNum;
+}
+
+int Innovator::getGeneNum(int from, int to) {
+    par betweenNodes = std::make_pair(from, to);
+    if (Utils::mapContains<par>(takenGeneIDs, betweenNodes))
+        return takenGeneIDs[betweenNodes];
+    geneNum++;
+    takenGeneIDs[betweenNodes] = geneNum;
+    return geneNum;
 }
 
 int Innovator::getAnyNodeNum() {
-    innovNodeNum++;
-    return innovNodeNum;
+    nodeNum++;
+    return nodeNum;
 }
 
 int Innovator::getMaxNodeNum() {
-    return innovNodeNum;
+    return nodeNum;
 }
 int Innovator::getMaxEdgeNum() {
-    return innovNum;
+    return geneNum;
 }
 
-int Innovator::getNum(int from, int to) {
-    par betweenNodes = std::make_pair(from, to);
-    if (Utils::mapContains<par>(takenIDs, betweenNodes)) {
-        return takenIDs[betweenNodes];
-    }
-    innovNum++;
-    takenIDs[betweenNodes] = innovNum;
-    return innovNum;
+std::map<Innovator::par3, int> Innovator::getAllNodeIDs() {
+    return takenNodeIDs;
+}
+
+void Innovator::setTakenNodeIDs(std::map<Innovator::par3, int> _takenNodeIDs) {
+    takenNodeIDs = _takenNodeIDs;
 }

@@ -1,6 +1,6 @@
 #include "NEAT.h"
 
-#include "Innovator.h"
+//#include "Innovator.h"
 #include <set>
 #include <iostream>
 #include <math.h>

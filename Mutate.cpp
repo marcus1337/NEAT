@@ -63,7 +63,7 @@ void Mutate::nodeMutate(NEAT& neat) {
         neat.gencopies[randEdge].childNodes++;
         neat.updateGene(neat.gencopies[randEdge]);
 
-        Node node(Innovator::getInstance().getNewNodeNum(neat.gencopies[randEdge].getFrom(), neat.gencopies[randEdge].getTo(), neat.gencopies[randEdge].childNodes));
+        Node node(Innovator::getInstance().getNodeNum(neat.gencopies[randEdge].getFrom(), neat.gencopies[randEdge].getTo(), neat.gencopies[randEdge].childNodes));
 
         neat.nodes[node.getID()] = node;
         neat.addGene(neat.gencopies[randEdge].getFrom(), node.getID());

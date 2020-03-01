@@ -35,6 +35,7 @@ void Coordinator::setFitness(int index, int fitness) {
 
 void Coordinator::save(int index, std::string filename) {
     SaveData saveData(neats[index], filename, generation);
+    saveData.takenNodeIDs = Innovator::getInstance().getAllNodeIDs();
     IOstuff::save(saveData);
 }
 
@@ -48,9 +49,11 @@ void Coordinator::load(std::string filename, int numAI) {
     }
     for (auto const& x : neat.nodes) {
         int id = x.second.getID();
-        Innovator::getInstance().innovNodeNum = std::max<int>(Innovator::getInstance().innovNodeNum, id);
+        Innovator::getInstance().nodeNum = std::max<int>(Innovator::getInstance().nodeNum, id);
     }
-    Innovator::getInstance().innovNodeNum += 1;
+    Innovator::getInstance().nodeNum += 1;
+    Innovator::getInstance().setTakenNodeIDs(saveData.takenNodeIDs);
+
     speciator.init(neat.numIn, neat.numOut, numAI);
 
 }

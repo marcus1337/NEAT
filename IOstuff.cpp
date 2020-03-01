@@ -15,12 +15,31 @@ void IOstuff::neatInfoToStream(std::ofstream& stream, NEAT& neat) {
     }
 }
 
+void IOstuff::nodeIDsToStream(std::ofstream& stream, std::map<std::tuple<int, int, int>, int>& nodeIDs) {
+    stream << nodeIDs.size() << "\n";
+    for (const auto &[key, value] : nodeIDs) {
+        stream << std::get<0>(key) << " " << std::get<1>(key) << " " << std::get<2>(key)
+            << " " << value << "\n";
+    }
+}
+
 void IOstuff::save(SaveData& saveData) {
     std::ofstream myfile;
     myfile.open(saveData.fileName);
-
     myfile << saveData.generation << "\n";
     neatInfoToStream(myfile, saveData.neat);
+    nodeIDsToStream(myfile, saveData.takenNodeIDs);
+}
+
+void IOstuff::loadNodeIDs(std::ifstream& stream, SaveData& saveData) {
+    int numNodeIDs;
+    stream >> numNodeIDs;
+    for (int i = 0; i < numNodeIDs; i++) {
+        int from, to, children, value;
+        stream >> from >> to >> children >> value;
+        std::tuple<int, int, int> betweenEdges = std::make_tuple(from, to, children);
+        saveData.takenNodeIDs[betweenEdges] = value;
+    }
 }
 
 SaveData IOstuff::load(std::string filename) {
@@ -28,5 +47,7 @@ SaveData IOstuff::load(std::string filename) {
     int generation;
     myfile >> generation;
     NEAT neat(myfile);
-    return SaveData(neat,filename, generation);
+    SaveData saveData(neat, filename, generation);
+    loadNodeIDs(myfile, saveData);
+    return saveData;
 }

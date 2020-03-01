@@ -26,9 +26,9 @@ void Speciator::speciate(std::vector<NEAT>& neats) {
     for (size_t i = 0; i < neats.size(); i++) {
         addToSpecies(neats[i]);
     }
-
     removeStaleSpecies();
     cullSpecies();
+
     newGeneration();
     neats = std::vector<NEAT>(children);
 }

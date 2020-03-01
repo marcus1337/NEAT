@@ -94,7 +94,7 @@ void Utils::topologicalSortUtil(int v, std::vector<bool>& visited, std::stack<in
 
 std::stack<int> Utils::topSort(std::map<int, Node>& nodes) {
     std::stack<int> topstack;
-    std::vector<bool> visited(Innovator::getInstance().innovNodeNum+1, false);
+    std::vector<bool> visited(Innovator::getInstance().nodeNum+1, false);
 
     for (const auto& n : nodes)
     {

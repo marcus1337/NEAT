@@ -17,12 +17,12 @@ int Genome::getID() const {
 Genome::Genome() : id(-1) {}
 
 Genome::Genome(int _from, int _to) :
-    from(_from), to(_to), id(Innovator::getInstance().getNum(_from, _to)), enabled(true) {
+    from(_from), to(_to), id(Innovator::getInstance().getGeneNum(_from, _to)), enabled(true) {
     weight = Utils::randf(-2.f, 2.f);
 }
 
 Genome::Genome(int _from, int _to, bool _enabled, float _weight, int _childNodes) :
-    from(_from), to(_to), id(Innovator::getInstance().getNum(_from, _to)), 
+    from(_from), to(_to), id(Innovator::getInstance().getGeneNum(_from, _to)), 
     enabled(_enabled), weight(_weight), childNodes(_childNodes) {}
 
 
