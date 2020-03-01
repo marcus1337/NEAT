@@ -11,12 +11,13 @@ using namespace std;
 void Test::crashSaveLoad() {
     Coordinator coordinator;
     coordinator.init(13, 4, 100);
-    coordinator.save(0, "NEAT_SAVE77");
+    std::string fileName = "NEAT_SAVE77";
+    coordinator.save(0, fileName);
     std::vector<float> inputs = {1,2,0,-4,5,3,-4,4,5,2,3,5,4,0,3.4f,3.6f,4.2f};
     for (int i = 0; i < 10; i++) {
-        coordinator.load("NEAT_SAVE77", 20);
+        coordinator.load(fileName, 20);
         randomlyEvolveNeats(coordinator, 13, 4, 20, 100);
-        coordinator.save(0, "NEAT_SAVE77");
+        coordinator.save(0, fileName);
 
         rep(i, coordinator.neats.size()) {
             coordinator.neats[i].calculateOutput(inputs.data());
