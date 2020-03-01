@@ -81,61 +81,46 @@ void Speciator::childFromEqualParents(NEAT& child, std::vector<Genome>& g1, std:
     addRemainingGenesToNeat(child, i, g1);
 }
 
-void Speciator::crossOver(NEAT* n1, NEAT* n2) {
+void Speciator::childFromUnequalParents(NEAT& child, std::vector<Genome>& g1, std::vector<Genome>& g2) {
+    int i = 0; int j = 0;
+    while (i != g1.size() - 1 && j != g2.size() - 1) {
+        if (g1[i].getID() > g2[j].getID())
+            child.addGeneNoLoop(g2[j]);
+        incrementIDIndexes(i, j, g1[i].getID(), g2[j].getID());
+    }
+    addRemainingGenesToNeat(child, j, g2);
+}
+
+NEAT Speciator::makeChildWithoutGenes(NEAT* parent1, NEAT* parent2) {
     NEAT child(numIn, numOut);
-
-
-    if (n2->fitness > n1->fitness) { //n1 has better fit
-        Utils::swap<NEAT*>(n1, n2);
-    }
-
-    for (const auto &[key, value] : n1->nodes) {
+    for (const auto &[key, value] : parent1->nodes) {
         Node nod(value.getID(), value.getType());
         child.nodes[nod.getID()] = nod;
     }
-    for (const auto &[key, value] : n2->nodes) {
+    for (const auto &[key, value] : parent2->nodes) {
         Node nod(value.getID(), value.getType());
         child.nodes[nod.getID()] = nod;
     }
+    return child;
+}
 
-    std::vector<Genome>& g1 = n1->gencopies;
-    std::vector<Genome>& g2 = n2->gencopies;
-
-    if (n1->fitness == n2->fitness) {
-        childFromEqualParents(child, g1, g2);
-        
-    }
+void Speciator::inheritGenesFromParents(NEAT& child, NEAT* parent1, NEAT* parent2) {
+    if (parent1->fitness == parent2->fitness)
+        childFromEqualParents(child, parent1->gencopies, parent2->gencopies);
     else {
-        child.copyPointer(n1);
-
-        for (int i = 0, j = 0;;) {
-            if (i == g1.size() - 1) {
-                addRemainingGenesToNeat(child, j, g2);
-                break;
-            }
-            if (j == g2.size() - 1) {
-                break;
-            }
-
-            if (g1[i].getID() == g2[j].getID()) {
-                i++;
-                j++;
-            }
-            else if (g1[i].getID() < g2[j].getID()) {
-                i++;
-            }
-            else if (g1[i].getID() > g2[j].getID()) {
-                child.addGeneNoLoop(g2[j]);
-                j++;
-            }
-        }
-
+        if (parent2->fitness > parent1->fitness)
+            Utils::swap<NEAT*>(parent1, parent2);
+        child.copyPointer(parent1);
+        childFromUnequalParents(child, parent1->gencopies, parent2->gencopies);
     }
-
     child.removeRedundants();
+}
+
+void Speciator::crossOver(NEAT* n1, NEAT* n2) {
+    NEAT child = makeChildWithoutGenes(n1, n2);
+    inheritGenesFromParents(child, n1, n2);
     Mutate::allMutations(child);
     children.push_back(child);
-
 }
 
 void Speciator::breedChild(const Specie& specie) {
@@ -146,8 +131,7 @@ void Speciator::breedChild(const Specie& specie) {
     NEAT& g2 = *specie.neats[index2];
 
     if (randf > crossChance) {
-        NEAT child(numIn, numOut);
-        child.copyPointer(&g1);
+        NEAT child(g1);
         Mutate::allMutations(child);
         children.push_back(child);
     }

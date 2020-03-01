@@ -57,7 +57,7 @@ void NEAT::resetNodes() {
     }
 }
 
-void NEAT::copyPointer(NEAT* np) {
+void NEAT::copyPointer(const NEAT* np) {
     if (np == nullptr)
         return;
     nodes = np->nodes;
@@ -67,6 +67,10 @@ void NEAT::copyPointer(NEAT* np) {
     numIn = np->numIn;
     numOut = np->numOut;
     fitness = np->fitness;
+}
+
+NEAT::NEAT(const NEAT& _neat) {
+    copyPointer(&_neat);
 }
 
 NEAT::NEAT() :numIn(-1), numOut(-1) {}

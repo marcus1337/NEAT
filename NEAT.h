@@ -23,8 +23,9 @@ public:
     void topSortCalc(float* inputs);
     void resetNodes();
 
-    void copyPointer(NEAT* np);
+    void copyPointer(const NEAT* np);
     NEAT();
+    NEAT(const NEAT& _neat);
     NEAT(std::istream& stream);
     NEAT(int _numIn, int _numOut);
     void initBaseNodes();
