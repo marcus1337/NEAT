@@ -20,7 +20,7 @@ float NEAT::reLu(float value) {
     return std::max<float>(0.0f, value);
 }
 
-void NEAT::topSortCalc(float* inputs) {
+void NEAT::calculateOutput(float* inputs) {
     for (int i = 0; i < numIn; i++) {
         nodes[i].value = inputs[i];
     }
@@ -76,14 +76,13 @@ NEAT::NEAT(const NEAT& _neat) {
 NEAT::NEAT() :numIn(-1), numOut(-1) {}
 
 NEAT::NEAT(std::istream& stream) {
-
     stream >> numIn >> numOut >> fitness;
     outputs.resize(numOut);
-    int totalSize;
-    stream >> totalSize;
+    int numGenes;
+    stream >> numGenes;
     initBaseNodes();
 
-    for (int i = 0; i < totalSize; i++) {
+    for (int i = 0; i < numGenes; i++) {
         int from, to, childnodes;
         bool enabled;
         float weight;
@@ -95,11 +94,8 @@ NEAT::NEAT(std::istream& stream) {
         if (!Utils::mapContains<int, Node>(nodes, to)) {
             nodes[to] = Node(to);
         }
-
         addGene(from, to, enabled, weight, childnodes);
-
     }
-
 }
 
 void NEAT::initBaseNodes() {

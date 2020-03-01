@@ -20,7 +20,7 @@ public:
     float sigmoidNN(float value);
     float reLu(float value);
 
-    void topSortCalc(float* inputs);
+    void calculateOutput(float* inputs);
     void resetNodes();
 
     void copyPointer(const NEAT* np);

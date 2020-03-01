@@ -9,8 +9,6 @@ class Coordinator {
 
 public:
     std::vector<NEAT> neats;
-    int _numAI, _numOut, _numIn;
-
     Speciator speciator;
     int generation;
 
@@ -19,8 +17,8 @@ public:
     void calcInput(int index, float* inputs);
     float* getOutput(int index);
     void setFitness(int index, int fitness);
-    void save(int index, int fileID);
-    void load(std::string filename);
+    void save(int index, std::string filename);
+    void load(std::string filename, int numAI);
 
 };
 

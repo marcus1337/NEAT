@@ -2,21 +2,31 @@
 #include <iostream>
 #include <fstream>
 
-void IOstuff::save(NEAT& neat, int id) {
-    std::ofstream myfile;
-    myfile.open("NEAT_SAVE" + std::to_string(id));
 
-    myfile << neat.numIn << " " << neat.numOut << "\n";
-    myfile << neat.fitness << "\n" << neat.gencopies.size() << "\n";
+SaveData::SaveData(NEAT& _neat, std::string _fileName, int _generation) :
+    neat(_neat), fileName(_fileName), generation(_generation) {}
+
+void IOstuff::neatInfoToStream(std::ofstream& stream, NEAT& neat) {
+    stream << neat.numIn << " " << neat.numOut << "\n";
+    stream << neat.fitness << "\n" << neat.gencopies.size() << "\n";
     for (int i = 0; i < neat.gencopies.size(); i++) {
-        myfile << neat.gencopies[i].getFrom() << " " << neat.gencopies[i].getTo() << " " << neat.gencopies[i].enabled
+        stream << neat.gencopies[i].getFrom() << " " << neat.gencopies[i].getTo() << " " << neat.gencopies[i].enabled
             << " " << neat.gencopies[i].weight << " " << neat.gencopies[i].childNodes << "\n";
     }
 }
 
-NEAT IOstuff::load(std::string filename) {
-    std::ifstream myfile(filename);
-    NEAT neat(myfile);
+void IOstuff::save(SaveData& saveData) {
+    std::ofstream myfile;
+    myfile.open(saveData.fileName);
 
-    return neat;
+    myfile << saveData.generation << "\n";
+    neatInfoToStream(myfile, saveData.neat);
+}
+
+SaveData IOstuff::load(std::string filename) {
+    std::ifstream myfile(filename);
+    int generation;
+    myfile >> generation;
+    NEAT neat(myfile);
+    return SaveData(neat,filename, generation);
 }

@@ -6,9 +6,6 @@
 
 void Coordinator::init(int numIn, int numOut, int numAI) {
     generation = 1;
-    _numAI = numAI;
-    _numOut = numOut;
-    _numIn = numIn;
     Innovator::getInstance().reset();
     for (int i = 0; i <= numIn + numOut; i++)
         Innovator::getInstance().getAnyNodeNum();
@@ -25,7 +22,7 @@ void Coordinator::evolve() {
 }
 
 void Coordinator::calcInput(int index, float* inputs) {
-    neats[index].topSortCalc(inputs);
+    neats[index].calculateOutput(inputs);
 }
 
 float* Coordinator::getOutput(int index) {
@@ -36,14 +33,17 @@ void Coordinator::setFitness(int index, int fitness) {
     neats[index].fitness = fitness;
 }
 
-void Coordinator::save(int index, int fileID) {
-    IOstuff::save(neats[index], fileID);
+void Coordinator::save(int index, std::string filename) {
+    SaveData saveData(neats[index], filename, generation);
+    IOstuff::save(saveData);
 }
 
-void Coordinator::load(std::string filename) {
-    NEAT neat = IOstuff::load(filename);
+void Coordinator::load(std::string filename, int numAI) {
+    SaveData saveData = IOstuff::load(filename);
+    generation = saveData.generation;
+    NEAT neat = saveData.neat;
     neats.clear();
-    for (int i = 0; i < _numAI; i++) {
+    for (int i = 0; i < numAI; i++) {
         neats.push_back(neat);
     }
     for (auto const& x : neat.nodes) {
@@ -51,5 +51,6 @@ void Coordinator::load(std::string filename) {
         Innovator::getInstance().innovNodeNum = std::max<int>(Innovator::getInstance().innovNodeNum, id);
     }
     Innovator::getInstance().innovNodeNum += 1;
+    speciator.init(neat.numIn, neat.numOut, numAI);
 
 }
