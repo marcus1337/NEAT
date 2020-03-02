@@ -19,8 +19,8 @@ void Test::crashSaveLoad() {
         randomlyEvolveNeats(coordinator, 13, 4, 20, 100);
         coordinator.save(0, fileName);
 
-        rep(i, coordinator.neats.size()) {
-            coordinator.neats[i].calculateOutput(inputs.data());
+        rep(i, (*coordinator.neatBuffer.neats).size()) {
+            (*coordinator.neatBuffer.neats)[i].calculateOutput(inputs.data());
         }
     }
 }
@@ -40,14 +40,14 @@ void Test::printNeatInfo() {
 }
 
 void Test::randomlyEvolveNeats(Coordinator& coordinator, int numIn, int numOut, int numAI, int steps) {
-    rep(i, coordinator.neats.size()) {
-        coordinator.neats[i].fitness = Utils::randi(1, 1000);
+    rep(i, (*coordinator.neatBuffer.neats).size()) {
+        (*coordinator.neatBuffer.neats)[i].fitness = Utils::randi(1, 1000);
     }
     rep(i, steps) {
         coordinator.evolve();
-        rep(i, coordinator.neats.size()) {
-            coordinator.neats[i].fitness += Utils::randi(-2, 2);
+        rep(i, (*coordinator.neatBuffer.neats).size()) {
+            (*coordinator.neatBuffer.neats)[i].fitness += Utils::randi(-2, 2);
         }
-        cout << "TEST " << coordinator.neats[0].nodes.size() << " e " << coordinator.neats[0].gencopies.size() << "\n";
+        cout << "TEST " << (*coordinator.neatBuffer.neats)[0].nodes.size() << " e " << (*coordinator.neatBuffer.neats)[0].gencopies.size() << "\n";
     }
 }

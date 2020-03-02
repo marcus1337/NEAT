@@ -23,7 +23,7 @@ public:
     static constexpr float crossChance = 0.75f;
     int totAvg = 1;
     std::vector<Specie> pool;
-    std::vector<NEAT> children;
+    std::vector<NEAT>* children;
     int specieNum;
 
     Speciator();
@@ -34,7 +34,7 @@ public:
     int calcNumBreeds(const Specie& specie);
 
     int totalAvgFit();
-    void speciate(std::vector<NEAT>& neats);
+    void speciate(std::vector<NEAT>& neats, std::vector<NEAT>& oldNeats);
     void crossOver(NEAT* n1, NEAT* n2);
 
     void breedChild(Specie& specie);

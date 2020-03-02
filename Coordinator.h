@@ -1,6 +1,7 @@
 #include "NEAT.h"
 #include "Speciator.h"
 #include <vector>
+#include "NEATDoubleBuffer.h"
 
 #ifndef COORDINATOR_H
 #define COORDINATOR_H
@@ -8,7 +9,8 @@
 class Coordinator {
 
 public:
-    std::vector<NEAT> neats;
+    NEATDoubleBuffer neatBuffer;
+    //std::vector<NEAT> neats;
     Speciator speciator;
     int generation;
 
