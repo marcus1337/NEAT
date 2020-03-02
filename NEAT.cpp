@@ -1,6 +1,5 @@
 #include "NEAT.h"
 
-//#include "Innovator.h"
 #include <set>
 #include <iostream>
 #include <math.h>
@@ -150,8 +149,8 @@ void NEAT::addGeneNoLoop(Genome gene) { //can cause loops, should be excess gene
     if (!Utils::mapContains<int, Node>(nodes, from)) {
         nodes[from] = Node(from);
     }
-    if (!Utils::mapContains<int, Node>(nodes, to)) {
-        nodes[to] = Node(to);
+    if (!Utils::mapContains<int, Node>(nodes, to)) { //Maybe not needed check?
+        nodes[to] = Node(to); 
     }
     if (!Utils::isCircle(nodes, from, to)) {
         addGene(from, to, gene.enabled, gene.weight, gene.childNodes);

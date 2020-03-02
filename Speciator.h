@@ -29,29 +29,29 @@ public:
     Speciator();
 
     void init(int _numIn, int _numOut, int _numAI);
+    void speciate(std::vector<NEAT>& neats, std::vector<NEAT>& oldNeats);
     void prepareForNewGeneration(std::vector<NEAT>& neats);
     void createSpecies(std::vector<NEAT>& neats);
+    void sortPoolAndSpecies();
+
     int calcNumBreeds(const Specie& specie);
-
     int totalAvgFit();
-    void speciate(std::vector<NEAT>& neats, std::vector<NEAT>& oldNeats);
-    void crossOver(NEAT* n1, NEAT* n2);
-
-    void breedChild(Specie& specie);
-    bool isWeak(const Specie& o);
-    void removeWeakSpecies();
 
     void newGeneration();
     void removeStaleSpecies();
 
-    void sortPoolAndSpecies();
     void cullSpecies();
+    bool isWeak(const Specie& o);
+    void removeWeakSpecies();
+    void removeWeaksInSpecies();
     void cullAllButOneFromSpecies();
 
     void addToSpecies(NEAT& neat);
     bool addToExistingSpecie(NEAT& neat);
     void addNewSpecie(NEAT& neat);
 
+    void crossOver(NEAT* n1, NEAT* n2);
+    void breedChild(Specie& specie);
     void breedFitnessBased(int numKids);
     void breedElitismOfSpecies(int numKids);
 
