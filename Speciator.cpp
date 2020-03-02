@@ -16,28 +16,39 @@ void Speciator::init(int _numIn, int _numOut, int _numAI) {
 void Speciator::prepareForNewGeneration(std::vector<NEAT>& neats) {
     for (NEAT& neat : neats)
         std::sort(neat.gencopies.begin(), neat.gencopies.end());
+    numChildrenLeft = numAI;
     specieNum = 0;
     pool.clear();
     children.clear();
+    createSpecies(neats);
+}
+
+void Speciator::createSpecies(std::vector<NEAT>& neats) {
     for (size_t i = 0; i < neats.size(); i++)
         addToSpecies(neats[i]);
     sortPoolAndSpecies();
+    for (Specie& spec : pool)
+        spec.calcAvgFit();
 }
 
 void Speciator::speciate(std::vector<NEAT>& neats) {
     prepareForNewGeneration(neats);
     removeStaleSpecies();
     cullSpecies();
+    removeWeakSpecies();
     newGeneration();
     neats = std::vector<NEAT>(children);
 }
 
 int Speciator::totalAvgFit() {
     int total = 0;
-    for (const auto& s : pool) {
+    for (const auto& s : pool)
         total += s.averageFitness;
-    }
     return total;
+}
+
+int Speciator::calcNumBreeds(const Specie& specie) {
+    return (int)(((float)specie.averageFitness / (float)totAvg)*(float)numAI) - 1;
 }
 
 void Speciator::addRemainingGenesToNeat(NEAT& _neat, int fromIndex, std::vector<Genome>& genes) {
@@ -90,8 +101,7 @@ void Speciator::childFromUnequalParents(NEAT& child, std::vector<Genome>& g1, st
     addRemainingGenesToNeat(child, j, g2);
 }
 
-NEAT Speciator::makeChildWithoutGenes(NEAT* parent1, NEAT* parent2) {
-    NEAT child(numIn, numOut);
+void Speciator::inheritNodesFromParents(NEAT& child, NEAT* parent1, NEAT* parent2) {
     for (const auto &[key, value] : parent1->nodes) {
         Node nod(value.getID(), value.getType());
         child.nodes[nod.getID()] = nod;
@@ -100,7 +110,6 @@ NEAT Speciator::makeChildWithoutGenes(NEAT* parent1, NEAT* parent2) {
         Node nod(value.getID(), value.getType());
         child.nodes[nod.getID()] = nod;
     }
-    return child;
 }
 
 void Speciator::inheritGenesFromParents(NEAT& child, NEAT* parent1, NEAT* parent2) {
@@ -116,9 +125,9 @@ void Speciator::inheritGenesFromParents(NEAT& child, NEAT* parent1, NEAT* parent
 }
 
 void Speciator::crossOver(NEAT* n1, NEAT* n2) {
-    NEAT child = makeChildWithoutGenes(n1, n2);
+    NEAT child(numIn, numOut);
+    inheritNodesFromParents(child, n1, n2);
     inheritGenesFromParents(child, n1, n2);
-    Mutate::allMutations(child);
     children.push_back(child);
 }
 
@@ -128,54 +137,51 @@ void Speciator::breedChild(Specie& specie) {
 
     if (Utils::randf(0, 100) > crossChance) {
         NEAT child(*g1);
-        Mutate::allMutations(child);
         children.push_back(child);
     }
     else
         crossOver(g1, g2);
+    Mutate::allMutations(children[children.size() - 1]);
+    numChildrenLeft--;
 }
 
 bool Speciator::isWeak(const Specie& o) {
-    int numBreeds = (int)(((float)o.averageFitness / (float)totAvg)*(float)numAI);
-    return numBreeds < 1;
+    return calcNumBreeds(o) < 0;
 }
 
 void Speciator::removeWeakSpecies() {
+    totAvg = totalAvgFit();
+    Specie backupSpecie = pool[0];
     pool.erase(std::remove_if(pool.begin(), pool.end(),
-        [=](const Specie& o) {
-        return this->isWeak(o);
-    }), pool.end());
+        [&](const Specie& o) { return isWeak(o); }), pool.end());
+    if (pool.empty())
+        pool.push_back(backupSpecie);
 }
 
-
-void Speciator::newGeneration() {
-
-    for (Specie& spec : pool) {
-        spec.calcAvgFit();
-    }
+void Speciator::breedFitnessBased(int numKids) {
     totAvg = totalAvgFit();
-
-    removeWeakSpecies();
-
-    for (Specie& spec : pool) {
-        if (children.size() == numAI)
-            return;
-
-        int numBreeds = (int)(((float)spec.averageFitness / (float)totAvg)*(float)numAI) - 1;
-        for (int i = 0; i < numBreeds; i++) {
-            breedChild(spec);
-            if (children.size() == numAI)
-                return;
+    while (numKids >= 0)
+        for (Specie& spec : pool) {
+            int numBreeds = std::min(calcNumBreeds(spec), numKids--);
+            for (int i = 0; i < numBreeds; i++) {
+                breedChild(spec);
+            }
         }
-    }
+}
 
+void Speciator::breedElitismOfSpecies(int numKids) {
     cullAllButOneFromSpecies();
-
-    while (children.size() < numAI) {
+    while (numKids >= 0) {
         int index = Utils::randi(0, pool.size() - 1);
         Specie& spec = pool[index];
         breedChild(spec);
+        numKids--;
     }
+}
+
+void Speciator::newGeneration() {
+    breedFitnessBased(numChildrenLeft/2);
+    breedElitismOfSpecies(numChildrenLeft);
 }
 
 void Speciator::removeStaleSpecies() {
@@ -193,9 +199,9 @@ void Speciator::sortPoolAndSpecies() {
     });
     for (Specie& spec : pool)
         std::sort(spec.neats.begin(), spec.neats.end(), [](const NEAT* lhs, const NEAT* rhs)
-        {   //smallest fitness in beginning
+    {   //low to high
         return lhs->fitness > rhs->fitness;
-        });
+    });
 }
 
 void Speciator::cullSpecies() {
