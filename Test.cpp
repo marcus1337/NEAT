@@ -10,14 +10,15 @@ using namespace std;
 
 void Test::crashSaveLoad() {
     Coordinator coordinator;
-    coordinator.init(13, 4, 100);
+    int numIn = 13, numOut = 4, numAI = 100;
+    coordinator.init(numIn, numOut, numAI);
     std::string fileName = "NEAT_SAVE77";
-    coordinator.save(0, fileName);
+   // coordinator.save(0, fileName);
     std::vector<float> inputs = {1,2,0,-4,5,3,-4,4,5,2,3,5,4,0,3.4f,3.6f,4.2f};
     for (int i = 0; i < 10; i++) {
-        coordinator.load(fileName, 20);
-        randomlyEvolveNeats(coordinator, 13, 4, 20, 100);
-        coordinator.save(0, fileName);
+        //coordinator.load(fileName, 20);
+        randomlyEvolveNeats(coordinator, numIn, numOut, numAI, 100);
+        //coordinator.save(0, fileName);
 
         rep(i, (*coordinator.neatBuffer.neats).size()) {
             (*coordinator.neatBuffer.neats)[i].calculateOutput(inputs.data());

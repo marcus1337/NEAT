@@ -188,11 +188,9 @@ void Speciator::cullSpecies() {
 }
 
 void Speciator::removeStaleSpecies() {
-    std::vector<Specie> survived;
-    for (size_t i = 0; i < pool.size() && i < 200; i++) {
-        survived.push_back(pool[i]);
-    }
-    pool = survived;
+    int numSpeciesLimit = 200;
+    if (pool.size() >= numSpeciesLimit)
+        pool.erase(pool.begin() + numSpeciesLimit, pool.end());
 }
 
 void Speciator::sortPoolAndSpecies() {

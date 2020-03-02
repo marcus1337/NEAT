@@ -57,5 +57,4 @@ void Coordinator::load(std::string filename, int numAI) {
     Innovator::getInstance().setTakenNodeIDs(saveData.takenNodeIDs);
 
     speciator.init(neat.numIn, neat.numOut, numAI);
-
 }
