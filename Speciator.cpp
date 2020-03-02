@@ -13,22 +13,21 @@ void Speciator::init(int _numIn, int _numOut, int _numAI) {
     numAI = _numAI;
 }
 
-void Speciator::speciate(std::vector<NEAT>& neats) {
-
-    for (NEAT& neat : neats) {
+void Speciator::prepareForNewGeneration(std::vector<NEAT>& neats) {
+    for (NEAT& neat : neats)
         std::sort(neat.gencopies.begin(), neat.gencopies.end());
-    }
-
     specieNum = 0;
     pool.clear();
     children.clear();
-
-    for (size_t i = 0; i < neats.size(); i++) {
+    for (size_t i = 0; i < neats.size(); i++)
         addToSpecies(neats[i]);
-    }
+    sortPoolAndSpecies();
+}
+
+void Speciator::speciate(std::vector<NEAT>& neats) {
+    prepareForNewGeneration(neats);
     removeStaleSpecies();
     cullSpecies();
-
     newGeneration();
     neats = std::vector<NEAT>(children);
 }
@@ -151,13 +150,11 @@ void Speciator::removeWeakSpecies() {
 
 void Speciator::newGeneration() {
 
-    pool.erase(std::remove_if(pool.begin(), pool.end(),
-        [](const Specie& o) { return o.neats.size() == 0; }), pool.end());
-
     for (Specie& spec : pool) {
         spec.calcAvgFit();
     }
     totAvg = totalAvgFit();
+
     removeWeakSpecies();
 
     for (Specie& spec : pool) {
@@ -172,7 +169,7 @@ void Speciator::newGeneration() {
         }
     }
 
-    cullSpecies(true);
+    cullAllButOneFromSpecies();
 
     while (children.size() < numAI) {
         int index = Utils::randi(0, pool.size() - 1);
@@ -183,67 +180,69 @@ void Speciator::newGeneration() {
 
 void Speciator::removeStaleSpecies() {
     std::vector<Specie> survived;
-    std::sort(pool.begin(), pool.end(), [](const Specie& lhs, const Specie& rhs)
-    {
-        return lhs.topFitness > rhs.topFitness;
-    });
     for (size_t i = 0; i < pool.size() && i < 200; i++) {
         survived.push_back(pool[i]);
     }
     pool = survived;
 }
 
-void Speciator::cullSpecies(bool onlyOneLeft) {
-
-    for (Specie& spec : pool) {
-        std::sort(spec.neats.begin(), spec.neats.end(), [](const NEAT* lhs, const NEAT* rhs) //smallest fitness in beginning
-        {
-            return lhs->fitness > rhs->fitness;
+void Speciator::sortPoolAndSpecies() {
+    std::sort(pool.begin(), pool.end(), [](const Specie& lhs, const Specie& rhs)
+    {
+        return lhs.topFitness > rhs.topFitness;
+    });
+    for (Specie& spec : pool)
+        std::sort(spec.neats.begin(), spec.neats.end(), [](const NEAT* lhs, const NEAT* rhs)
+        {   //smallest fitness in beginning
+        return lhs->fitness > rhs->fitness;
         });
+}
 
-        int remaining = spec.neats.size() / 2;
-        if (spec.neats.size() % 2)
-            remaining++;
-
+void Speciator::cullSpecies() {
+    for (Specie& spec : pool) {
         std::vector<NEAT*> survivors;
-        if (onlyOneLeft) {
+        int remaining = spec.neats.size() / 2;
+        if (remaining == 0)
             survivors.push_back(spec.neats[0]);
-            spec.neats = survivors;
-            continue;
-        }
-
-        if (remaining == 0) {
-            survivors.push_back(spec.neats[0]);
-        }
-
-        for (int i = 0; i < spec.neats.size() - remaining; i++) {
+        for (int i = 0; i < remaining; i++)
             survivors.push_back(spec.neats[i]);
-        }
-
         spec.neats = survivors;
+    }
+    pool.erase(std::remove_if(pool.begin(), pool.end(),
+        [](const Specie& o) { return o.neats.size() == 0; }), pool.end());
+}
+
+void Speciator::cullAllButOneFromSpecies() {
+    for (Specie& spec : pool) {
+        spec.neats = std::vector<NEAT*>({ spec.neats[0] });
     }
 }
 
 void Speciator::addToSpecies(NEAT& neat) {
-    bool foundSpecies = false;
+    bool foundSpecies = addToExistingSpecie(neat);
+    if (!foundSpecies)
+        addNewSpecie(neat);
+}
+
+bool Speciator::addToExistingSpecie(NEAT& neat) {
     for (int i = 0; i < specieNum; i++) {
         NEAT& tmpNeat = *pool[i].neats[0];
         if (sameSpecie(neat, tmpNeat)) {
-            foundSpecies = true;
             pool[i].neats.push_back(&neat);
             if (pool[i].topFitness < neat.fitness)
                 pool[i].topFitness = neat.fitness;
-
-            break;
+            return true;
         }
     }
-    if (!foundSpecies) {
-        specieNum++;
-        Specie spec(specieNum);
-        spec.topFitness = neat.fitness;
-        spec.neats.push_back(&neat);
-        pool.push_back(spec);
-    }
+    return false;
+}
+
+void Speciator::addNewSpecie(NEAT& neat) {
+    specieNum++;
+    Specie spec(specieNum);
+    spec.topFitness = neat.fitness;
+    spec.neats.push_back(&neat);
+    pool.push_back(spec);
 }
 
 bool Speciator::sameSpecie(NEAT& n1, NEAT& n2) {

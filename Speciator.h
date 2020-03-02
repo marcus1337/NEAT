@@ -29,6 +29,7 @@ public:
     Speciator();
 
     void init(int _numIn, int _numOut, int _numAI);
+    void prepareForNewGeneration(std::vector<NEAT>& neats);
     int totalAvgFit();
     void speciate(std::vector<NEAT>& neats);
     void crossOver(NEAT* n1, NEAT* n2);
@@ -39,8 +40,14 @@ public:
 
     void newGeneration();
     void removeStaleSpecies();
-    void cullSpecies(bool onlyOneLeft = false);
+
+    void sortPoolAndSpecies();
+    void cullSpecies();
+    void cullAllButOneFromSpecies();
+
     void addToSpecies(NEAT& neat);
+    bool addToExistingSpecie(NEAT& neat);
+    void addNewSpecie(NEAT& neat);
 
     bool sameSpecie(NEAT& n1, NEAT& n2);
     float weightDiff(std::vector<Genome>& g1, std::vector<Genome>& g2);

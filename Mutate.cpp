@@ -111,10 +111,4 @@ void Mutate::allMutations(NEAT& neat) {
     pointMutate(neat);
     linkMutate(neat);
     nodeMutate(neat);
-
-    /*if (Helper::hasLoop(neat)) {
-        std::cout << "AFTER " << neat.nodes.size() << " " << neat.gencopies.size() << std::endl;
-        abort();
-    }*/
-
 }
