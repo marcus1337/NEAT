@@ -93,7 +93,7 @@ NEAT::NEAT(std::istream& stream) {
         if (!Utils::mapContains<int, Node>(nodes, to)) {
             nodes[to] = Node(to);
         }
-        addGene(from, to, enabled, weight, childnodes);
+        addGene(Genome(from, to, enabled, weight, childnodes));
     }
 }
 
@@ -117,26 +117,16 @@ NEAT::NEAT(int _numIn, int _numOut) : numIn(_numIn), numOut(_numOut), fitness(0)
         for (int j = numIn; j < numIn + numOut; j++) {
             int from = nodes[i].getID();
             int to = nodes[j].getID();
-            addGene(from, to);
+            addGene(Genome(from, to));
         }
     }
-
 }
 
-void NEAT::addGene(int from, int to, bool enabled, float weight, int childnodes) {
-    Genome gene(from, to, enabled, weight, childnodes);
-    nodes[from].genomes.insert(gene);
+void NEAT::addGene(Genome gene) {
+    nodes[gene.getFrom()].genomes.insert(gene);
     gencopies.push_back(gene);
-    busyEdges[std::make_pair(from, to)] = true;
-    busyEdges[std::make_pair(to, from)] = true;
-}
-
-void NEAT::addGene(int from, int to) {
-    Genome gene(from, to);
-    nodes[from].genomes.insert(gene);
-    gencopies.push_back(gene);
-    busyEdges[std::make_pair(from, to)] = true;
-    busyEdges[std::make_pair(to, from)] = true;
+    busyEdges[std::make_pair(gene.getFrom(), gene.getTo())] = true;
+    busyEdges[std::make_pair(gene.getFrom(), gene.getTo())] = true;
 }
 
 void NEAT::addGeneNoLoop(Genome gene) { //can cause loops, should be excess gene before add
@@ -153,7 +143,7 @@ void NEAT::addGeneNoLoop(Genome gene) { //can cause loops, should be excess gene
         nodes[to] = Node(to); 
     }
     if (!Utils::isCircle(nodes, from, to)) {
-        addGene(from, to, gene.enabled, gene.weight, gene.childNodes);
+        addGene(Genome(from, to, gene.enabled, gene.weight, gene.childNodes));
     }
 }
 

@@ -30,8 +30,7 @@ public:
     NEAT(int _numIn, int _numOut);
     void initBaseNodes();
 
-    void addGene(int from, int to, bool enabled, float weight, int childnodes);
-    void addGene(int from, int to);
+    void addGene(Genome gene);
     void addGeneNoLoop(Genome gene);
     void removeRedundants();
 

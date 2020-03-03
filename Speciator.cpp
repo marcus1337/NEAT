@@ -68,9 +68,9 @@ void Speciator::incrementIDIndexes(int& i, int& j, int ID1, int ID2) {
 void Speciator::addLowestGeneOrRandom(NEAT& _neat, Genome& gene1, Genome& gene2) {
     if (gene1.getID() == gene2.getID()) {
         if (Utils::randomBool())
-            _neat.addGene(gene1.getFrom(), gene1.getTo());
+            _neat.addGene(Genome(gene1.getFrom(), gene1.getTo()));
         else
-            _neat.addGene(gene2.getFrom(), gene2.getTo());
+            _neat.addGene(Genome(gene2.getFrom(), gene2.getTo()));
     }
     else if (gene1.getID() < gene2.getID())
         _neat.addGeneNoLoop(gene1);

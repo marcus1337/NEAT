@@ -37,7 +37,7 @@ void Mutate::linkMutate(NEAT& neat) {
                 !(anode.getType() == Node::INPUT && bnode.getType() == Node::INPUT) &&
                 !Utils::mapContains<par, bool>(neat.busyEdges, std::make_pair(from, to))) {
                 if (!Utils::isCircle(neat.nodes, from, to)) {
-                    neat.addGene(from, to);
+                    neat.addGene(Genome(from, to));
                 }
                 else {
                     neat.busyEdges[std::make_pair(from, to)] = true;
@@ -66,8 +66,8 @@ void Mutate::nodeMutate(NEAT& neat) {
         Node node(Innovator::getInstance().getNodeNum(neat.gencopies[randEdge].getFrom(), neat.gencopies[randEdge].getTo(), neat.gencopies[randEdge].childNodes));
 
         neat.nodes[node.getID()] = node;
-        neat.addGene(neat.gencopies[randEdge].getFrom(), node.getID());
-        neat.addGene(node.getID(), neat.gencopies[randEdge].getTo());
+        neat.addGene(Genome(neat.gencopies[randEdge].getFrom(), node.getID()));
+        neat.addGene(Genome(node.getID(), neat.gencopies[randEdge].getTo()));
 
     }
 }
