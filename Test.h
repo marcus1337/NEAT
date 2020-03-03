@@ -14,6 +14,7 @@ public:
 
     void randomlyEvolveNeats(Coordinator& coordinator, int numIn, int numOut, int numAI, int steps);
     void crashSaveLoad();
+    void evolveManyGenerations();
     void printNeatInfo();
 
 };
