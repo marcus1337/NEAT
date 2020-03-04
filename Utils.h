@@ -43,6 +43,9 @@ public:
     static std::stack<int> topSort(std::map<int, Node>& nodes);
     static bool isCircle(std::map<int, Node>& nodes, int from, int to);
 
+    static bool isInNode(int _id, int numIn);
+    static bool isOutNode(int _id, int numIn, int numOut);
+
 };
 
 #endif

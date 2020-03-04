@@ -19,6 +19,15 @@ bool Mutate::shouldMutate(float chance) {
     return true;
 }
 
+bool Mutate::canAddGene(NEAT& neat, int from, int to) {
+    int numIn = neat.numIn;
+    int numOut = neat.numOut;
+    return (from != to &&
+        !Utils::isInNode(to, numIn) && !Utils::isOutNode(from, numIn, numOut) &&
+        !(Utils::isInNode(from, numIn) && Utils::isInNode(to, numIn)) &&
+        !Utils::mapContains<par, bool>(neat.busyEdges, std::make_pair(from, to))) &&
+        !Utils::isCircle(neat.nodes, from, to);
+}
 
 void Mutate::linkMutate(NEAT& neat) {
     for (auto& a : neat.nodes)
@@ -28,21 +37,16 @@ void Mutate::linkMutate(NEAT& neat) {
 
             if (Utils::randf(0.f, 100.f) > mutationrate)
                 continue;
-            Node& anode = a.second;
-            Node& bnode = b.second;
-            int from = anode.getID();
-            int to = bnode.getID();
 
-            if (from != to && !(bnode.getType() == Node::INPUT) && !(anode.getType() == Node::OUTPUT) &&
-                !(anode.getType() == Node::INPUT && bnode.getType() == Node::INPUT) &&
-                !Utils::mapContains<par, bool>(neat.busyEdges, std::make_pair(from, to))) {
-                if (!Utils::isCircle(neat.nodes, from, to)) {
-                    neat.addGene(Genome(from, to));
-                }
-                else {
-                    neat.busyEdges[std::make_pair(from, to)] = true;
-                    neat.busyEdges[std::make_pair(to, from)] = true;
-                }
+            int from = a.second.getID();
+            int to = b.second.getID();
+
+            if (canAddGene(neat, from, to)) {
+                neat.addGene(Genome(from, to));
+            }
+            else {
+                neat.busyEdges[std::make_pair(from, to)] = true;
+                neat.busyEdges[std::make_pair(to, from)] = true;
             }
 
         }

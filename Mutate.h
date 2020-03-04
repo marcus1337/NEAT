@@ -6,6 +6,8 @@
 
 class Mutate {
 
+    static bool canAddGene(NEAT& neat, int from, int to);
+
 public:
 
     static float mutationrate, mutationrateNewNode;

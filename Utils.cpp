@@ -118,3 +118,10 @@ int Utils::randi(int LO, int HI) {
     std::uniform_int_distribution<> distr(LO, HI);
     return distr(Random::mRng);
 }
+
+bool Utils::isInNode(int _id, int numIn) {
+    return _id < numIn;
+}
+bool Utils::isOutNode(int _id, int numIn, int numOut) {
+    return _id >= numIn && _id < numIn + numOut;
+}
