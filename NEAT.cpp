@@ -139,34 +139,39 @@ void NEAT::addGeneNoLoop(Genome gene) { //can cause loops, should be excess gene
     if (!Utils::mapContains<int, Node>(nodes, from)) {
         nodes[from] = Node(from);
     }
-    if (!Utils::mapContains<int, Node>(nodes, to)) { //Maybe not needed check?
+    if (!Utils::mapContains<int, Node>(nodes, to)) {
         nodes[to] = Node(to); 
     }
     if (!Utils::isCircle(nodes, from, to)) {
-        addGene(Genome(from, to, gene.enabled, gene.weight, gene.childNodes));
+        addGene(gene);
     }
 }
 
 void NEAT::removeRedundants() { //removes edges and nodes with dead ends
     std::set<int> badFroms;
+    std::set<int> toBeRemoved;
+    std::vector<Genome> savedCopies;
 
     for (const auto& x : nodes) {
         if (x.second.genomes.size() == 0 && x.second.getType() == Node::HIDDEN) {
             badFroms.insert(x.second.getID());
         }
     }
-    std::set<int> toBeRemoved;
+
     for (int i = 0; i < gencopies.size(); i++) {
         int from = gencopies[i].getFrom();
         int to = gencopies[i].getTo();
-        const bool is_in = (badFroms.find(from) != badFroms.end()) || (badFroms.find(to) != badFroms.end());
-        if (is_in) {
+        if (badFroms.find(to) != badFroms.end()) {
             toBeRemoved.insert(i);
             nodes[from].genomes.erase(gencopies[i]);
         }
     }
-    std::vector<Genome> savedCopies;
 
+    for (int x : badFroms) {
+        nodes.erase(x);
+    }
+
+    savedCopies.reserve(gencopies.size());
     for (int i = 0; i < gencopies.size(); i++) {
         bool is_in = toBeRemoved.find(i) != toBeRemoved.end();
         if (!is_in) {
@@ -175,9 +180,5 @@ void NEAT::removeRedundants() { //removes edges and nodes with dead ends
     }
 
     gencopies = savedCopies;
-
-    for (int x : badFroms) {
-        nodes.erase(x);
-    }
 
 }

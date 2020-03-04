@@ -67,10 +67,11 @@ void Speciator::incrementIDIndexes(int& i, int& j, int ID1, int ID2) {
 
 void Speciator::addLowestGeneOrRandom(NEAT& _neat, Genome& gene1, Genome& gene2) {
     if (gene1.getID() == gene2.getID()) {
+        Genome genome = gene1;
         if (Utils::randomBool())
-            _neat.addGene(Genome(gene1.getFrom(), gene1.getTo()));
-        else
-            _neat.addGene(Genome(gene2.getFrom(), gene2.getTo()));
+            genome = gene2;
+        genome.childNodes = std::max(gene1.childNodes, gene2.childNodes);
+        _neat.addGene(genome);
     }
     else if (gene1.getID() < gene2.getID())
         _neat.addGeneNoLoop(gene1);
@@ -93,9 +94,16 @@ void Speciator::childFromUnequalParents(NEAT& child, std::vector<Genome>& g1, st
     while (i != g1.size() - 1 && j != g2.size() - 1) {
         if (g1[i].getID() > g2[j].getID())
             child.addGeneNoLoop(g2[j]);
+        if (g1[i].getID() <= g2[j].getID()) {
+            Genome genome = g1[i];
+            if (g1[i].getID() == g2[j].getID())
+                genome.childNodes = std::max(g1[i].childNodes, g2[j].childNodes);
+            child.addGeneNoLoop(genome);
+        }
         incrementIDIndexes(i, j, g1[i].getID(), g2[j].getID());
     }
     addRemainingGenesToNeat(child, j, g2);
+    addRemainingGenesToNeat(child, i, g1);
 }
 
 void Speciator::inheritNodesFromParents(NEAT& child, NEAT* parent1, NEAT* parent2) {
@@ -115,7 +123,6 @@ void Speciator::inheritGenesFromParents(NEAT& child, NEAT* parent1, NEAT* parent
     else {
         if (parent2->fitness > parent1->fitness)
             Utils::swap<NEAT*>(parent1, parent2);
-        child.copyPointer(parent1);
         childFromUnequalParents(child, parent1->gencopies, parent2->gencopies);
     }
     child.removeRedundants();

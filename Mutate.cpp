@@ -58,16 +58,15 @@ void Mutate::nodeMutate(NEAT& neat) {
         if (!shouldMutate(mutationrateNewNode))
             continue;
 
-        int randEdge = i;
-        neat.gencopies[randEdge].enabled = false;
-        neat.gencopies[randEdge].childNodes++;
-        neat.updateGene(neat.gencopies[randEdge]);
+        neat.gencopies[i].enabled = false;
+        neat.gencopies[i].childNodes++;
+        neat.updateGene(neat.gencopies[i]);
 
-        Node node(Innovator::getInstance().getNodeNum(neat.gencopies[randEdge].getFrom(), neat.gencopies[randEdge].getTo(), neat.gencopies[randEdge].childNodes));
+        Node node(Innovator::getInstance().getNodeNum(neat.gencopies[i].getFrom(), neat.gencopies[i].getTo(), neat.gencopies[i].childNodes));
 
         neat.nodes[node.getID()] = node;
-        neat.addGene(Genome(neat.gencopies[randEdge].getFrom(), node.getID()));
-        neat.addGene(Genome(node.getID(), neat.gencopies[randEdge].getTo()));
+        neat.addGene(Genome(neat.gencopies[i].getFrom(), node.getID()));
+        neat.addGene(Genome(node.getID(), neat.gencopies[i].getTo()));
 
     }
 }
