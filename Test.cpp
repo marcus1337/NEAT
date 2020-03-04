@@ -18,7 +18,8 @@ void Test::crashSaveLoad() {
     for (int i = 0; i < 10; i++) {
         //coordinator.load(fileName, 20);
 
-        randomlyEvolveNeats(coordinator, numIn, numOut, numAI, 100);
+        randomlyEvolveNeats(coordinator, numIn, numOut, numAI, 20);
+        std::cout << "HEJ\n";
         //coordinator.save(0, fileName);
 
         rep(i, (*coordinator.neatBuffer.neats).size()) {

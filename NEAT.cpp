@@ -41,7 +41,7 @@ void NEAT::calculateOutput(float* inputs) {
             nodes[to].value += nodes[nowID].value*genome.weight;
         }
     }
-
+    outputs = std::vector<float>(numOut,0);
     for (int i = numIn; i < numIn + numOut; i++) {
         outputs[i - numIn] = nodes[i].value;
         outputs[i - numIn] = sigmoidNN(outputs[i - numIn]);
@@ -62,7 +62,6 @@ void NEAT::copyPointer(const NEAT* np) {
     nodes = np->nodes;
     gencopies = np->gencopies;
     busyEdges = np->busyEdges;
-    outputs = np->outputs;
     numIn = np->numIn;
     numOut = np->numOut;
     fitness = np->fitness;
@@ -76,7 +75,6 @@ NEAT::NEAT() :numIn(-1), numOut(-1) {}
 
 NEAT::NEAT(std::istream& stream) {
     stream >> numIn >> numOut >> fitness;
-    outputs.resize(numOut);
     int numGenes;
     stream >> numGenes;
     initBaseNodes();
@@ -110,7 +108,7 @@ void NEAT::initBaseNodes() {
 }
 
 
-NEAT::NEAT(int _numIn, int _numOut) : numIn(_numIn), numOut(_numOut), fitness(0), outputs(_numOut) {
+NEAT::NEAT(int _numIn, int _numOut) : numIn(_numIn), numOut(_numOut), fitness(0) {
     initBaseNodes();
 
     for (int i = 0; i < numIn; i++) {

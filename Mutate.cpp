@@ -51,7 +51,6 @@ void Mutate::linkMutate(NEAT& neat) {
 
         }
     }
-
 }
 
 
