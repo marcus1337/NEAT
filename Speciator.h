@@ -20,7 +20,7 @@ public:
 
     static constexpr float c1 = 1.8f;
     static constexpr float c2 = 0.4f;
-    static constexpr float crossChance = 0.75f;
+    static constexpr int crossChance = 75;
     int totAvg = 1;
     std::vector<Specie> pool;
     std::vector<NEAT>* children;

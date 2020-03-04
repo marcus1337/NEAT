@@ -25,15 +25,15 @@ void Mutate::linkMutate(NEAT& neat) {
     {
         for (auto& b : neat.nodes) //add edge a --> b
         {
-            float r = Utils::randf(0.f, 100.f);
-            if (r > mutationrate)
-                continue;
 
+            if (Utils::randf(0.f, 100.f) > mutationrate)
+                continue;
             Node& anode = a.second;
             Node& bnode = b.second;
             int from = anode.getID();
             int to = bnode.getID();
-            if (anode.getID() != bnode.getID() && !(bnode.getType() == Node::INPUT) && !(anode.getType() == Node::OUTPUT) &&
+
+            if (from != to && !(bnode.getType() == Node::INPUT) && !(anode.getType() == Node::OUTPUT) &&
                 !(anode.getType() == Node::INPUT && bnode.getType() == Node::INPUT) &&
                 !Utils::mapContains<par, bool>(neat.busyEdges, std::make_pair(from, to))) {
                 if (!Utils::isCircle(neat.nodes, from, to)) {

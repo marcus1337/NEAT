@@ -122,7 +122,9 @@ void Speciator::inheritGenesFromParents(NEAT& child, NEAT* parent1, NEAT* parent
 }
 
 void Speciator::crossOver(NEAT* n1, NEAT* n2) {
-    NEAT child(numIn, numOut);
+    NEAT child;
+    child.numIn = numIn;
+    child.numOut = numOut;
     inheritNodesFromParents(child, n1, n2);
     inheritGenesFromParents(child, n1, n2);
     children->push_back(child);
@@ -131,8 +133,7 @@ void Speciator::crossOver(NEAT* n1, NEAT* n2) {
 void Speciator::breedChild(Specie& specie) {
     NEAT* g1 = specie.getRandomNeat();
     NEAT* g2 = specie.getRandomNeat();
-
-    if (Utils::randf(0, 100) > crossChance) {
+    if (Utils::randi(0, 100) > crossChance) {
         NEAT child(*g1);
         children->push_back(child);
     }
