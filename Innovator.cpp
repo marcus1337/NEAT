@@ -53,3 +53,11 @@ std::map<Innovator::par3, int> Innovator::getAllNodeIDs() {
 void Innovator::setTakenNodeIDs(std::map<Innovator::par3, int> _takenNodeIDs) {
     takenNodeIDs = _takenNodeIDs;
 }
+
+std::map<Innovator::par, int> Innovator::getAllGeneIDs() {
+    return takenGeneIDs;
+}
+
+void Innovator::setTakenGeneIDs(std::map<par, int> _takenGeneIDs) {
+    takenGeneIDs = _takenGeneIDs;
+}

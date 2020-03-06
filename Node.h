@@ -11,8 +11,8 @@ class Node {
 
 public:
     static const int INPUT = 1, HIDDEN = 2, OUTPUT = 3;
-    std::set<Genome> genomes;
-    float value = 0;
+    mutable std::set<Genome> genomes;
+    mutable float value = 0;
 
     int getType() const;
     int getID() const;

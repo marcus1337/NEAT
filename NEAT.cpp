@@ -61,7 +61,6 @@ void NEAT::copyPointer(const NEAT* np) {
         return;
     nodes = np->nodes;
     gencopies = np->gencopies;
-    busyEdges = np->busyEdges;
     numIn = np->numIn;
     numOut = np->numOut;
     fitness = np->fitness;
@@ -107,10 +106,7 @@ void NEAT::initBaseNodes() {
     }
 }
 
-
-NEAT::NEAT(int _numIn, int _numOut) : numIn(_numIn), numOut(_numOut), fitness(0) {
-    initBaseNodes();
-
+void NEAT::initBaseGenes() {
     for (int i = 0; i < numIn; i++) {
         for (int j = numIn; j < numIn + numOut; j++) {
             int from = nodes[i].getID();
@@ -120,29 +116,49 @@ NEAT::NEAT(int _numIn, int _numOut) : numIn(_numIn), numOut(_numOut), fitness(0)
     }
 }
 
+NEAT::NEAT(int _numIn, int _numOut) : numIn(_numIn), numOut(_numOut), fitness(0) {
+    initBaseNodes();
+    initBaseGenes();
+}
+
 void NEAT::addGene(Genome gene) {
     nodes[gene.getFrom()].genomes.insert(gene);
     gencopies.push_back(gene);
-    busyEdges[std::make_pair(gene.getFrom(), gene.getTo())] = true;
-    busyEdges[std::make_pair(gene.getFrom(), gene.getTo())] = true;
 }
 
-void NEAT::addGeneNoLoop(Genome gene) { //can cause loops, should be excess gene before add
+void NEAT::addGeneNoLoop(Genome gene) { //can cause loops, should check gene before add
     int from = gene.getFrom();
     int to = gene.getTo();
-    if (Utils::mapContains<std::pair<int, int>, bool>(busyEdges, std::make_pair(from, to))) {
+    if (hasOppositeEdge(from, to))
         return;
-    }
 
+    bool addedFromNode = false;
+    bool addedToNode = false;
     if (!Utils::mapContains<int, Node>(nodes, from)) {
         nodes[from] = Node(from);
+        addedFromNode = true;
     }
     if (!Utils::mapContains<int, Node>(nodes, to)) {
         nodes[to] = Node(to); 
+        addedToNode = true;
     }
     if (!Utils::isCircle(nodes, from, to)) {
         addGene(gene);
     }
+    else {
+        if (addedFromNode)
+            nodes.erase(from);
+        if (addedToNode)
+            nodes.erase(to);
+    }
+}
+
+int NEAT::getNumGenes() {
+    int result = 0;
+    for (const auto& [key, node] : nodes) {
+        result += node.genomes.size();
+    }
+    return result;
 }
 
 void NEAT::removeRedundants() { //removes edges and nodes with dead ends
@@ -179,4 +195,16 @@ void NEAT::removeRedundants() { //removes edges and nodes with dead ends
 
     gencopies = savedCopies;
 
+}
+
+bool NEAT::hasOppositeEdge(int from, int to) {
+    if (Utils::mapContains(nodes, to)) {
+        const auto& container = nodes[to].genomes;
+        return container.find(Genome::dummyGenome(to, from)) != container.end();
+    }
+    return false;
+}
+
+bool NEAT::hasEdge(int from, int to) {
+    return hasOppositeEdge(to, from);
 }

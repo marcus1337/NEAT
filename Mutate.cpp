@@ -23,10 +23,10 @@ bool Mutate::canAddGene(NEAT& neat, int from, int to) {
     int numIn = neat.numIn;
     int numOut = neat.numOut;
     return (from != to &&
-        !Utils::isInNode(to, numIn) && !Utils::isOutNode(from, numIn, numOut) &&
-        !(Utils::isInNode(from, numIn) && Utils::isInNode(to, numIn)) &&
-        !Utils::mapContains<par, bool>(neat.busyEdges, std::make_pair(from, to))) &&
-        !Utils::isCircle(neat.nodes, from, to);
+        !Utils::isInNode(to, numIn)     && !Utils::isOutNode(from, numIn, numOut) &&
+        !(Utils::isInNode(from, numIn)  &&  Utils::isInNode(to, numIn)) &&
+        !neat.hasOppositeEdge(from, to) && !neat.hasOppositeEdge(to, from) &&
+        !Utils::isCircle(neat.nodes, from, to));
 }
 
 void Mutate::linkMutate(NEAT& neat) {
@@ -44,13 +44,17 @@ void Mutate::linkMutate(NEAT& neat) {
             if (canAddGene(neat, from, to)) {
                 neat.addGene(Genome(from, to));
             }
-            else {
-                neat.busyEdges[std::make_pair(from, to)] = true;
-                neat.busyEdges[std::make_pair(to, from)] = true;
-            }
-
         }
     }
+}
+
+int Mutate::getUnusedNodeID(const std::map<int, Node>& nodes, int from, int to) {
+    int numChildren = 0;
+    int nodeID = Innovator::getInstance().getNodeNum(from, to, numChildren);
+    while (Utils::mapContains(nodes, nodeID)) {
+        nodeID = Innovator::getInstance().getNodeNum(from, to, ++numChildren);
+    }
+    return nodeID;
 }
 
 
@@ -61,15 +65,13 @@ void Mutate::nodeMutate(NEAT& neat) {
         if (!shouldMutate(mutationrateNewNode))
             continue;
 
-        neat.gencopies[i].enabled = false;
-        neat.gencopies[i].childNodes++;
-        neat.updateGene(neat.gencopies[i]);
-
-        Node node(Innovator::getInstance().getNodeNum(neat.gencopies[i].getFrom(), neat.gencopies[i].getTo(), neat.gencopies[i].childNodes));
-
-        neat.nodes[node.getID()] = node;
-        neat.addGene(Genome(neat.gencopies[i].getFrom(), node.getID()));
-        neat.addGene(Genome(node.getID(), neat.gencopies[i].getTo()));
+        Genome gene = neat.gencopies[i];
+        Node newNode(getUnusedNodeID(neat.nodes, gene.getFrom(), gene.getTo()));
+        neat.nodes[newNode.getID()] = newNode;
+        neat.addGene(Genome(gene.getFrom(), newNode.getID(), gene.enabled, gene.weight, 0));
+        neat.addGene(Genome(newNode.getID(), gene.getTo(), gene.enabled, gene.weight, 0));
+        neat.nodes[gene.getFrom()].genomes.erase(gene);
+        neat.gencopies.erase(neat.gencopies.begin() + i);
 
     }
 }

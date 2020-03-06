@@ -20,8 +20,10 @@ public:
     static void nodeMutate(NEAT& neat);
     static void enableDisableMutate(NEAT& neat);
     static void pointMutate(NEAT& neat);
-
     static void allMutations(NEAT& neat);
+
+    static int getUnusedNodeID(const std::map<int, Node>& nodes, int from, int to);
+
 };
 
 #endif

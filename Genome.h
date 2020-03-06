@@ -6,13 +6,15 @@ class Genome {
 
 public:
 
-    bool enabled;
-    float weight;
-    int childNodes = 0; //How many times a gene has been split into two new genes + node.
+    mutable bool enabled;
+    mutable float weight;
+    mutable int childNodes = 0; //How many times a gene has been split into two new genes + node.
 
     int getFrom() const;
     int getTo() const;
     int getID() const;
+
+    static Genome dummyGenome(int _from, int _to);
     Genome();
     Genome(int _from, int _to);
     Genome(int _from, int _to, bool _enabled, float _weight, int _childNodes);

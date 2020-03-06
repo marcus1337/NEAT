@@ -4,7 +4,11 @@
 #include "IOstuff.h"
 #include <algorithm>
 
+#include <iostream>
+
+
 void Coordinator::init(int numIn, int numOut, int numAI) {
+
     generation = 1;
     Innovator::getInstance().reset();
     for (int i = 0; i <= numIn + numOut; i++)

@@ -14,6 +14,12 @@ int Genome::getID() const {
     return id;
 }
 
+Genome Genome::dummyGenome(int _from, int _to) {
+    Genome genome;
+    genome.id = Innovator::getInstance().getGeneNum(_from, _to);
+    return genome;
+}
+
 Genome::Genome() : id(-1) {}
 
 Genome::Genome(int _from, int _to) :

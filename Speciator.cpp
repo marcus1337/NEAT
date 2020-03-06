@@ -132,6 +132,7 @@ void Speciator::crossOver(NEAT* n1, NEAT* n2) {
     NEAT child;
     child.numIn = numIn;
     child.numOut = numOut;
+    child.gencopies.reserve(std::max(n1->gencopies.size(), n2->gencopies.size()));
     inheritNodesFromParents(child, n1, n2);
     inheritGenesFromParents(child, n1, n2);
     children->push_back(child);

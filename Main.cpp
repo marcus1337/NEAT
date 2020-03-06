@@ -1,8 +1,7 @@
 //#pragma GCC optimize ("O3")
 //#pragma GCC target ("avx")
-
-//#include "mimalloc-override.h"
-//#include "mimalloc-new-delete.h"
+#include "mimalloc-override.h"
+#include "mimalloc-new-delete.h"
 
 #include <iostream>
 #include <fstream>
@@ -14,19 +13,6 @@
 
 #include "Test.h"
 
-/*using namespace std;
-void * operator new(size_t size)
-{
-    cout << "New operator overloading " << endl;
-    void * p = malloc(size);
-    return p;
-}
-
-void operator delete(void * p)
-{
-    cout << "Delete operator overloading " << endl;
-    free(p);
-}*/
 
 int main(int argc, char *argv[]) {
 

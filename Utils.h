@@ -26,12 +26,12 @@ public:
         T c(a); a = b; b = c;
     }
 
-    template<class K, class T> static bool mapContains(std::map<K,T>&m , K key) {
+    template<class K, class T> static bool mapContains(const std::map<K,T>&m , K key) {
         if (m.find(key) == m.end()) return false;
         return true;
     }
 
-    template <class T> static bool mapContains(std::map<T, int>& amap, T key)
+    template <class T> static bool mapContains(const std::map<T, int>& amap, T key)
     {
         if (amap.find(key) == amap.end()) return false;
         return true;

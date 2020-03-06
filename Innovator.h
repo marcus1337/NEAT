@@ -26,6 +26,9 @@ public:
     int getMaxEdgeNum();
     int getGeneNum(int from, int to);
 
+    std::map<par, int> getAllGeneIDs();
+    void setTakenGeneIDs(std::map<par, int> _takenGeneIDs);
+
     std::map<par3, int> getAllNodeIDs();
     void setTakenNodeIDs(std::map<par3, int> _takenNodeIDs);
 

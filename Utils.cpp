@@ -6,7 +6,7 @@
 
 bool Utils::isCircle(std::map<int, Node>& nodes, int from, int to) {
     bool result = false;
-    Genome gene(from, to); //ATM genes.size() may not reflect innocationNumber for genes
+    Genome gene(from, to); //ATM genes.size() may not reflect innovationNumber for genes
     nodes[from].genomes.insert(gene);
 
     if (Utils::hasLoopEasy(nodes, to)) {

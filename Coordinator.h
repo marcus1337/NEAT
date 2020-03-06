@@ -10,7 +10,6 @@ class Coordinator {
 
 public:
     NEATDoubleBuffer neatBuffer;
-    //std::vector<NEAT> neats;
     Speciator speciator;
     int generation;
 
