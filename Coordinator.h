@@ -16,6 +16,7 @@ public:
     void init(int numIn, int numOut, int numAI);
     void evolve();
     void calcInput(int index, float* inputs);
+    void calcInputAll(float* inputs);
     float* getOutput(int index);
     void setFitness(int index, int fitness);
     void save(int index, std::string filename);
