@@ -16,8 +16,6 @@ class Speciator {
     void inheritNodesFromParents(NEAT& child, NEAT* parent1, NEAT* parent2);
     void inheritGenesFromParents(NEAT& child, NEAT* parent1, NEAT* parent2);
 
-    void placeGenesToGlobalArrays(NEAT& neat);
-
 public:
 
     static constexpr float c1 = 1.8f;

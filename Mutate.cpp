@@ -8,12 +8,18 @@
 
 typedef std::pair<int, int> par;
 
-float Mutate::mutationrate = 0.02f;
-float Mutate::mutationrateNewNode = 0.01;
+float Mutate::mutationrate = 2.f;
+
+float Mutate::newNodeRate = 1.f;
+float Mutate::newLinkRate = 1.f;
+
+float Mutate::enableDisableLinkRate = 1.f;
+float Mutate::randomizeLinkRate = 7.f;
+float Mutate::mutateLinkRate = 1.f;
 
 
 bool Mutate::shouldMutate(float chance) {
-    float r = Utils::randf(0.f, 100.f);
+    float r = Utils::randf(0.f, 1000.f);
     if (r > chance)
         return false;
     return true;
@@ -34,8 +40,7 @@ void Mutate::linkMutate(NEAT& neat) {
     {
         for (auto& b : neat.nodes) //add edge a --> b
         {
-
-            if (Utils::randf(0.f, 100.f) > mutationrate)
+            if (!shouldMutate(newLinkRate))
                 continue;
 
             int from = a.second.getID();
@@ -62,7 +67,7 @@ void Mutate::nodeMutate(NEAT& neat) {
 
     for (size_t i = 0; i < neat.gencopies.size(); i++) {
 
-        if (!shouldMutate(mutationrateNewNode))
+        if (!shouldMutate(newNodeRate))
             continue;
 
         Genome gene = neat.gencopies[i];
@@ -79,7 +84,7 @@ void Mutate::nodeMutate(NEAT& neat) {
 
 void Mutate::enableDisableMutate(NEAT& neat) {
     for (size_t i = 0; i < neat.gencopies.size(); i++) {
-        if (!shouldMutate(mutationrate))
+        if (!shouldMutate(enableDisableLinkRate))
             continue;
 
         neat.gencopies[i].enabled = !neat.gencopies[i].enabled;
@@ -89,16 +94,14 @@ void Mutate::enableDisableMutate(NEAT& neat) {
 
 void Mutate::pointMutate(NEAT& neat) {
     for (size_t i = 0; i < neat.gencopies.size(); i++) {
-        if (!shouldMutate(mutationrate))
+        if (!shouldMutate(mutateLinkRate))
             continue;
 
-        if (shouldMutate(0.07f)) {
+        if (shouldMutate(randomizeLinkRate)) {
             neat.gencopies[i].weight = Utils::randf(-2.f, 2.f);
         }
         else {
-
             neat.gencopies[i].weight += Utils::randf(-0.3f, 0.3f);
-
             if (neat.gencopies[i].weight > 2.f)
                 neat.gencopies[i].weight = 2.f;
             if (neat.gencopies[i].weight < -2.f)
