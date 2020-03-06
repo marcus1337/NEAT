@@ -1,6 +1,7 @@
 
 #include "NEAT.h"
 #include "Specie.h"
+#include <future>
 
 #ifndef SPECIATOR_H
 #define SPECIATOR_H
@@ -15,6 +16,8 @@ class Speciator {
     void addLowestGeneOrRandom(NEAT& _neat, Genome& gene1, Genome& gene2);
     void inheritNodesFromParents(NEAT& child, NEAT* parent1, NEAT* parent2);
     void inheritGenesFromParents(NEAT& child, NEAT* parent1, NEAT* parent2);
+
+    int getChildIndex(int numKids);
 
 public:
 
@@ -54,10 +57,12 @@ public:
     bool addToExistingSpecie(NEAT& neat);
     void addNewSpecie(NEAT& neat);
 
-    void crossOver(NEAT* n1, NEAT* n2);
-    void breedChild(Specie& specie);
-    void breedFitnessBased(int numKids);
-    void breedElitismOfSpecies(int numKids);
+    void crossOver(NEAT& child, NEAT* n1, NEAT* n2);
+    void breedChild(Specie& specie, int childIndex);
+    void breedElite(int childIndex);
+
+    void breedFitnessBased(std::vector<std::future<void>>& futures, int numKids);
+    void breedElitismOfSpecies(std::vector<std::future<void>>& futures, int numKids);
 
     bool sameSpecie(NEAT& n1, NEAT& n2);
     float weightDiff(std::vector<Genome>& g1, std::vector<Genome>& g2);

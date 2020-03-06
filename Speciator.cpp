@@ -139,28 +139,6 @@ void Speciator::inheritGenesFromParents(NEAT& child, NEAT* parent1, NEAT* parent
     child.removeRedundants();
 }
 
-void Speciator::crossOver(NEAT* n1, NEAT* n2) {
-    NEAT child;
-    child.numIn = numIn;
-    child.numOut = numOut;
-    child.gencopies.reserve(std::max(n1->gencopies.size(), n2->gencopies.size()));
-    inheritNodesFromParents(child, n1, n2);
-    inheritGenesFromParents(child, n1, n2);
-    children->push_back(child);
-}
-
-void Speciator::breedChild(Specie& specie) {
-    NEAT* g1 = specie.getRandomNeat();
-    NEAT* g2 = specie.getRandomNeat();
-    if (Utils::randi(0, 100) > crossChance) {
-        NEAT child(*g1);
-        children->push_back(child);
-    }
-    else
-        crossOver(g1, g2);
-    Mutate::allMutations((*children)[children->size() - 1]);
-}
-
 bool Speciator::isWeak(const Specie& o) {
     return calcNumBreeds(o) < 0;
 }
@@ -174,33 +152,74 @@ void Speciator::removeWeakSpecies() {
         pool.push_back(backupSpecie);
 }
 
-void Speciator::breedFitnessBased(int numKids) {
+void Speciator::breedFitnessBased(std::vector<std::future<void>>& futures, int numKids) {
     totAvg = totalAvgFit();
     while (numKids > 0) {
         for (Specie& spec : pool) {
             int numBreeds = calcNumBreeds(spec);
             for (int i = 0; i < numBreeds && numKids > 0; i++) {
-                breedChild(spec);
+                int childIndex = getChildIndex(numKids);
+                futures.push_back(std::async(std::launch::async | std::launch::deferred, std::bind(&Speciator::breedChild, *this ,spec,childIndex)));
+                //breedChild(spec, getChildIndex(numKids));
                 numKids--;
             }
         }
     }
 }
 
-void Speciator::breedElitismOfSpecies(int numKids) {
+int Speciator::getChildIndex(int numKids) {
+    return numChildrenLeft - numKids;
+}
+
+void Speciator::breedElitismOfSpecies(std::vector<std::future<void>>& futures, int numKids) {
     while (numKids > 0) {
-        int index = Utils::randi(0, pool.size() - 1);
-        Specie& spec = pool[index];
-        children->push_back(*spec.neats[0]);
-        Mutate::allMutations((*children)[children->size() - 1]);
+        futures.push_back(std::async(std::launch::async | std::launch::deferred, 
+            std::bind(&Speciator::breedElite, *this, getChildIndex(numKids))));
+        //breedElite(getChildIndex(numKids));
         numKids--;
     }
 }
 
+void Speciator::breedElite(int childIndex) {
+    int index = Utils::randi(0, pool.size() - 1);
+    Specie& spec = pool[index];
+    (*children)[childIndex] = (*spec.neats[0]);
+    Mutate::allMutations((*children)[childIndex]);
+}
+
+void Speciator::breedChild(Specie& specie, int childIndex) {
+    NEAT* g1 = specie.getRandomNeat();
+    NEAT* g2 = specie.getRandomNeat();
+    if (Utils::randi(0, 100) > Speciator::crossChance) {
+        NEAT child(*g1);
+        (*children)[childIndex] = child;
+    }
+    else {
+        NEAT child;
+        crossOver(child, g1, g2);
+        (*children)[childIndex] = child;
+    }
+    Mutate::allMutations((*children)[childIndex]);
+}
+
+void Speciator::crossOver(NEAT& child, NEAT* n1, NEAT* n2) {
+    child.numIn = numIn;
+    child.numOut = numOut;
+    child.gencopies.reserve(std::max(n1->gencopies.size(), n2->gencopies.size()));
+    inheritNodesFromParents(child, n1, n2);
+    inheritGenesFromParents(child, n1, n2);
+}
+
 void Speciator::newGeneration() {
-    breedFitnessBased(numChildrenLeft/2);
+    std::vector<std::future<void>> futures;
+    futures.reserve(numAI);
+    breedFitnessBased(futures, numChildrenLeft/2);
     numChildrenLeft -= numChildrenLeft / 2;
-    breedElitismOfSpecies(numChildrenLeft);
+    breedElitismOfSpecies(futures, numChildrenLeft);
+
+    for (auto &fut : futures) {
+        fut.wait();
+    }
 }
 
 void Speciator::cullSpecies() {
