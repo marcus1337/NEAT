@@ -28,6 +28,7 @@ void Speciator::createSpecies(std::vector<NEAT>& neats) {
     sortPoolAndSpecies();
     for (Specie& spec : pool)
         spec.calcAvgFit();
+   // std::cout << "spec " << specieNum << "\n";
 }
 
 void Speciator::speciate(std::vector<NEAT>& neats, std::vector<NEAT>& oldNeats) {
@@ -148,7 +149,6 @@ void Speciator::breedChild(Specie& specie) {
     else
         crossOver(g1, g2);
     Mutate::allMutations((*children)[children->size() - 1]);
-    numChildrenLeft--;
 }
 
 bool Speciator::isWeak(const Specie& o) {
@@ -166,27 +166,30 @@ void Speciator::removeWeakSpecies() {
 
 void Speciator::breedFitnessBased(int numKids) {
     totAvg = totalAvgFit();
-    while (numKids >= 0)
+    while (numKids > 0) {
         for (Specie& spec : pool) {
-            int numBreeds = std::min(calcNumBreeds(spec), numKids--);
-            for (int i = 0; i < numBreeds; i++) {
+            int numBreeds = calcNumBreeds(spec);
+            for (int i = 0; i < numBreeds && numKids > 0; i++) {
                 breedChild(spec);
+                numKids--;
             }
         }
+    }
 }
 
 void Speciator::breedElitismOfSpecies(int numKids) {
-    while (numKids-- >= 0) {
+    while (numKids > 0) {
         int index = Utils::randi(0, pool.size() - 1);
         Specie& spec = pool[index];
         children->push_back(*spec.neats[0]);
         Mutate::allMutations((*children)[children->size() - 1]);
-        numChildrenLeft--;
+        numKids--;
     }
 }
 
 void Speciator::newGeneration() {
     breedFitnessBased(numChildrenLeft/2);
+    numChildrenLeft -= numChildrenLeft / 2;
     breedElitismOfSpecies(numChildrenLeft);
 }
 
@@ -242,7 +245,8 @@ void Speciator::addToSpecies(NEAT& neat) {
 
 bool Speciator::addToExistingSpecie(NEAT& neat) {
     for (int i = 0; i < specieNum; i++) {
-        NEAT& tmpNeat = *pool[i].neats[0];
+        int numNeatsInSpecie = pool[i].neats.size();
+        NEAT& tmpNeat = *pool[i].neats[Utils::randi(0, numNeatsInSpecie-1)];
         if (sameSpecie(neat, tmpNeat)) {
             pool[i].neats.push_back(&neat);
             if (pool[i].topFitness < neat.fitness)

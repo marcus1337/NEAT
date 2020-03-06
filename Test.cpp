@@ -11,7 +11,7 @@ using namespace std;
 
 void Test::crashSaveLoad() {
     Coordinator coordinator;
-    int numIn = 13, numOut = 4, numAI = 50;
+    int numIn = 13, numOut = 4, numAI = 100;
     coordinator.init(numIn, numOut, numAI);
     std::string fileName = "NEAT_SAVE77";
     //coordinator.save(0, fileName);
@@ -66,7 +66,7 @@ void Test::randomlyEvolveNeats(Coordinator& coordinator, int numIn, int numOut, 
         (*coordinator.neatBuffer.neats)[i].fitness = Utils::randi(1, 1000);
     }
     rep(i, steps) {
-        coordinator.evolve(); //test this...
+        coordinator.evolve(); 
         rep(i, (*coordinator.neatBuffer.neats).size()) {
             (*coordinator.neatBuffer.neats)[i].fitness += Utils::randi(-2, 2);
         }
