@@ -70,7 +70,7 @@ void Test::randomlyEvolveNeats(Coordinator& coordinator, int numIn, int numOut, 
         rep(i, (*coordinator.neatBuffer.neats).size()) {
             (*coordinator.neatBuffer.neats)[i].fitness += Utils::randi(-2, 2);
         }
-        cout << "TEST " << (*coordinator.neatBuffer.neats)[0].nodes.size() << " e " << (*coordinator.neatBuffer.neats)[0].getNumGenes() << "\n";
+       // cout << "TEST " << (*coordinator.neatBuffer.neats)[0].nodes.size() << " e " << (*coordinator.neatBuffer.neats)[0].getNumGenes() << "\n";
        // cout << "inno " << Innovator::getInstance().geneNum << " , " << Innovator::getInstance().nodeNum << "\n";
     }
 }

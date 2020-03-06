@@ -2,6 +2,7 @@
 #include "Utils.h"
 
 void Specie::calcAvgFit() {
+
     int total = 0;
     for (const auto& n : neats) {
         total += n->fitness;

@@ -39,7 +39,9 @@ public:
     void speciate(std::vector<NEAT>& neats, std::vector<NEAT>& oldNeats);
     void prepareForNewGeneration(std::vector<NEAT>& neats);
     void createSpecies(std::vector<NEAT>& neats);
-    void sortPoolAndSpecies();
+
+    void sortPool();
+    void sortSpecie(Specie& spec);
 
     int calcNumBreeds(const Specie& specie);
     int totalAvgFit();

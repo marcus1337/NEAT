@@ -14,21 +14,23 @@ void Speciator::init(int _numIn, int _numOut, int _numAI) {
 }
 
 void Speciator::prepareForNewGeneration(std::vector<NEAT>& neats) {
-    for (NEAT& neat : neats)
-        std::sort(neat.gencopies.begin(), neat.gencopies.end());
     numChildrenLeft = numAI;
     specieNum = 0;
     pool.clear();
+    for (size_t i = 0; i < neats.size(); i++)
+        std::sort(neats[i].gencopies.begin(), neats[i].gencopies.end());
     createSpecies(neats);
+    adjustDynamicSpecieDelta();
 }
 
 void Speciator::createSpecies(std::vector<NEAT>& neats) {
     for (size_t i = 0; i < neats.size(); i++)
         addToSpecies(neats[i]);
-    sortPoolAndSpecies();
-    for (Specie& spec : pool)
+    sortPool();
+    for (Specie& spec : pool) {
+        sortSpecie(spec); 
         spec.calcAvgFit();
-    adjustDynamicSpecieDelta();
+    }
 }
 
 void Speciator::adjustDynamicSpecieDelta() {
@@ -159,8 +161,8 @@ void Speciator::breedFitnessBased(std::vector<std::future<void>>& futures, int n
             int numBreeds = calcNumBreeds(spec);
             for (int i = 0; i < numBreeds && numKids > 0; i++) {
                 int childIndex = getChildIndex(numKids);
-                futures.push_back(std::async(std::launch::async | std::launch::deferred, std::bind(&Speciator::breedChild, *this ,spec,childIndex)));
-                //breedChild(spec, getChildIndex(numKids));
+                futures.push_back(std::async(std::launch::async | std::launch::deferred, 
+                    std::bind(&Speciator::breedChild, *this ,spec,childIndex)));
                 numKids--;
             }
         }
@@ -175,7 +177,6 @@ void Speciator::breedElitismOfSpecies(std::vector<std::future<void>>& futures, i
     while (numKids > 0) {
         futures.push_back(std::async(std::launch::async | std::launch::deferred, 
             std::bind(&Speciator::breedElite, *this, getChildIndex(numKids))));
-        //breedElite(getChildIndex(numKids));
         numKids--;
     }
 }
@@ -219,6 +220,7 @@ void Speciator::newGeneration() {
 
     for (auto &fut : futures) {
         fut.wait();
+        fut.get();
     }
 }
 
@@ -234,13 +236,15 @@ void Speciator::removeStaleSpecies() {
         pool.erase(pool.begin() + numSpeciesLimit, pool.end());
 }
 
-void Speciator::sortPoolAndSpecies() {
+void Speciator::sortPool() {
     std::sort(pool.begin(), pool.end(), [](const Specie& lhs, const Specie& rhs)
     {
         return lhs.topFitness > rhs.topFitness;
     });
-    for (Specie& spec : pool)
-        std::sort(spec.neats.begin(), spec.neats.end(), [](const NEAT* lhs, const NEAT* rhs)
+}
+
+void Speciator::sortSpecie(Specie& spec) {
+    std::sort(spec.neats.begin(), spec.neats.end(), [](const NEAT* lhs, const NEAT* rhs)
     {   //low to high
         return lhs->fitness > rhs->fitness;
     });
