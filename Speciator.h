@@ -27,6 +27,10 @@ public:
     std::vector<Specie> pool;
     std::vector<NEAT>* children;
     int specieNum;
+    int targetNumSpecies = 3;
+    float speciateDelta = 1.0f;
+
+    void adjustDynamicSpecieDelta();
 
     Speciator();
 

@@ -28,7 +28,17 @@ void Speciator::createSpecies(std::vector<NEAT>& neats) {
     sortPoolAndSpecies();
     for (Specie& spec : pool)
         spec.calcAvgFit();
-   // std::cout << "spec " << specieNum << "\n";
+    adjustDynamicSpecieDelta();
+}
+
+void Speciator::adjustDynamicSpecieDelta() {
+    if (specieNum < targetNumSpecies) {
+        speciateDelta -= speciateDelta/20;
+    }
+    if (specieNum > targetNumSpecies) {
+        speciateDelta += speciateDelta / 20;
+    }
+    speciateDelta = std::clamp(speciateDelta, 0.00001f, 1000.0f);
 }
 
 void Speciator::speciate(std::vector<NEAT>& neats, std::vector<NEAT>& oldNeats) {
@@ -268,7 +278,7 @@ void Speciator::addNewSpecie(NEAT& neat) {
 bool Speciator::sameSpecie(NEAT& n1, NEAT& n2) {
     float dd = c1 * disjointDiff(n1.gencopies, n2.gencopies);
     float dw = c2 * weightDiff(n1.gencopies, n2.gencopies);
-    return (dd + dw) < 1.0f;
+    return (dd + dw) < speciateDelta;
 }
 
 float Speciator::weightDiff(std::vector<Genome>& g1, std::vector<Genome>& g2) {
