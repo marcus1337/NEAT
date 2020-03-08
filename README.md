@@ -47,7 +47,7 @@ Various static helper functions, used by most other files.
 An edge going from node A to node B. Each genome has an ID and weight.
 
 ### Node.h
-Each node has an ID and a set of Genomes.
+Each node has an ID and a set of genomes.
 
 ### NEATDoubleBuffer.h
 Used for computational optimizations. Stores networks in two arrays that are swapped via pointers.
