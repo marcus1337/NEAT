@@ -160,7 +160,7 @@ void Speciator::breedFitnessBased(std::vector<std::future<void>>& futures, int n
         int minNumBreeds = 0;
         int produced = 0;
         for (Specie& spec : pool) {
-            int numBreeds = std::max(calcNumBreeds(spec), minNumBreeds);
+            int numBreeds = std::max(calcNumBreeds(spec), 1);
             produced += numBreeds;
             for (int i = 0; i < numBreeds && numKids > 0; i++) {
                 int childIndex = getChildIndex(numKids);

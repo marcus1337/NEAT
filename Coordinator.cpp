@@ -1,4 +1,9 @@
 #include "Coordinator.h"
+//#pragma GCC optimize ("O3")
+//#pragma GCC target ("avx")
+#include "mimalloc-override.h"
+#include "mimalloc-new-delete.h"
+
 #include <ctime>
 #include "Innovator.h"
 #include "IOstuff.h"
@@ -12,18 +17,17 @@ void Coordinator::init(int numIn, int numOut, int numAI) {
 
     generation = 1;
     Innovator::getInstance().reset();
-    for (int i = 0; i <= numIn + numOut; i++)
-        Innovator::getInstance().getAnyNodeNum();
+    Innovator::getInstance().nodeNum = numIn + numOut + 1;
 
     for (int i = 0; i < numAI; i++) {
         (*neatBuffer.neats).push_back(NEAT(numIn, numOut));
     }
     speciator.init(numIn, numOut, numAI);
+    neatBuffer.setBuffSize(numAI);
 }
 
 void Coordinator::evolve() {
     generation++;
-    neatBuffer.prepareNewGeneration();
     speciator.speciate(*neatBuffer.neats, *neatBuffer.oldNeats);
     neatBuffer.swapBuffers();
 }

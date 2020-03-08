@@ -125,3 +125,9 @@ bool Utils::isInNode(int _id, int numIn) {
 bool Utils::isOutNode(int _id, int numIn, int numOut) {
     return _id >= numIn && _id < numIn + numOut;
 }
+
+int Utils::elegantPair(int x, int y) {
+    if (x > y)
+        return x * x + x + y;
+    return y * y + x;
+}

@@ -1,7 +1,7 @@
 //#pragma GCC optimize ("O3")
 //#pragma GCC target ("avx")
-#include "mimalloc-override.h"
-#include "mimalloc-new-delete.h"
+//#include "mimalloc-override.h"
+//#include "mimalloc-new-delete.h"
 
 #include <iostream>
 #include <fstream>
@@ -12,28 +12,20 @@
 #include "Mutate.h"
 
 #include "Test.h"
+#include <tuple>
 
-#include <future>
 
-void twice(int m) {
-    std::cout << std::string(std::to_string(m)+"\n");
-    return;
+int elegantPair(int x, int y) {
+    if (x > y)
+        return x * x + x + y;
+    return y * y + x;
 }
 
-void testFutures() {
-    std::vector<std::future<void>> futures;
-    for (int i = 0; i < 1000; ++i) {
-        futures.push_back(std::async(std::launch::async | std::launch::deferred, twice, i));
-    }
 
-    for (auto &e : futures) {
-       e.wait();
-    }
-}
+using namespace std;
 
 int main(int argc, char *argv[]) {
 
-   // testFutures();
     Test tests;
     tests.crashSaveLoad();
 

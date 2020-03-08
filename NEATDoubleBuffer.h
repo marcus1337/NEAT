@@ -10,8 +10,8 @@ public:
     std::vector<NEAT>* neats;
     std::vector<NEAT>* oldNeats;
 
+    void setBuffSize(int numAI);
     NEATDoubleBuffer();
-    void prepareNewGeneration();
     void swapBuffers();
 };
 

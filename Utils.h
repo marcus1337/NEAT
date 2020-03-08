@@ -46,6 +46,8 @@ public:
     static bool isInNode(int _id, int numIn);
     static bool isOutNode(int _id, int numIn, int numOut);
 
+    static int elegantPair(int x, int y);
+
 };
 
 #endif
