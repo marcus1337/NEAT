@@ -19,5 +19,8 @@ Set input values for the input-nodes for a specific network between index 0 to #
 #### float* getOutput(int)
 Returns an array with the result of calcInput(...).
 
-#### setFitness(int, int);
+#### setFitness(int, int)
 Set fitness value for a specific network between index 0 to #networks. Fitness values are used to compute optimal networks, and are decided by an external fitness evaluation function, which is not provided by this code.
+
+#### evolve()
+Performs various genetic algorithms to transform the current set of neural networks to a new generation of networks. Some, or all networks may be modified after this function is run. How the new networks appear depends largely on the fitness values.
