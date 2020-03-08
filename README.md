@@ -35,6 +35,9 @@ b) change weight of a genome
 c) create a new genome  
 d) replace a genome by 1 new node connected by 2 new genomes  
 
+### Speciator.h
+Applies genetic algorithms along with mutations to create a new generation of networks. Performance is boosted by multi-threading.
+
 ### NEAT.h
 Stores a neural network, and an array having extra copies of all genomes.
 
