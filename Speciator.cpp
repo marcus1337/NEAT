@@ -142,7 +142,7 @@ void Speciator::inheritGenesFromParents(NEAT& child, NEAT* parent1, NEAT* parent
 }
 
 bool Speciator::isWeak(const Specie& o) {
-    return calcNumBreeds(o) < 0;
+    return calcNumBreeds(o) <= 0;
 }
 
 void Speciator::removeWeakSpecies() {
