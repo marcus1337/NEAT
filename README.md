@@ -25,6 +25,22 @@ Set fitness value for a specific network between index 0 to #networks. Fitness v
 #### evolve()
 Performs various genetic algorithms to transform the current set of neural networks to a new generation of networks. Some, or all networks may be modified after this function is run. How the new networks appear depends largely on the fitness values.
 
+### Innovator.h
+Provides unique IDs for genomes and nodes.
+
+### Mutate.h
+Randomly modifies a network. Possible mutations are:  
+a) enable/disable a genome  
+b) change weight of a genome  
+c) create a new genome  
+d) replace a genome by 1 new node connected by 2 new genomes  
+
+### NEAT.h
+Stores a neural network, and an array having extra copies of all genomes.
+
+### Utils.h
+Various static helper functions, used by most other files.
+
 ## Data
 
 ### Genome.h
@@ -38,3 +54,5 @@ Used for computational optimizations. Stores networks in two arrays that are swa
 
 ### Specie.h
 Used by evolve() to separate sets of networks into groups. The groups are decided by a dynamic evaluation function that compares how different networks are. Are they too different they get split into separate species.
+
+
