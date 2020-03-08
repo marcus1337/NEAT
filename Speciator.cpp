@@ -58,7 +58,7 @@ int Speciator::totalAvgFit() {
 }
 
 int Speciator::calcNumBreeds(const Specie& specie) {
-    return (int)(((float)specie.averageFitness / (float)totAvg)*(float)numAI) - 1;
+    return std::max((int)(((float)specie.averageFitness / (float)totAvg)*(float)numAI) - 1, 0);
 }
 
 void Speciator::addRemainingGenesToNeat(NEAT& _neat, int fromIndex, std::vector<Genome>& genes) {
@@ -157,15 +157,20 @@ void Speciator::removeWeakSpecies() {
 void Speciator::breedFitnessBased(std::vector<std::future<void>>& futures, int numKids) {
     totAvg = totalAvgFit();
     while (numKids > 0) {
+        int minNumBreeds = 0;
+        int produced = 0;
         for (Specie& spec : pool) {
-            int numBreeds = calcNumBreeds(spec);
+            int numBreeds = std::max(calcNumBreeds(spec), minNumBreeds);
+            produced += numBreeds;
             for (int i = 0; i < numBreeds && numKids > 0; i++) {
                 int childIndex = getChildIndex(numKids);
-                futures.push_back(std::async(std::launch::async | std::launch::deferred, 
-                    std::bind(&Speciator::breedChild, *this ,spec,childIndex)));
+                futures.push_back(std::async(std::launch::async | std::launch::deferred,
+                    std::bind(&Speciator::breedChild, *this, spec, childIndex)));
                 numKids--;
             }
         }
+        if (!produced)
+            minNumBreeds++;
     }
 }
 
