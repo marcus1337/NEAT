@@ -21,8 +21,9 @@ class Speciator {
 
 public:
 
-    static constexpr float c1 = 1.8f;
+    static constexpr float c1 = 1.6f;
     static constexpr float c2 = 0.4f;
+    static constexpr float c3 = 1.6f;
     static constexpr int crossChance = 75;
     int totAvg = 1;
     std::vector<Specie> pool;
@@ -69,6 +70,8 @@ public:
     bool sameSpecie(NEAT& n1, NEAT& n2);
     float weightDiff(std::vector<Genome>& g1, std::vector<Genome>& g2);
     float disjointDiff(std::vector<Genome>& g1, std::vector<Genome>& g2);
+    float excessDiff(std::vector<Genome>& g1, std::vector<Genome>& g2);
+    bool IDInRange(int _id, std::vector<Genome>& genomeArr);
 
 };
 

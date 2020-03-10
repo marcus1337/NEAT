@@ -306,7 +306,8 @@ void Speciator::addNewSpecie(NEAT& neat) {
 bool Speciator::sameSpecie(NEAT& n1, NEAT& n2) {
     float dd = c1 * disjointDiff(n1.gencopies, n2.gencopies);
     float dw = c2 * weightDiff(n1.gencopies, n2.gencopies);
-    return (dd + dw) < speciateDelta;
+    float de = c3 * excessDiff(n1.gencopies, n2.gencopies);
+    return (dd + dw + de) < speciateDelta;
 }
 
 float Speciator::weightDiff(std::vector<Genome>& g1, std::vector<Genome>& g2) {
@@ -327,13 +328,33 @@ float Speciator::weightDiff(std::vector<Genome>& g1, std::vector<Genome>& g2) {
 
 float Speciator::disjointDiff(std::vector<Genome>& g1, std::vector<Genome>& g2) {
     float res = 0;
+    int N = std::max<int>(g1.size(), g2.size());
     int i = 0, j = 0;
     while (i != g1.size() - 1 && j != g2.size() - 1) {
-        if (g1[i].getID() != g2[j].getID())
+        if (g1[i].getID() != g2[j].getID() && IDInRange(g1[i].getID(), g2) && IDInRange(g2[i].getID(), g1))
             res++;
         incrementIDIndexes(i, j, g1[i].getID(), g2[j].getID());
     }
-    res += g2.size() - i + g1.size() - j;
-    float maxlen = (float)std::max<int>(g1.size(), g2.size());
-    return res / maxlen;
+    return res / N;
+}
+
+float Speciator::excessDiff(std::vector<Genome>& g1, std::vector<Genome>& g2) {
+    float res = 0;
+    int N = std::max<int>(g1.size(), g2.size());
+    for (int i = 0; i < g1.size(); i++) {
+        if (!IDInRange(g1[i].getID(), g2))
+            res++;
+    }
+    for (int i = 0; i < g2.size(); i++) {
+        if (!IDInRange(g2[i].getID(), g1))
+            res++;
+    }
+    return res / N;
+}
+
+
+bool Speciator::IDInRange(int _id, std::vector<Genome>& genomeArr) {
+    int minID = genomeArr[0].getID();
+    int maxID = genomeArr[genomeArr.size() - 1].getID();
+    return _id >= minID && _id <= maxID;
 }
