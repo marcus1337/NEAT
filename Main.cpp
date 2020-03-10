@@ -13,16 +13,11 @@
 
 #include "Test.h"
 #include <tuple>
-
-
-int elegantPair(int x, int y) {
-    if (x > y)
-        return x * x + x + y;
-    return y * y + x;
-}
-
+#include <future>
 
 using namespace std;
+
+
 
 int main(int argc, char *argv[]) {
 

@@ -23,19 +23,33 @@ void Speciator::prepareForNewGeneration(std::vector<NEAT>& neats) {
     adjustDynamicSpecieDelta();
 }
 
+void Speciator::fitnessSharing(std::vector<NEAT>& neats) {
+    for (int i = 0; i < numAI; i++) {
+        adjustFitnessShared(neats, i);
+    }
+}
+void Speciator::adjustFitnessShared(std::vector<NEAT>& neats, int index) {
+    int divisor = 1;
+
+    for (int i = 0; i < numAI; i++) {
+        if (i == index)
+            continue;
+        if (sameSpecie(neats[i], neats[index]))
+            divisor++;
+    }
+    neats[index].fitness /= divisor;
+}
+
 void Speciator::createSpecies(std::vector<NEAT>& neats) {
     for (size_t i = 0; i < neats.size(); i++)
         addToSpecies(neats[i]);
-    sortPool();
-    for (Specie& spec : pool) {
-        sortSpecie(spec); 
-        spec.calcAvgFit();
-    }
+    fitnessSharing(neats);
+    preparePool();
 }
 
 void Speciator::adjustDynamicSpecieDelta() {
     if (specieNum < targetNumSpecies) {
-        speciateDelta -= speciateDelta/20;
+        speciateDelta -= speciateDelta / 20;
     }
     if (specieNum > targetNumSpecies) {
         speciateDelta += speciateDelta / 20;
@@ -58,7 +72,7 @@ int Speciator::totalAvgFit() {
 }
 
 int Speciator::calcNumBreeds(const Specie& specie) {
-    return std::max((int)(((float)specie.averageFitness / (float)totAvg)*(float)numAI) - 1, 0);
+    return std::max((int)(((float)specie.averageFitness / (float)totAvg)*(float)specieNum) - 1, 0);
 }
 
 void Speciator::addRemainingGenesToNeat(NEAT& _neat, int fromIndex, std::vector<Genome>& genes) {
@@ -156,11 +170,11 @@ void Speciator::removeWeakSpecies() {
 
 void Speciator::breedFitnessBased(std::vector<std::future<void>>& futures, int numKids) {
     totAvg = totalAvgFit();
+    int minNumBreeds = 0;
     while (numKids > 0) {
-        int minNumBreeds = 0;
         int produced = 0;
         for (Specie& spec : pool) {
-            int numBreeds = std::max(calcNumBreeds(spec), 1);
+            int numBreeds = std::max(calcNumBreeds(spec), minNumBreeds);
             produced += numBreeds;
             for (int i = 0; i < numBreeds && numKids > 0; i++) {
                 int childIndex = getChildIndex(numKids);
@@ -180,7 +194,7 @@ int Speciator::getChildIndex(int numKids) {
 
 void Speciator::breedElitismOfSpecies(std::vector<std::future<void>>& futures, int numKids) {
     while (numKids > 0) {
-        futures.push_back(std::async(std::launch::async | std::launch::deferred, 
+        futures.push_back(std::async(std::launch::async | std::launch::deferred,
             std::bind(&Speciator::breedElite, *this, getChildIndex(numKids))));
         numKids--;
     }
@@ -219,14 +233,12 @@ void Speciator::crossOver(NEAT& child, NEAT* n1, NEAT* n2) {
 void Speciator::newGeneration() {
     std::vector<std::future<void>> futures;
     futures.reserve(numAI);
-    breedFitnessBased(futures, numChildrenLeft/2);
+    breedFitnessBased(futures, numChildrenLeft / 2);
     numChildrenLeft -= numChildrenLeft / 2;
     breedElitismOfSpecies(futures, numChildrenLeft);
 
-    for (auto &fut : futures) {
+    for (auto &fut : futures)
         fut.wait();
-        fut.get();
-    }
 }
 
 void Speciator::cullSpecies() {
@@ -241,11 +253,16 @@ void Speciator::removeStaleSpecies() {
         pool.erase(pool.begin() + numSpeciesLimit, pool.end());
 }
 
-void Speciator::sortPool() {
+void Speciator::preparePool() {
+    for (Specie& spec : pool)
+        for (const auto& neat : spec.neats)
+            spec.topFitness = std::max(spec.topFitness, neat->fitness);
     std::sort(pool.begin(), pool.end(), [](const Specie& lhs, const Specie& rhs)
-    {
-        return lhs.topFitness > rhs.topFitness;
-    });
+    { return lhs.topFitness > rhs.topFitness; });
+    for (Specie& spec : pool) {
+        sortSpecie(spec);
+        spec.calcAvgFit();
+    }
 }
 
 void Speciator::sortSpecie(Specie& spec) {
@@ -284,11 +301,9 @@ void Speciator::addToSpecies(NEAT& neat) {
 bool Speciator::addToExistingSpecie(NEAT& neat) {
     for (int i = 0; i < specieNum; i++) {
         int numNeatsInSpecie = pool[i].neats.size();
-        NEAT& tmpNeat = *pool[i].neats[Utils::randi(0, numNeatsInSpecie-1)];
+        NEAT& tmpNeat = *pool[i].neats[Utils::randi(0, numNeatsInSpecie - 1)];
         if (sameSpecie(neat, tmpNeat)) {
             pool[i].neats.push_back(&neat);
-            if (pool[i].topFitness < neat.fitness)
-                pool[i].topFitness = neat.fitness;
             return true;
         }
     }
@@ -298,7 +313,6 @@ bool Speciator::addToExistingSpecie(NEAT& neat) {
 void Speciator::addNewSpecie(NEAT& neat) {
     specieNum++;
     Specie spec(specieNum);
-    spec.topFitness = neat.fitness;
     spec.neats.push_back(&neat);
     pool.push_back(spec);
 }
@@ -331,7 +345,7 @@ float Speciator::disjointDiff(std::vector<Genome>& g1, std::vector<Genome>& g2) 
     int N = std::max<int>(g1.size(), g2.size());
     int i = 0, j = 0;
     while (i != g1.size() - 1 && j != g2.size() - 1) {
-        if (g1[i].getID() != g2[j].getID() && IDInRange(g1[i].getID(), g2) && IDInRange(g2[i].getID(), g1))
+        if (g1[i].getID() != g2[j].getID() && IDInRange(g1[i].getID(), g2) && IDInRange(g2[j].getID(), g1))
             res++;
         incrementIDIndexes(i, j, g1[i].getID(), g2[j].getID());
     }

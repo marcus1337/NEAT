@@ -53,7 +53,7 @@ float* Coordinator::getOutput(int index) {
 }
 
 void Coordinator::setFitness(int index, int fitness) {
-    (*neatBuffer.neats)[index].fitness = fitness;
+    (*neatBuffer.neats)[index].fitness = fitness * speciator.numAI;
 }
 
 void Coordinator::save(int index, std::string filename) {

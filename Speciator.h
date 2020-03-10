@@ -7,7 +7,7 @@
 #define SPECIATOR_H
 
 class Speciator {
-    int numOut, numIn, numAI, numChildrenLeft;
+    int numOut, numIn, numChildrenLeft;
 
     void addRemainingGenesToNeat(NEAT& _neat, int fromIndex, std::vector<Genome>& genes);
     void childFromEqualParents(NEAT& child, std::vector<Genome>& g1, std::vector<Genome>& g2);
@@ -21,6 +21,7 @@ class Speciator {
 
 public:
 
+    int numAI = 1;
     static constexpr float c1 = 1.6f;
     static constexpr float c2 = 0.4f;
     static constexpr float c3 = 1.6f;
@@ -41,9 +42,11 @@ public:
     void prepareForNewGeneration(std::vector<NEAT>& neats);
     void createSpecies(std::vector<NEAT>& neats);
 
-    void sortPool();
+    void preparePool();
     void sortSpecie(Specie& spec);
 
+    void fitnessSharing(std::vector<NEAT>& neats);
+    void adjustFitnessShared(std::vector<NEAT>& neats, int index);
     int calcNumBreeds(const Specie& specie);
     int totalAvgFit();
 
