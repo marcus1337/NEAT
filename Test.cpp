@@ -62,10 +62,11 @@ void Test::printNeatInfo() {
 }
 
 void Test::randomlyEvolveNeats(Coordinator& coordinator, int numIn, int numOut, int numAI, int steps) {
-    rep(i, (*coordinator.neatBuffer.neats).size()) {
-        (*coordinator.neatBuffer.neats)[i].fitness = Utils::randi(1, 1000);
-    }
     rep(i, steps) {
+        rep(i, (*coordinator.neatBuffer.neats).size()) {
+            (*coordinator.neatBuffer.neats)[i].fitness = Utils::randi(1, 1000);
+        }
+
         coordinator.evolve(); 
         rep(i, (*coordinator.neatBuffer.neats).size()) {
             (*coordinator.neatBuffer.neats)[i].fitness += Utils::randi(-2, 2);

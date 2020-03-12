@@ -129,7 +129,7 @@ void NEAT::addGene(Genome gene) {
 void NEAT::addGeneNoLoop(Genome gene) { //can cause loops, should check gene before add
     int from = gene.getFrom();
     int to = gene.getTo();
-    if (hasOppositeEdge(from, to))
+    if (hasOppositeEdge(from, to) || hasEdge(from, to))
         return;
 
     bool addedFromNode = false;

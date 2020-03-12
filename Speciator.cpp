@@ -76,8 +76,14 @@ int Speciator::calcNumBreeds(const Specie& specie) {
 }
 
 void Speciator::addRemainingGenesToNeat(NEAT& _neat, int fromIndex, std::vector<Genome>& genes) {
-    for (int i = fromIndex; i < genes.size(); i++) {
+    for (int i = fromIndex; i < genes.size(); i++)
         _neat.addGeneNoLoop(genes[i]);
+}
+
+void Speciator::addRemainingGenesToNeatRandomly(NEAT& _neat, int fromIndex, std::vector<Genome>& genes) {
+    for (int i = fromIndex; i < genes.size(); i++) {
+        if(Utils::randomBool())
+            _neat.addGeneNoLoop(genes[i]);
     }
 }
 
@@ -92,45 +98,34 @@ void Speciator::incrementIDIndexes(int& i, int& j, int ID1, int ID2) {
         j++;
 }
 
-void Speciator::addLowestGeneOrRandom(NEAT& _neat, Genome& gene1, Genome& gene2) {
-    if (gene1.getID() == gene2.getID()) {
-        Genome genome = gene1;
-        if (Utils::randomBool())
-            genome = gene2;
-        genome.childNodes = std::max(gene1.childNodes, gene2.childNodes);
-        _neat.addGene(genome);
-    }
-    else if (gene1.getID() < gene2.getID())
-        _neat.addGeneNoLoop(gene1);
-    else
-        _neat.addGeneNoLoop(gene2);
-}
-
 void Speciator::childFromEqualParents(NEAT& child, std::vector<Genome>& g1, std::vector<Genome>& g2) {
     int i = 0; int j = 0;
     while (i != g1.size() - 1 && j != g2.size() - 1) {
-        addLowestGeneOrRandom(child, g1[i], g2[j]);
+        addGeneRandomly(child, g1[i], g2[j]);
         incrementIDIndexes(i, j, g1[i].getID(), g2[j].getID());
     }
-    addRemainingGenesToNeat(child, j, g2);
-    addRemainingGenesToNeat(child, i, g1);
+    addRemainingGenesToNeatRandomly(child, j, g2);
+    addRemainingGenesToNeatRandomly(child, i, g1);
 }
 
 void Speciator::childFromUnequalParents(NEAT& child, std::vector<Genome>& g1, std::vector<Genome>& g2) {
     int i = 0; int j = 0;
     while (i != g1.size() - 1 && j != g2.size() - 1) {
-        if (g1[i].getID() > g2[j].getID())
-            child.addGeneNoLoop(g2[j]);
-        if (g1[i].getID() <= g2[j].getID()) {
-            Genome genome = g1[i];
-            if (g1[i].getID() == g2[j].getID())
-                genome.childNodes = std::max(g1[i].childNodes, g2[j].childNodes);
-            child.addGeneNoLoop(genome);
-        }
+        if (g1[i].getID() == g2[j].getID())
+            addGeneRandomly(child, g1[i], g2[j]);
+        if (g1[i].getID() != g2[j].getID())
+            child.addGeneNoLoop(g1[i]);
         incrementIDIndexes(i, j, g1[i].getID(), g2[j].getID());
     }
-    addRemainingGenesToNeat(child, j, g2);
     addRemainingGenesToNeat(child, i, g1);
+}
+
+void Speciator::addGeneRandomly(NEAT& child, Genome gene1, Genome gene2) {
+    Genome genome = gene1;
+    if (Utils::randomBool())
+        genome = gene2;
+    genome.childNodes = std::max(gene1.childNodes, gene2.childNodes);
+    child.addGeneNoLoop(genome);
 }
 
 void Speciator::inheritNodesFromParents(NEAT& child, NEAT* parent1, NEAT* parent2) {
@@ -267,7 +262,7 @@ void Speciator::preparePool() {
 
 void Speciator::sortSpecie(Specie& spec) {
     std::sort(spec.neats.begin(), spec.neats.end(), [](const NEAT* lhs, const NEAT* rhs)
-    {   //low to high
+    {
         return lhs->fitness > rhs->fitness;
     });
 }
