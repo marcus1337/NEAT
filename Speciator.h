@@ -7,6 +7,8 @@
 #define SPECIATOR_H
 
 class Speciator {
+protected:
+
     int numOut, numIn, numChildrenLeft;
 
     void addRemainingGenesToNeat(NEAT& _neat, int fromIndex, std::vector<Genome>& genes);
@@ -23,6 +25,7 @@ class Speciator {
 public:
 
     int numAI = 1;
+    int numSpeciesLimit = 200;
     static constexpr float c1 = 1.6f;
     static constexpr float c2 = 0.4f;
     static constexpr float c3 = 1.6f;
@@ -36,8 +39,6 @@ public:
 
     void adjustDynamicSpecieDelta();
 
-    Speciator();
-
     void init(int _numIn, int _numOut, int _numAI);
     void speciate(std::vector<NEAT>& neats, std::vector<NEAT>& oldNeats);
     void prepareForNewGeneration(std::vector<NEAT>& neats);
@@ -46,15 +47,17 @@ public:
     void preparePool();
     void sortSpecie(Specie& spec);
 
-    void fitnessSharing(std::vector<NEAT>& neats);
+    virtual void fitnessSharing(std::vector<NEAT>& neats);
     void adjustFitnessShared(std::vector<NEAT>& neats, int index);
     int calcNumBreeds(const Specie& specie);
     int totalAvgFit();
 
     void newGeneration();
+    virtual void newGeneration(std::vector<std::future<void>>& futures);
+
     void removeStaleSpecies();
 
-    void cullSpecies();
+    virtual void cullSpecies();
     bool isWeak(const Specie& o);
     void removeWeakSpecies();
     void removeWeaksInSpecies();

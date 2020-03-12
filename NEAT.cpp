@@ -192,9 +192,7 @@ void NEAT::removeRedundants() { //removes edges and nodes with dead ends
             savedCopies.push_back(gencopies[i]);
         }
     }
-
     gencopies = savedCopies;
-
 }
 
 bool NEAT::hasOppositeEdge(int from, int to) {

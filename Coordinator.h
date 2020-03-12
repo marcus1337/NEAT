@@ -8,9 +8,15 @@
 
 class Coordinator {
 
+    void changeEvolveStrategy();
+
 public:
+    Coordinator();
+    ~Coordinator();
+
     NEATDoubleBuffer neatBuffer;
-    Speciator speciator;
+    Speciator* speciator = nullptr;
+    //Speciator speciator;
     int generation;
 
     void init(int numIn, int numOut, int numAI);

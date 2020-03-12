@@ -5,8 +5,6 @@
 #include "Innovator.h"
 #include "Utils.h"
 
-Speciator::Speciator() {}
-
 void Speciator::init(int _numIn, int _numOut, int _numAI) {
     numOut = _numOut;
     numIn = _numIn;
@@ -23,11 +21,7 @@ void Speciator::prepareForNewGeneration(std::vector<NEAT>& neats) {
     adjustDynamicSpecieDelta();
 }
 
-void Speciator::fitnessSharing(std::vector<NEAT>& neats) {
-    for (int i = 0; i < numAI; i++) {
-        adjustFitnessShared(neats, i);
-    }
-}
+
 void Speciator::adjustFitnessShared(std::vector<NEAT>& neats, int index) {
     int divisor = 1;
 
@@ -228,22 +222,12 @@ void Speciator::crossOver(NEAT& child, NEAT* n1, NEAT* n2) {
 void Speciator::newGeneration() {
     std::vector<std::future<void>> futures;
     futures.reserve(numAI);
-    breedFitnessBased(futures, numChildrenLeft / 2);
-    numChildrenLeft -= numChildrenLeft / 2;
-    breedElitismOfSpecies(futures, numChildrenLeft);
-
+    newGeneration(futures);
     for (auto &fut : futures)
         fut.wait();
 }
 
-void Speciator::cullSpecies() {
-    removeStaleSpecies();
-    removeWeaksInSpecies();
-    removeWeakSpecies();
-}
-
 void Speciator::removeStaleSpecies() {
-    int numSpeciesLimit = 200;
     if (pool.size() >= numSpeciesLimit)
         pool.erase(pool.begin() + numSpeciesLimit, pool.end());
 }
@@ -361,9 +345,20 @@ float Speciator::excessDiff(std::vector<Genome>& g1, std::vector<Genome>& g2) {
     return res / N;
 }
 
-
 bool Speciator::IDInRange(int _id, std::vector<Genome>& genomeArr) {
     int minID = genomeArr[0].getID();
     int maxID = genomeArr[genomeArr.size() - 1].getID();
     return _id >= minID && _id <= maxID;
+}
+
+void Speciator::fitnessSharing(std::vector<NEAT>& neats) {
+    exit(EXIT_FAILURE);
+}
+
+void Speciator::newGeneration(std::vector<std::future<void>>& futures) {
+    exit(EXIT_FAILURE);
+}
+
+void Speciator::cullSpecies() {
+    exit(EXIT_FAILURE);
 }

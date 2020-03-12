@@ -12,9 +12,17 @@
 #include <iostream>
 #include <future>
 
+#include "StandardStrategy.h"
+
+Coordinator::Coordinator() {
+    speciator = new StandardStrategy();
+}
+
+Coordinator::~Coordinator() {
+    delete speciator;
+}
 
 void Coordinator::init(int numIn, int numOut, int numAI) {
-
     generation = 1;
     Innovator::getInstance().reset();
     Innovator::getInstance().nodeNum = numIn + numOut + 1;
@@ -22,13 +30,14 @@ void Coordinator::init(int numIn, int numOut, int numAI) {
     for (int i = 0; i < numAI; i++) {
         (*neatBuffer.neats).push_back(NEAT(numIn, numOut));
     }
-    speciator.init(numIn, numOut, numAI);
+
+    speciator->init(numIn, numOut, numAI);
     neatBuffer.setBuffSize(numAI);
 }
 
 void Coordinator::evolve() {
     generation++;
-    speciator.speciate(*neatBuffer.neats, *neatBuffer.oldNeats);
+    speciator->speciate(*neatBuffer.neats, *neatBuffer.oldNeats);
     neatBuffer.swapBuffers();
 }
 
@@ -42,10 +51,8 @@ void Coordinator::calcInputAll(float* inputs) {
         futures.push_back(std::async(std::launch::async | std::launch::deferred,
             std::bind(&Coordinator::calcInput, *this, i, inputs)));
     }
-    for (auto &fut : futures) {
+    for (auto &fut : futures)
         fut.wait();
-        fut.get();
-    }
 }
 
 float* Coordinator::getOutput(int index) {
@@ -53,7 +60,7 @@ float* Coordinator::getOutput(int index) {
 }
 
 void Coordinator::setFitness(int index, int fitness) {
-    (*neatBuffer.neats)[index].fitness = fitness * speciator.numAI;
+    (*neatBuffer.neats)[index].fitness = fitness * speciator->numAI;
 }
 
 void Coordinator::save(int index, std::string filename) {
@@ -77,5 +84,10 @@ void Coordinator::load(std::string filename, int numAI) {
     Innovator::getInstance().nodeNum += 1;
     Innovator::getInstance().setTakenNodeIDs(saveData.takenNodeIDs);
 
-    speciator.init(neat.numIn, neat.numOut, numAI);
+    speciator->init(neat.numIn, neat.numOut, numAI);
+}
+
+
+void Coordinator::changeEvolveStrategy() {
+
 }
