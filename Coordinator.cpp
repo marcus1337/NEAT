@@ -27,12 +27,12 @@ void Coordinator::init(int numIn, int numOut, int numAI) {
     Innovator::getInstance().reset();
     Innovator::getInstance().nodeNum = numIn + numOut + 1;
 
-    for (int i = 0; i < numAI; i++) {
+    (*neatBuffer.neats).clear();
+    for (int i = 0; i < numAI; i++)
         (*neatBuffer.neats).push_back(NEAT(numIn, numOut));
-    }
+    neatBuffer.setBuffSize(numAI);
 
     speciator->init(numIn, numOut, numAI);
-    neatBuffer.setBuffSize(numAI);
 }
 
 void Coordinator::evolve() {
@@ -69,24 +69,30 @@ void Coordinator::save(int index, std::string filename) {
     IOstuff::save(saveData);
 }
 
-void Coordinator::load(std::string filename, int numAI) {
-    SaveData saveData = IOstuff::load(filename);
-    generation = saveData.generation;
-    NEAT neat = saveData.neat;
+void Coordinator::initNEATBuffers(NEAT& neat, int numAI) {
     (*neatBuffer.neats).clear();
-    for (int i = 0; i < numAI; i++) {
+    speciator->init(neat.numIn, neat.numOut, numAI);
+    neatBuffer.setBuffSize(numAI);
+    for (int i = 0; i < numAI; i++)
         (*neatBuffer.neats).push_back(neat);
-    }
+}
+
+void Coordinator::setMaxInnovationNumber(NEAT& neat) {
     for (auto const& x : neat.nodes) {
         int id = x.second.getID();
         Innovator::getInstance().nodeNum = std::max<int>(Innovator::getInstance().nodeNum, id);
     }
     Innovator::getInstance().nodeNum += 1;
-    Innovator::getInstance().setTakenNodeIDs(saveData.takenNodeIDs);
-
-    speciator->init(neat.numIn, neat.numOut, numAI);
 }
 
+void Coordinator::load(std::string filename, int numAI) {
+    SaveData saveData = IOstuff::load(filename);
+    generation = saveData.generation;
+    NEAT& neat = saveData.neat;
+    initNEATBuffers(neat, numAI);
+    setMaxInnovationNumber(neat);
+    Innovator::getInstance().setTakenNodeIDs(saveData.takenNodeIDs);
+}
 
 void Coordinator::changeEvolveStrategy() {
 

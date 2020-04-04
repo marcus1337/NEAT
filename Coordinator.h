@@ -9,6 +9,8 @@
 class Coordinator {
 
     void changeEvolveStrategy();
+    void initNEATBuffers(NEAT& neat, int numAI);
+    void setMaxInnovationNumber(NEAT& neat);
 
 public:
     Coordinator();
@@ -16,7 +18,6 @@ public:
 
     NEATDoubleBuffer neatBuffer;
     Speciator* speciator = nullptr;
-    //Speciator speciator;
     int generation;
 
     void init(int numIn, int numOut, int numAI);
