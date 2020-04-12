@@ -58,7 +58,7 @@ public:
     void removeStaleSpecies();
 
     virtual void cullSpecies();
-    bool isWeak(const Specie& o);
+    bool isWeak(const Specie& specie, int numSpecies, int totalAverageFitness);
     void removeWeakSpecies();
     void removeWeaksInSpecies();
     void cullAllButOneFromSpecies();

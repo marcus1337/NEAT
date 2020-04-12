@@ -66,7 +66,7 @@ int Speciator::totalAvgFit() {
 }
 
 int Speciator::calcNumBreeds(const Specie& specie) {
-    return std::max((int)(((float)specie.averageFitness / (float)totAvg)*(float)specieNum) - 1, 0);
+    return specie.getSpecieStrength(specieNum, totAvg)*(specie.neats.size() / 2);
 }
 
 void Speciator::addRemainingGenesToNeat(NEAT& _neat, int fromIndex, std::vector<Genome>& genes) {
@@ -144,15 +144,15 @@ void Speciator::inheritGenesFromParents(NEAT& child, NEAT* parent1, NEAT* parent
     child.removeRedundants();
 }
 
-bool Speciator::isWeak(const Specie& o) {
-    return calcNumBreeds(o) <= 0;
+bool Speciator::isWeak(const Specie& specie, int numSpecies, int totalAverageFitness) {
+    return specie.getSpecieStrength(numSpecies, totalAverageFitness) < 0.8f;
 }
 
 void Speciator::removeWeakSpecies() {
     totAvg = totalAvgFit();
     Specie backupSpecie = pool[0];
     pool.erase(std::remove_if(pool.begin(), pool.end(),
-        [&](const Specie& o) { return isWeak(o); }), pool.end());
+        [&](const Specie& o) { return isWeak(o, specieNum, totAvg); }), pool.end());
     if (pool.empty())
         pool.push_back(backupSpecie);
 }

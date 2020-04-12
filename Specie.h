@@ -15,6 +15,8 @@ struct Specie {
     Specie();
     Specie(int _id);
 
+    float getSpecieStrength(int numSpecies, int totalAverageFitness) const;
+
     bool operator < (const Specie &right) const;
     bool operator==(const Specie& rhs) const;
 };
