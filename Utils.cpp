@@ -3,6 +3,7 @@
 #include <list>
 #include "Innovator.h"
 #include "Random.h"
+using namespace NTE;
 
 bool Utils::isCircle(std::map<int, Node>& nodes, int from, int to) {
     bool result = false;

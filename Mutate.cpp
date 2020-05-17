@@ -5,7 +5,7 @@
 #include "Utils.h"
 #include <vector>
 #include <iostream>
-
+using namespace NTE;
 typedef std::pair<int, int> par;
 
 float Mutate::mutationrate = 2.f;

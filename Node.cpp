@@ -1,5 +1,5 @@
 #include "Node.h"
-
+using namespace NTE;
 int Node::getType() const {
     return nodTyp;
 }

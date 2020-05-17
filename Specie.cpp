@@ -1,6 +1,6 @@
 #include "Specie.h"
 #include "Utils.h"
-
+using namespace NTE;
 void Specie::calcAvgFit() {
 
     int total = 0;

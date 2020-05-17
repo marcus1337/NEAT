@@ -4,7 +4,7 @@
 #include <algorithm>
 #include "Innovator.h"
 #include "Utils.h"
-
+using namespace NTE;
 void Speciator::init(int _numIn, int _numOut, int _numAI) {
     numOut = _numOut;
     numIn = _numIn;

@@ -2,17 +2,17 @@
 
 #ifndef NEATDOUBLEBUFFER_H
 #define NEATDOUBLEBUFFER_H
+namespace NTE {
+    class NEATDoubleBuffer {
+        std::vector<NEAT> neatBuff1;
+        std::vector<NEAT> neatBuff2;
+    public:
+        std::vector<NEAT>* neats;
+        std::vector<NEAT>* oldNeats;
 
-class NEATDoubleBuffer {
-    std::vector<NEAT> neatBuff1;
-    std::vector<NEAT> neatBuff2;
-public:
-    std::vector<NEAT>* neats;
-    std::vector<NEAT>* oldNeats;
-
-    void setBuffSize(int numAI);
-    NEATDoubleBuffer();
-    void swapBuffers();
-};
-
+        void setBuffSize(int numAI);
+        NEATDoubleBuffer();
+        void swapBuffers();
+    };
+}
 #endif

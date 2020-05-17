@@ -5,7 +5,7 @@
 #include <math.h>
 #include "Utils.h"
 #include <algorithm>
-
+using namespace NTE;
 void NEAT::updateGene(Genome updatedGene) {
     Node& nowNode = nodes[updatedGene.getFrom()];
     nowNode.genomes.insert(updatedGene);

@@ -1,6 +1,7 @@
 
 #include "Innovator.h"
 #include "Utils.h"
+using namespace NTE;
 
 Innovator::Innovator() : nodeNum(0) {}
 

@@ -1,4 +1,5 @@
 #include "MiniMutex.h"
+using namespace NTE;
 
 void MiniMutex::lock()
 {

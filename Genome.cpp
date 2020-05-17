@@ -1,7 +1,7 @@
 #include "Genome.h"
 #include "Utils.h"
 #include "Innovator.h"
-
+using namespace NTE;
 int Genome::getFrom() const {
     return from;
 }

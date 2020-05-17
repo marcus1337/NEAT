@@ -3,7 +3,7 @@
 #include <iostream>
 
 using namespace std;
-
+using namespace NTE;
 void StandardStrategy::fitnessSharing(std::vector<NEAT>& neats) {
     for (int i = 0; i < numAI; i++)
         adjustFitnessShared(neats, i);

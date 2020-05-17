@@ -3,27 +3,27 @@
 
 #ifndef MUTATE_H
 #define MUTATE_H
+namespace NTE {
+    class Mutate {
 
-class Mutate {
+        static bool canAddGene(NEAT& neat, int from, int to);
 
-    static bool canAddGene(NEAT& neat, int from, int to);
+    public:
 
-public:
+        static float mutationrate, newNodeRate, newLinkRate;
+        static float randomizeLinkRate, mutateLinkRate;
+        static float enableDisableLinkRate;
 
-    static float mutationrate, newNodeRate, newLinkRate;
-    static float randomizeLinkRate, mutateLinkRate;
-    static float enableDisableLinkRate;
+        static bool shouldMutate(float chance);
 
-    static bool shouldMutate(float chance);
+        static void linkMutate(NEAT& neat);
+        static void nodeMutate(NEAT& neat);
+        static void enableDisableMutate(NEAT& neat);
+        static void pointMutate(NEAT& neat);
+        static void allMutations(NEAT& neat);
 
-    static void linkMutate(NEAT& neat);
-    static void nodeMutate(NEAT& neat);
-    static void enableDisableMutate(NEAT& neat);
-    static void pointMutate(NEAT& neat);
-    static void allMutations(NEAT& neat);
+        static int getUnusedNodeID(const std::map<int, Node>& nodes, int from, int to);
 
-    static int getUnusedNodeID(const std::map<int, Node>& nodes, int from, int to);
-
-};
-
+    };
+}
 #endif
