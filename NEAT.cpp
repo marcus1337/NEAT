@@ -38,9 +38,9 @@ void NEAT::propagateEdge(const Genome& genome, int nodeID) {
     if (!genome.enabled)
         return;
     int to = genome.getTo();
-    if (nodes[nodeID].getType() != Node::INPUT) { //Activation functions, hidden layers
-        nodes[nodeID].value = reLu(nodes[nodeID].value);
-    }
+    if (nodes[nodeID].getType() != Node::INPUT)
+        nodes[nodeID].value = sigmoidNN(nodes[nodeID].value);
+
     nodes[to].value += nodes[nodeID].value*genome.weight;
 }
 
