@@ -2,6 +2,7 @@
 #include "../Speciator.h"
 #include <vector>
 #include "../NEATDoubleBuffer.h"
+#include "../Evolver.h"
 
 #ifndef COORDINATOR_NEAT_H
 #define COORDINATOR_NEAT_H
@@ -14,7 +15,7 @@ namespace NTE {
     public:
 
         NEATDoubleBuffer neatBuffer;
-        Speciator speciator;
+        Evolver evolver;
         int generation;
 
         void init(int numIn, int numOut, int numAI);
