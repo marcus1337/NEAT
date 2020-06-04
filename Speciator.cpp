@@ -180,15 +180,9 @@ void Speciator::breedElite(int childIndex) {
 void Speciator::breedChild(Specie& specie, int childIndex) {
     NEAT* g1 = specie.getRandomNeat();
     NEAT* g2 = specie.getRandomNeat();
-    if (Utils::randi(0, 100) > Speciator::crossChance) {
-        NEAT child(*g1);
-        (*children)[childIndex] = child;
-    }
-    else {
-        NEAT child;
-        crossOver(child, g1, g2);
-        (*children)[childIndex] = child;
-    }
+    NEAT child;
+    crossOver(child, g1, g2);
+    (*children)[childIndex] = child;
     Mutate::allMutations((*children)[childIndex]);
 }
 
