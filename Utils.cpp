@@ -82,14 +82,10 @@ void Utils::move_vertex(int vertex, std::set<int>& source_set, std::set<int>& de
 
 void Utils::topologicalSortUtil(int v, std::vector<bool>& visited, std::stack<int>& topstack, std::map<int, Node>& nodes) {
     visited[v] = true;
-    std::list<int>::iterator i;
-
     for (const Genome& genome : nodes[v].genomes) {
-
         if (!visited[genome.getTo()])
             topologicalSortUtil(genome.getTo(), visited, topstack, nodes);
     }
-
     topstack.push(v);
 }
 
@@ -100,9 +96,8 @@ std::stack<int> Utils::topSort(std::map<int, Node>& nodes) {
     for (const auto& n : nodes)
     {
         int id = n.second.getID();
-        if(!visited[id]) {
+        if(!visited[id])
             topologicalSortUtil(id, visited, topstack, nodes);
-        }
     }
     return topstack;
 }

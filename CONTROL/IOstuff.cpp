@@ -1,7 +1,13 @@
 #include "IOstuff.h"
 #include <iostream>
 #include <fstream>
+
+#include <filesystem>
+#include <iostream>
+#include "../GenerationInfo.h"
+
 using namespace NTE;
+namespace fs = std::filesystem;
 
 SaveData::SaveData(NEAT& _neat, std::string _fileName, int _generation) :
     neat(_neat), fileName(_fileName), generation(_generation) {}
@@ -50,4 +56,82 @@ SaveData IOstuff::load(std::string filename) {
     SaveData saveData(neat, filename, generation);
     loadNodeIDs(myfile, saveData);
     return saveData;
+}
+
+
+
+
+
+std::vector<NEAT> IOstuff::loadGeneration(int generation, std::string folderName) {
+    std::vector<NEAT> result;
+    GenerationInfo generationInfo;
+    generationInfo.generation = generation;
+    std::ifstream infoStream = getGenerationInfoInStream(folderName, generation);
+    generationInfo.loadData(infoStream);
+
+    for (int i = 0; i < generationInfo.numNEATs; i++) {
+        NEAT neat = loadNEAT(i + 1, generation, folderName);
+        result.push_back(neat);
+    }
+    return result;
+}
+
+void IOstuff::saveGeneration(std::vector<NEAT>& neats, int generation, std::string folderName) {
+    std::ofstream infoStream = getGenerationInfoOutStream(folderName, generation);
+    GenerationInfo generationInfo;
+    generationInfo.generation = generation;
+    generationInfo.saveData(infoStream, neats);
+    for (size_t i = 0; i < neats.size(); i++)
+        saveNEAT(neats[i], (int)(i + 1), generation, folderName);
+}
+
+NEAT IOstuff::loadNEAT(int treeIndex, int generation, std::string folderName) {
+    std::ifstream stream = getFileInStream(treeIndex, generation, folderName);
+    return NEAT(stream);
+}
+
+void IOstuff::saveNEAT(NEAT& neat, int treeIndex, int generation, std::string folderName) {
+    std::ofstream stream = getFileOutStream(treeIndex, generation, folderName);
+    neatInfoToStream(stream, neat);
+}
+
+void IOstuff::makeFolder(std::string folderName) {
+    std::string filePath = getPath(folderName);
+    if (!fs::exists(filePath))
+        fs::create_directories(filePath);
+    if (!fs::exists(filePath))
+        fs::create_directory(filePath);
+}
+std::string IOstuff::getPath(std::string fileName) {
+    std::string filePath = std::filesystem::current_path().string();
+    filePath += "\\" + allSavesParentFileName + "\\" + fileName;
+    return filePath;
+}
+std::string IOstuff::getFolderName(int generation, std::string folderName) {
+    return std::string(folderName + "_" + std::to_string(generation));
+}
+std::string IOstuff::getFilenameWithPath(std::string folderNameAndGeneration, int treeIndex) {
+    return getPath(std::string(folderNameAndGeneration + "//TREE_" + std::to_string(treeIndex) + ".txt"));
+}
+std::ofstream IOstuff::getFileOutStream(int treeIndex, int generation, std::string folderName) {
+    std::string folderNameAndGeneration = getFolderName(generation, folderName);
+    makeFolder(folderNameAndGeneration);
+    return std::ofstream(getFilenameWithPath(folderNameAndGeneration, treeIndex));
+}
+std::ifstream IOstuff::getFileInStream(int treeIndex, int generation, std::string folderName) {
+    std::string folderNameAndGeneration = getFolderName(generation, folderName);
+    makeFolder(folderNameAndGeneration);
+    return std::ifstream(getFilenameWithPath(folderNameAndGeneration, treeIndex));
+}
+
+std::ofstream IOstuff::getGenerationInfoOutStream(std::string folderName, int generation) {
+    std::string folderNameAndGeneration = getFolderName(generation, folderName);
+    makeFolder(folderNameAndGeneration);
+    return std::ofstream(getPath(std::string(folderNameAndGeneration + "//" + generationInfoFileName + ".txt")));
+}
+
+std::ifstream IOstuff::getGenerationInfoInStream(std::string folderName, int generation) {
+    std::string folderNameAndGeneration = getFolderName(generation, folderName);
+    makeFolder(folderNameAndGeneration);
+    return std::ifstream(getPath(std::string(folderNameAndGeneration + "//" + generationInfoFileName + ".txt")));
 }
