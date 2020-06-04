@@ -12,12 +12,12 @@ using namespace NTE;
 
 void Test::crashSaveLoad() {
     Coordinator coordinator;
-    int numIn = 13, numOut = 4, numAI = 100;
+    int numIn = 13, numOut = 4, numAI = 5;
     coordinator.init(numIn, numOut, numAI);
     std::string fileName = "NEAT_SAVE77";
     //coordinator.save(0, fileName);
     std::vector<float> inputs = {1,2,0,-4,5,3,-4,4,5,2,3,5,4,0,3.4f,3.6f,4.2f};
-    for (int i = 0; i < 10*3; i++) {
+    for (int i = 0; i < 100*3; i++) {
 
         auto t1 = std::chrono::high_resolution_clock::now();
         //coordinator.load(fileName, numAI);

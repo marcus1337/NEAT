@@ -128,6 +128,11 @@ NEAT::NEAT(int _numIn, int _numOut) : numIn(_numIn), numOut(_numOut), fitness(0)
 }
 
 void NEAT::addGene(Genome gene) {
+    if (!Utils::mapContains<int, Node>(nodes, gene.getFrom()))
+        nodes[gene.getFrom()] = Node(gene.getFrom());
+    if (!Utils::mapContains<int, Node>(nodes, gene.getTo()))
+        nodes[gene.getTo()] = Node(gene.getTo());
+
     nodes[gene.getFrom()].genomes.insert(gene);
     gencopies.push_back(gene);
 }
@@ -150,8 +155,7 @@ void NEAT::addGeneNoLoop(Genome gene) { //can cause loops, should check gene bef
     }
     if (!Utils::isCircle(nodes, from, to)) {
         addGene(gene);
-    }
-    else {
+    } else {
         if (addedFromNode)
             nodes.erase(from);
         if (addedToNode)

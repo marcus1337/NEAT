@@ -71,12 +71,12 @@ int Speciator::calcNumBreeds(const Specie& specie) {
 
 void Speciator::addRemainingGenesToNeat(NEAT& _neat, int fromIndex, std::vector<Genome>& genes) {
     for (int i = fromIndex; i < genes.size(); i++)
-        _neat.addGeneNoLoop(genes[i]);
+        _neat.addGene(genes[i]);
 }
 
 void Speciator::addRemainingGenesToNeatRandomly(NEAT& _neat, int fromIndex, std::vector<Genome>& genes) {
     for (int i = fromIndex; i < genes.size(); i++) {
-        if(Utils::randomBool())
+        if (Utils::randomBool())
             _neat.addGeneNoLoop(genes[i]);
     }
 }
@@ -92,23 +92,13 @@ void Speciator::incrementIDIndexes(int& i, int& j, int ID1, int ID2) {
         j++;
 }
 
-void Speciator::childFromEqualParents(NEAT& child, std::vector<Genome>& g1, std::vector<Genome>& g2) {
-    int i = 0; int j = 0;
-    while (i != g1.size() - 1 && j != g2.size() - 1) {
-        addGeneRandomly(child, g1[i], g2[j]);
-        incrementIDIndexes(i, j, g1[i].getID(), g2[j].getID());
-    }
-    addRemainingGenesToNeatRandomly(child, j, g2);
-    addRemainingGenesToNeatRandomly(child, i, g1);
-}
-
 void Speciator::childFromUnequalParents(NEAT& child, std::vector<Genome>& g1, std::vector<Genome>& g2) {
     int i = 0; int j = 0;
     while (i != g1.size() - 1 && j != g2.size() - 1) {
         if (g1[i].getID() == g2[j].getID())
             addGeneRandomly(child, g1[i], g2[j]);
         if (g1[i].getID() != g2[j].getID())
-            child.addGeneNoLoop(g1[i]);
+            child.addGene(g1[i]);
         incrementIDIndexes(i, j, g1[i].getID(), g2[j].getID());
     }
     addRemainingGenesToNeat(child, i, g1);
@@ -134,14 +124,12 @@ void Speciator::inheritNodesFromParents(NEAT& child, NEAT* parent1, NEAT* parent
 }
 
 void Speciator::inheritGenesFromParents(NEAT& child, NEAT* parent1, NEAT* parent2) {
-    if (parent1->fitness == parent2->fitness)
-        childFromEqualParents(child, parent1->gencopies, parent2->gencopies);
-    else {
-        if (parent2->fitness > parent1->fitness)
-            Utils::swap<NEAT*>(parent1, parent2);
-        childFromUnequalParents(child, parent1->gencopies, parent2->gencopies);
-    }
-    child.removeRedundants();
+    if (parent1->fitness == parent2->fitness && Utils::randomBool())
+        Utils::swap<NEAT*>(parent1, parent2);
+    if (parent2->fitness > parent1->fitness)
+        Utils::swap<NEAT*>(parent1, parent2);
+
+    childFromUnequalParents(child, parent1->gencopies, parent2->gencopies);
 }
 
 bool Speciator::isWeak(const Specie& specie, int numSpecies, int totalAverageFitness) {
@@ -215,6 +203,7 @@ void Speciator::crossOver(NEAT& child, NEAT* n1, NEAT* n2) {
     child.numIn = numIn;
     child.numOut = numOut;
     child.gencopies.reserve(std::max(n1->gencopies.size(), n2->gencopies.size()));
+
     inheritNodesFromParents(child, n1, n2);
     inheritGenesFromParents(child, n1, n2);
 }
@@ -351,9 +340,9 @@ bool Speciator::IDInRange(int _id, std::vector<Genome>& genomeArr) {
     return _id >= minID && _id <= maxID;
 }
 
-void Speciator::fitnessSharing(std::vector<NEAT>& neats) { //causes error...
-  //  for (int i = 0; i < numAI; i++)
-   //     adjustFitnessShared(neats, i);
+void Speciator::fitnessSharing(std::vector<NEAT>& neats) {
+    for (int i = 0; i < numAI; i++)
+        adjustFitnessShared(neats, i);
 }
 
 void Speciator::newGeneration(std::vector<std::future<void>>& futures) {
