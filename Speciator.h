@@ -15,7 +15,6 @@ namespace NTE {
     public:
 
         int numAI = 1;
-        int numSpeciesLimit = 200;
         static constexpr float c1 = 1.6f;
         static constexpr float c2 = 0.4f;
         static constexpr float c3 = 1.6f;

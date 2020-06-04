@@ -90,8 +90,8 @@ void Speciator::removeWeakSpecies() {
 
 
 void Speciator::removeStaleSpecies() {
-    if (pool.size() >= numSpeciesLimit)
-        pool.erase(pool.begin() + numSpeciesLimit, pool.end());
+    if (pool.size() >= numAI / 2)
+        pool.erase(pool.begin() + numAI / 2, pool.end());
 }
 
 void Speciator::preparePool() {
