@@ -9,18 +9,16 @@
 using namespace NTE;
 typedef std::pair<int, int> par;
 
-float Mutate::mutationrate = 2.f;
 
 float Mutate::newNodeRate = 1.f;
 float Mutate::newLinkRate = 1.f;
-
 float Mutate::enableDisableLinkRate = 1.f;
 float Mutate::randomizeLinkRate = 7.f;
 float Mutate::mutateLinkRate = 1.f;
 
 
 bool Mutate::shouldMutate(float chance) {
-    float r = Utils::randf(0.f, 1000.f);
+    float r = Utils::randf(0.f, 100.f);
     if (r > chance)
         return false;
     return true;

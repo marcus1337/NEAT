@@ -10,7 +10,7 @@ namespace NTE {
 
     public:
 
-        static float mutationrate, newNodeRate, newLinkRate;
+        static float newNodeRate, newLinkRate;
         static float randomizeLinkRate, mutateLinkRate;
         static float enableDisableLinkRate;
 
