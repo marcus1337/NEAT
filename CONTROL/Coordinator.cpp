@@ -12,16 +12,12 @@
 #include <iostream>
 #include <future>
 
-#include "../StandardStrategy.h"
-
 using namespace NTE;
 
 Coordinator::Coordinator() {
-    speciator = new StandardStrategy();
 }
 
 Coordinator::~Coordinator() {
-    delete speciator;
 }
 
 void Coordinator::init(int numIn, int numOut, int numAI) {
@@ -34,12 +30,12 @@ void Coordinator::init(int numIn, int numOut, int numAI) {
         (*neatBuffer.neats).push_back(NEAT(numIn, numOut));
     neatBuffer.setBuffSize(numAI);
 
-    speciator->init(numIn, numOut, numAI);
+    speciator.init(numIn, numOut, numAI);
 }
 
 void Coordinator::evolve() {
     generation++;
-    speciator->speciate(*neatBuffer.neats, *neatBuffer.oldNeats);
+    speciator.speciate(*neatBuffer.neats, *neatBuffer.oldNeats);
     neatBuffer.swapBuffers();
 }
 
@@ -62,7 +58,7 @@ float* Coordinator::getOutput(int index) {
 }
 
 void Coordinator::setFitness(int index, int fitness) {
-    (*neatBuffer.neats)[index].fitness = fitness * speciator->numAI;
+    (*neatBuffer.neats)[index].fitness = fitness * speciator.numAI;
 }
 
 void Coordinator::save(int index, std::string filename) {
@@ -73,7 +69,7 @@ void Coordinator::save(int index, std::string filename) {
 
 void Coordinator::initNEATBuffers(NEAT& neat, int numAI) {
     (*neatBuffer.neats).clear();
-    speciator->init(neat.numIn, neat.numOut, numAI);
+    speciator.init(neat.numIn, neat.numOut, numAI);
     neatBuffer.setBuffSize(numAI);
     for (int i = 0; i < numAI; i++)
         (*neatBuffer.neats).push_back(neat);

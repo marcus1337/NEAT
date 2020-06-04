@@ -18,7 +18,7 @@ namespace NTE {
         ~Coordinator();
 
         NEATDoubleBuffer neatBuffer;
-        Speciator* speciator = nullptr;
+        Speciator speciator;
         int generation;
 
         void init(int numIn, int numOut, int numAI);

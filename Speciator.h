@@ -47,17 +47,17 @@ namespace NTE {
         void preparePool();
         void sortSpecie(Specie& spec);
 
-        virtual void fitnessSharing(std::vector<NEAT>& neats);
+        void fitnessSharing(std::vector<NEAT>& neats);
         void adjustFitnessShared(std::vector<NEAT>& neats, int index);
         int calcNumBreeds(const Specie& specie);
         int totalAvgFit();
 
         void newGeneration();
-        virtual void newGeneration(std::vector<std::future<void>>& futures);
+        void newGeneration(std::vector<std::future<void>>& futures);
 
         void removeStaleSpecies();
 
-        virtual void cullSpecies();
+        void cullSpecies();
         bool isWeak(const Specie& specie, int numSpecies, int totalAverageFitness);
         void removeWeakSpecies();
         void removeWeaksInSpecies();

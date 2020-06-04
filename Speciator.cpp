@@ -351,14 +351,19 @@ bool Speciator::IDInRange(int _id, std::vector<Genome>& genomeArr) {
     return _id >= minID && _id <= maxID;
 }
 
-void Speciator::fitnessSharing(std::vector<NEAT>& neats) {
-    exit(EXIT_FAILURE);
+void Speciator::fitnessSharing(std::vector<NEAT>& neats) { //causes error...
+  //  for (int i = 0; i < numAI; i++)
+   //     adjustFitnessShared(neats, i);
 }
 
 void Speciator::newGeneration(std::vector<std::future<void>>& futures) {
-    exit(EXIT_FAILURE);
+    breedFitnessBased(futures, numChildrenLeft / 2);
+    numChildrenLeft -= numChildrenLeft / 2;
+    breedElitismOfSpecies(futures, numChildrenLeft);
 }
 
 void Speciator::cullSpecies() {
-    exit(EXIT_FAILURE);
+    removeStaleSpecies();
+    removeWeaksInSpecies();
+    removeWeakSpecies();
 }
