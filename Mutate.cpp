@@ -5,6 +5,7 @@
 #include "Utils.h"
 #include <vector>
 #include <iostream>
+#include <algorithm>
 using namespace NTE;
 typedef std::pair<int, int> par;
 
@@ -36,9 +37,6 @@ bool Mutate::canAddGene(NEAT& neat, int from, int to) {
 }
 
 void Mutate::linkMutate(NEAT& neat) {
-
-    if (!shouldMutate(newLinkRate))
-        return;
 
     std::vector<std::pair<int, int>> possibleNewLinks;
 
@@ -73,9 +71,6 @@ int Mutate::getUnusedNodeID(const std::map<int, Node>& nodes, int from, int to) 
 
 
 void Mutate::nodeMutate(NEAT& neat) {
-
-    if (!shouldMutate(newNodeRate))
-        return;
     int randIndex = Utils::randi(0, neat.gencopies.size() - 1);
 
     Genome gene = neat.gencopies[randIndex];
@@ -89,39 +84,36 @@ void Mutate::nodeMutate(NEAT& neat) {
 
 
 void Mutate::enableDisableMutate(NEAT& neat) {
-
-    if (!shouldMutate(enableDisableLinkRate))
-        return;
     int randIndex = Utils::randi(0, neat.gencopies.size() - 1);
-
     neat.gencopies[randIndex].enabled = !neat.gencopies[randIndex].enabled;
     neat.updateGene(neat.gencopies[randIndex]);
 }
 
 void Mutate::pointMutate(NEAT& neat) {
-
     int randIndex = Utils::randi(0, neat.gencopies.size() - 1);
 
-    if (shouldMutate(randomizeLinkRate)) {
-        neat.gencopies[randIndex].weight = Utils::randf(-2.f, 2.f);
-    }
+    float weight = neat.gencopies[randIndex].weight;
+    if (shouldMutate(randomizeLinkRate))
+        weight = Utils::randf(-2.f, 2.f);
     else {
-        neat.gencopies[randIndex].weight += Utils::randf(-0.3f, 0.3f);
-        if (neat.gencopies[randIndex].weight > 2.f)
-            neat.gencopies[randIndex].weight = 2.f;
-        if (neat.gencopies[randIndex].weight < -2.f)
-            neat.gencopies[randIndex].weight = -2.f;
+        weight += Utils::randf(-0.3f, 0.3f);
+        weight = std::clamp(weight, -2.f, 2.f);
     }
-
+    neat.gencopies[randIndex].weight = roundf(weight * 1000) / 1000;
     neat.updateGene(neat.gencopies[randIndex]);
 }
 
 
 void Mutate::allMutations(NEAT& neat) {
-    enableDisableMutate(neat);
-    pointMutate(neat);
+    if (shouldMutate(enableDisableLinkRate))
+        enableDisableMutate(neat);
 
     if (shouldMutate(mutateLinkRate))
+        pointMutate(neat);
+
+    if (shouldMutate(newLinkRate))
         linkMutate(neat);
-    nodeMutate(neat);
+
+    if (shouldMutate(newNodeRate))
+        nodeMutate(neat);
 }
