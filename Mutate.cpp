@@ -100,8 +100,6 @@ void Mutate::enableDisableMutate(NEAT& neat) {
 
 void Mutate::pointMutate(NEAT& neat) {
 
-    if (!shouldMutate(mutateLinkRate))
-        return;
     int randIndex = Utils::randi(0, neat.gencopies.size() - 1);
 
     if (shouldMutate(randomizeLinkRate)) {
@@ -122,6 +120,8 @@ void Mutate::pointMutate(NEAT& neat) {
 void Mutate::allMutations(NEAT& neat) {
     enableDisableMutate(neat);
     pointMutate(neat);
-    linkMutate(neat);
+
+    if (shouldMutate(mutateLinkRate))
+        linkMutate(neat);
     nodeMutate(neat);
 }

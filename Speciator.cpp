@@ -74,13 +74,6 @@ void Speciator::addRemainingGenesToNeat(NEAT& _neat, int fromIndex, std::vector<
         _neat.addGene(genes[i]);
 }
 
-void Speciator::addRemainingGenesToNeatRandomly(NEAT& _neat, int fromIndex, std::vector<Genome>& genes) {
-    for (int i = fromIndex; i < genes.size(); i++) {
-        if (Utils::randomBool())
-            _neat.addGeneNoLoop(genes[i]);
-    }
-}
-
 void Speciator::incrementIDIndexes(int& i, int& j, int ID1, int ID2) {
     if (ID1 == ID2) {
         i++;
@@ -109,7 +102,7 @@ void Speciator::addGeneRandomly(NEAT& child, Genome gene1, Genome gene2) {
     if (Utils::randomBool())
         genome = gene2;
     genome.childNodes = std::max(gene1.childNodes, gene2.childNodes);
-    child.addGeneNoLoop(genome);
+    child.addGene(genome);
 }
 
 void Speciator::inheritNodesFromParents(NEAT& child, NEAT* parent1, NEAT* parent2) {

@@ -41,8 +41,6 @@ namespace NTE {
         void initBaseGenes();
 
         void addGene(Genome gene);
-        void addGeneNoLoop(Genome gene);
-        void removeRedundants();
 
         bool hasOppositeEdge(int from, int to);
         bool hasEdge(int from, int to);

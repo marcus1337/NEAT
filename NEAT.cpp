@@ -137,72 +137,12 @@ void NEAT::addGene(Genome gene) {
     gencopies.push_back(gene);
 }
 
-void NEAT::addGeneNoLoop(Genome gene) { //can cause loops, should check gene before add
-    int from = gene.getFrom();
-    int to = gene.getTo();
-    if (hasOppositeEdge(from, to) || hasEdge(from, to))
-        return;
-
-    bool addedFromNode = false;
-    bool addedToNode = false;
-    if (!Utils::mapContains<int, Node>(nodes, from)) {
-        nodes[from] = Node(from);
-        addedFromNode = true;
-    }
-    if (!Utils::mapContains<int, Node>(nodes, to)) {
-        nodes[to] = Node(to); 
-        addedToNode = true;
-    }
-    if (!Utils::isCircle(nodes, from, to)) {
-        addGene(gene);
-    } else {
-        if (addedFromNode)
-            nodes.erase(from);
-        if (addedToNode)
-            nodes.erase(to);
-    }
-}
-
 int NEAT::getNumGenes() {
     int result = 0;
     for (const auto& [key, node] : nodes) {
         result += node.genomes.size();
     }
     return result;
-}
-
-void NEAT::removeRedundants() { //removes edges and nodes with dead ends
-    std::set<int> badFroms;
-    std::set<int> toBeRemoved;
-    std::vector<Genome> savedCopies;
-
-    for (const auto& x : nodes) {
-        if (x.second.genomes.size() == 0 && x.second.getType() == Node::HIDDEN) {
-            badFroms.insert(x.second.getID());
-        }
-    }
-
-    for (int i = 0; i < gencopies.size(); i++) {
-        int from = gencopies[i].getFrom();
-        int to = gencopies[i].getTo();
-        if (badFroms.find(to) != badFroms.end()) {
-            toBeRemoved.insert(i);
-            nodes[from].genomes.erase(gencopies[i]);
-        }
-    }
-
-    for (int x : badFroms) {
-        nodes.erase(x);
-    }
-
-    savedCopies.reserve(gencopies.size());
-    for (int i = 0; i < gencopies.size(); i++) {
-        bool is_in = toBeRemoved.find(i) != toBeRemoved.end();
-        if (!is_in) {
-            savedCopies.push_back(gencopies[i]);
-        }
-    }
-    gencopies = savedCopies;
 }
 
 bool NEAT::hasOppositeEdge(int from, int to) {

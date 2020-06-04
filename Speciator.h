@@ -12,7 +12,6 @@ namespace NTE {
         int numOut, numIn, numChildrenLeft;
 
         void addRemainingGenesToNeat(NEAT& _neat, int fromIndex, std::vector<Genome>& genes);
-        void addRemainingGenesToNeatRandomly(NEAT& _neat, int fromIndex, std::vector<Genome>& genes);
         void childFromUnequalParents(NEAT& child, std::vector<Genome>& g1, std::vector<Genome>& g2);
         void incrementIDIndexes(int& i, int& j, int ID1, int ID2);
 
