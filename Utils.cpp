@@ -127,3 +127,8 @@ int Utils::elegantPair(int x, int y) {
         return x * x + x + y;
     return y * y + x;
 }
+
+int Utils::randIndex(std::vector<int> probabilties) {
+    std::discrete_distribution<int> distribution(std::begin(probabilties), std::end(probabilties));
+    return distribution(Random::mRng);
+}

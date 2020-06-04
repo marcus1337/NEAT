@@ -19,6 +19,9 @@ namespace NTE {
 
         bool operator < (const Specie &right) const;
         bool operator==(const Specie& rhs) const;
+
+        std::vector<int> discreteProbabilityDistribution;
+        void setDiscreteProbabilityDistribution();
     };
 }
 #endif

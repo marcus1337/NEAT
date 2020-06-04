@@ -6,4 +6,5 @@ void Evolver::makeNewGeneration(std::vector<NEAT>& neats, std::vector<NEAT>& old
 
     speciator.speciate(neats);
     breeder.newGeneration(neats, oldNeats, speciator.pool);
+
 }

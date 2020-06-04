@@ -48,6 +48,7 @@ namespace NTE {
 
         static int elegantPair(int x, int y);
 
+        static int randIndex(std::vector<int> probabilties);
     };
 }
 #endif

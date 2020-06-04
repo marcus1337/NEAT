@@ -34,3 +34,19 @@ bool Specie::operator < (const Specie &right) const
     return id < right.id;
 }
 bool Specie::operator==(const Specie& rhs) const { return this->id == rhs.id; }
+
+void Specie::setDiscreteProbabilityDistribution() {
+    std::vector<float> probabilityDistribution(neats.size());
+    int totalFitness = 0;
+    for (size_t i = 0; i < neats.size(); i++)
+        totalFitness += neats[i]->fitness;
+    if (totalFitness <= 0)
+    {
+        discreteProbabilityDistribution = { 1 };
+        return;
+    }
+    for (size_t i = 0; i < neats.size(); i++)
+        probabilityDistribution[i] = ((float)neats[i]->fitness / totalFitness)*1000.f;
+    discreteProbabilityDistribution.clear();
+    std::transform(probabilityDistribution.begin(), probabilityDistribution.end(), std::back_inserter(discreteProbabilityDistribution), [](float x) { return static_cast<int>(x); });
+}
