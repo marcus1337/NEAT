@@ -14,6 +14,7 @@ namespace NTE {
     };
 
     class IOstuff {
+        std::string innovationNumbersFileName = "Generation_Innovation_Numbers";
         std::string generationInfoFileName = "Generation_Info";
         std::string allSavesParentFileName = "NEAT_EVO";
 
@@ -23,13 +24,13 @@ namespace NTE {
         std::string getFilenameWithPath(std::string folderNameAndGeneration, int treeIndex);
         std::ofstream getFileOutStream(int treeIndex, int generation, std::string folderName);
         std::ifstream getFileInStream(int treeIndex, int generation, std::string folderName);
-        std::ofstream getGenerationInfoOutStream(std::string folderName, int generation);
-        std::ifstream getGenerationInfoInStream(std::string folderName, int generation);
+        std::ofstream getGenerationInfoOutStream(std::string folderName, int generation, std::string info_fileName);
+        std::ifstream getGenerationInfoInStream(std::string folderName, int generation, std::string info_fileName);
 
 
         static void neatInfoToStream(std::ofstream& stream, NEAT& neat);
         static void nodeIDsToStream(std::ofstream& stream, std::map<std::tuple<int, int, int>, int>& nodeIDs);
-        static void loadNodeIDs(std::ifstream& stream, SaveData& savedata);
+        static void loadNodeIDs(std::ifstream& stream, std::map<std::tuple<int, int, int>, int>& takenNodeIDs);
 
     public:
         static void save(SaveData& saveData);

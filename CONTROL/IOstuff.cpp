@@ -6,6 +6,8 @@
 #include <iostream>
 #include "../GenerationInfo.h"
 
+#include "../Innovator.h"
+
 using namespace NTE;
 namespace fs = std::filesystem;
 
@@ -37,14 +39,14 @@ void IOstuff::save(SaveData& saveData) {
     nodeIDsToStream(myfile, saveData.takenNodeIDs);
 }
 
-void IOstuff::loadNodeIDs(std::ifstream& stream, SaveData& saveData) {
+void IOstuff::loadNodeIDs(std::ifstream& stream, std::map<std::tuple<int, int, int>, int>& takenNodeIDs) {
     int numNodeIDs;
     stream >> numNodeIDs;
     for (int i = 0; i < numNodeIDs; i++) {
         int from, to, children, value;
         stream >> from >> to >> children >> value;
         std::tuple<int, int, int> betweenEdges = std::make_tuple(from, to, children);
-        saveData.takenNodeIDs[betweenEdges] = value;
+        takenNodeIDs[betweenEdges] = value;
     }
 }
 
@@ -54,7 +56,7 @@ SaveData IOstuff::load(std::string filename) {
     myfile >> generation;
     NEAT neat(myfile);
     SaveData saveData(neat, filename, generation);
-    loadNodeIDs(myfile, saveData);
+    loadNodeIDs(myfile, saveData.takenNodeIDs);
     return saveData;
 }
 
@@ -66,8 +68,13 @@ std::vector<NEAT> IOstuff::loadGeneration(int generation, std::string folderName
     std::vector<NEAT> result;
     GenerationInfo generationInfo;
     generationInfo.generation = generation;
-    std::ifstream infoStream = getGenerationInfoInStream(folderName, generation);
+    std::ifstream infoStream = getGenerationInfoInStream(folderName, generation, generationInfoFileName);
     generationInfo.loadData(infoStream);
+
+    std::map<std::tuple<int, int, int>, int> takenNodeIDs;
+    std::ifstream innovNumsStream = getGenerationInfoInStream(folderName, generation, innovationNumbersFileName);
+    loadNodeIDs(innovNumsStream, takenNodeIDs);
+    Innovator::getInstance().setTakenNodeIDs(takenNodeIDs);
 
     for (int i = 0; i < generationInfo.numNEATs; i++) {
         NEAT neat = loadNEAT(i + 1, generation, folderName);
@@ -77,7 +84,12 @@ std::vector<NEAT> IOstuff::loadGeneration(int generation, std::string folderName
 }
 
 void IOstuff::saveGeneration(std::vector<NEAT>& neats, int generation, std::string folderName) {
-    std::ofstream infoStream = getGenerationInfoOutStream(folderName, generation);
+    std::ofstream infoStream = getGenerationInfoOutStream(folderName, generation, generationInfoFileName);
+    std::ofstream infoInnovNumsStream = getGenerationInfoOutStream(folderName, generation, innovationNumbersFileName);
+    
+    std::map<std::tuple<int, int, int>, int> takenNodeIDs = Innovator::getInstance().getAllNodeIDs();
+    nodeIDsToStream(infoInnovNumsStream, takenNodeIDs);
+
     GenerationInfo generationInfo;
     generationInfo.generation = generation;
     generationInfo.saveData(infoStream, neats);
@@ -124,14 +136,14 @@ std::ifstream IOstuff::getFileInStream(int treeIndex, int generation, std::strin
     return std::ifstream(getFilenameWithPath(folderNameAndGeneration, treeIndex));
 }
 
-std::ofstream IOstuff::getGenerationInfoOutStream(std::string folderName, int generation) {
+std::ofstream IOstuff::getGenerationInfoOutStream(std::string folderName, int generation, std::string info_fileName) {
     std::string folderNameAndGeneration = getFolderName(generation, folderName);
     makeFolder(folderNameAndGeneration);
-    return std::ofstream(getPath(std::string(folderNameAndGeneration + "//" + generationInfoFileName + ".txt")));
+    return std::ofstream(getPath(std::string(folderNameAndGeneration + "//" + info_fileName + ".txt")));
 }
 
-std::ifstream IOstuff::getGenerationInfoInStream(std::string folderName, int generation) {
+std::ifstream IOstuff::getGenerationInfoInStream(std::string folderName, int generation, std::string info_fileName) {
     std::string folderNameAndGeneration = getFolderName(generation, folderName);
     makeFolder(folderNameAndGeneration);
-    return std::ifstream(getPath(std::string(folderNameAndGeneration + "//" + generationInfoFileName + ".txt")));
+    return std::ifstream(getPath(std::string(folderNameAndGeneration + "//" + info_fileName + ".txt")));
 }

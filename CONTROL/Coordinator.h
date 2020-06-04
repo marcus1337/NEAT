@@ -12,7 +12,6 @@ namespace NTE {
 
         void changeEvolveStrategy();
         void initNEATBuffers(NEAT& neat, int numAI);
-        void setMaxInnovationNumber(NEAT& neat);
 
     public:
         Coordinator();

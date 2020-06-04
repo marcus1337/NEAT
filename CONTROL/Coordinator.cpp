@@ -79,20 +79,11 @@ void Coordinator::initNEATBuffers(NEAT& neat, int numAI) {
         (*neatBuffer.neats).push_back(neat);
 }
 
-void Coordinator::setMaxInnovationNumber(NEAT& neat) {
-    for (auto const& x : neat.nodes) {
-        int id = x.second.getID();
-        Innovator::getInstance().nodeNum = std::max<int>(Innovator::getInstance().nodeNum, id);
-    }
-    Innovator::getInstance().nodeNum += 1;
-}
-
 void Coordinator::load(std::string filename, int numAI) {
     SaveData saveData = IOstuff::load(filename);
     generation = saveData.generation;
     NEAT& neat = saveData.neat;
     initNEATBuffers(neat, numAI);
-    setMaxInnovationNumber(neat);
     Innovator::getInstance().setTakenNodeIDs(saveData.takenNodeIDs);
 }
 

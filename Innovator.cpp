@@ -1,6 +1,7 @@
 
 #include "Innovator.h"
 #include "Utils.h"
+#include <algorithm> 
 using namespace NTE;
 
 Innovator::Innovator() : nodeNum(0) {}
@@ -39,4 +40,7 @@ std::map<Innovator::par3, int> Innovator::getAllNodeIDs() {
 
 void Innovator::setTakenNodeIDs(std::map<Innovator::par3, int> _takenNodeIDs) {
     takenNodeIDs = _takenNodeIDs;
+    for (auto& n : _takenNodeIDs)
+        nodeNum = std::max(n.second, nodeNum);
+    nodeNum++;
 }
