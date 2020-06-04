@@ -14,12 +14,6 @@
 
 using namespace NTE;
 
-Coordinator::Coordinator() {
-}
-
-Coordinator::~Coordinator() {
-}
-
 void Coordinator::init(int numIn, int numOut, int numAI) {
     generation = 1;
     Innovator::getInstance().reset();
@@ -41,16 +35,6 @@ void Coordinator::evolve() {
 
 void Coordinator::calcInput(int index, float* inputs) {
     (*neatBuffer.neats)[index].calculateOutput(inputs);
-}
-
-void Coordinator::calcInputAll(float* inputs) {
-    std::vector<std::future<void>> futures;
-    for (int i = 0; i < neatBuffer.neats->size(); i++) {
-        futures.push_back(std::async(std::launch::async | std::launch::deferred,
-            std::bind(&Coordinator::calcInput, *this, i, inputs)));
-    }
-    for (auto &fut : futures)
-        fut.wait();
 }
 
 float* Coordinator::getOutput(int index) {
@@ -81,8 +65,4 @@ void Coordinator::load(std::string filename, int numAI) {
     NEAT& neat = saveData.neat;
     initNEATBuffers(neat, numAI);
     Innovator::getInstance().setTakenNodeIDs(saveData.takenNodeIDs);
-}
-
-void Coordinator::changeEvolveStrategy() {
-
 }

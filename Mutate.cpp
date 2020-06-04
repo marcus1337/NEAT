@@ -13,8 +13,8 @@ typedef std::pair<int, int> par;
 float Mutate::newNodeRate = 1.f;
 float Mutate::newLinkRate = 1.f;
 float Mutate::enableDisableLinkRate = 1.f;
-float Mutate::randomizeLinkRate = 7.f;
-float Mutate::mutateLinkRate = 1.f;
+float Mutate::randomizeLinkRate = 1.f;
+float Mutate::mutateLinkRate = 7.f;
 
 
 bool Mutate::shouldMutate(float chance) {
