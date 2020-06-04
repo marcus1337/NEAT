@@ -20,40 +20,46 @@ float NEAT::reLu(float value) {
 }
 
 void NEAT::calculateOutput(float* inputs) {
-    for (int i = 0; i < numIn; i++) {
-        nodes[i].value = inputs[i];
-    }
-
+    storeInput(inputs);
     std::stack<int> topstack = Utils::topSort(nodes);
-
     while (!topstack.empty())
     {
         int nowID = topstack.top();
         topstack.pop();
-
-        for (const Genome& genome : nodes[nowID].genomes) {
-            if (!genome.enabled)
-                continue;
-            int to = genome.getTo();
-            if (nodes[nowID].getType() != Node::INPUT) { //Activation functions, hidden layers
-                nodes[nowID].value = reLu(nodes[nowID].value);
-            }
-            nodes[to].value += nodes[nowID].value*genome.weight;
-        }
+        for (const Genome& genome : nodes[nowID].genomes)
+            propagateEdge(genome, nowID);
     }
-    outputs = std::vector<float>(numOut,0);
+
+    storeOutput();
+    resetNodes();
+}
+
+void NEAT::propagateEdge(const Genome& genome, int nodeID) {
+    if (!genome.enabled)
+        return;
+    int to = genome.getTo();
+    if (nodes[nodeID].getType() != Node::INPUT) { //Activation functions, hidden layers
+        nodes[nodeID].value = reLu(nodes[nodeID].value);
+    }
+    nodes[to].value += nodes[nodeID].value*genome.weight;
+}
+
+void NEAT::storeInput(float* inputs) {
+    for (int i = 0; i < numIn; i++)
+        nodes[i].value = inputs[i];
+}
+
+void NEAT::storeOutput() {
+    outputs = std::vector<float>(numOut, 0);
     for (int i = numIn; i < numIn + numOut; i++) {
         outputs[i - numIn] = nodes[i].value;
         outputs[i - numIn] = sigmoidNN(outputs[i - numIn]);
     }
-    resetNodes();
 }
 
 void NEAT::resetNodes() {
     for (auto& n : nodes)
-    {
         n.second.value = 0;
-    }
 }
 
 void NEAT::copyPointer(const NEAT* np) {

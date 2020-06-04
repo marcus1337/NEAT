@@ -9,6 +9,11 @@
 #define NEAT_H
 namespace NTE {
     class NEAT {
+
+        void storeOutput();
+        void storeInput(float* inputs);
+        void propagateEdge(const Genome& genome, int nodeID);
+
     public:
         int maxGeneNum;
 
