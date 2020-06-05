@@ -153,10 +153,10 @@ std::map<std::tuple<int, int, int>, NEAT> IOstuff::loadElites(std::string folder
     std::map<std::tuple<int, int, int>, NEAT> result;
 
     auto stream = std::ifstream(getPath(std::string(folderName + "//" + "elites_info" + ".txt")));
-    size_t numTrees;
-    stream >> numTrees;
+    size_t numNeats;
+    stream >> numNeats;
 
-    for (size_t i = 0; i < numTrees; i++) {
+    for (size_t i = 0; i < numNeats; i++) {
         auto stream = std::ifstream(getFilenameWithPath(folderName, (int)i));
         NEAT neat(stream);
         result[std::make_tuple(neat.observedBehaviors[0], neat.observedBehaviors[1],
