@@ -68,7 +68,7 @@ void Coordinator::load(std::string filename, int numAI) {
 }
 
 std::vector<NEAT>& Coordinator::getNEATsRef() {
-    return getNEATsRef();
+    return (*neatBuffer.neats);
 }
 
 
