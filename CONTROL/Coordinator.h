@@ -33,8 +33,8 @@ namespace NTE {
         void randomizePopulation(int minNodes, int maxNodes);
         void randomizePopulationFromElites();
         void mapElites();
-        void saveElites(std::string foldername = "TREES_ELITE");
-        void loadElites(std::string foldername = "TREES_ELITE");
+        void saveElites(std::string foldername = "NEATS_ELITE");
+        void loadElites(std::string foldername = "NEATS_ELITE");
         void storeElites();
 
         void setBehavior(int index, std::vector<int> behaviors);
