@@ -42,6 +42,8 @@ namespace NTE {
         void setSurpriseEffect(float effect);
         void saveGeneration(std::string filename);
         void loadGeneration(std::string filename, int _generation);
+
+        void setParentFoldername(std::string folderName);
     };
 }
 #endif

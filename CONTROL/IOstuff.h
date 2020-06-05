@@ -14,10 +14,6 @@ namespace NTE {
     };
 
     class IOstuff {
-        std::string innovationNumbersFileName = "Generation_Innovation_Numbers";
-        std::string generationInfoFileName = "Generation_Info";
-        std::string allSavesParentFileName = "NEAT_EVO";
-
         void makeFolder(std::string folderName);
         std::string getPath(std::string folderName);
         std::string getFolderName(int generation, std::string folderName);
@@ -33,6 +29,10 @@ namespace NTE {
         static void loadNodeIDs(std::ifstream& stream, std::map<std::tuple<int, int, int>, int>& takenNodeIDs);
 
     public:
+        std::string innovationNumbersFileName = "Generation_Innovation_Numbers";
+        std::string generationInfoFileName = "Generation_Info";
+        std::string allSavesParentFileName = "NEAT_EVO";
+
         static void save(SaveData& saveData);
         static SaveData load(std::string filename);
 

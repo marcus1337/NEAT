@@ -112,3 +112,7 @@ void Coordinator::loadElites(std::string foldername) {
 void Coordinator::storeElites() {
     evolver.mapElites.storeElites((*neatBuffer.neats));
 }
+
+void Coordinator::setParentFoldername(std::string folderName) {
+    ioStuff.allSavesParentFileName = folderName;
+}
