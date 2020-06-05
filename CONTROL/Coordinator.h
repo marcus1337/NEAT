@@ -15,6 +15,8 @@ namespace NTE {
 
     public:
 
+        std::vector<NEAT>& getNEATsRef();
+
         NEATDoubleBuffer neatBuffer;
         Evolver evolver;
         int generation;
@@ -34,6 +36,12 @@ namespace NTE {
         void saveElites(std::string foldername = "TREES_ELITE");
         void loadElites(std::string foldername = "TREES_ELITE");
         void storeElites();
+
+        void setBehavior(int index, std::vector<int> behaviors);
+        void setTargetSpecies(int numTargetSpecies);
+        void setSurpriseEffect(float effect);
+        void saveGeneration(std::string filename);
+        void loadGeneration(std::string filename, int _generation);
     };
 }
 #endif
