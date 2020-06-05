@@ -4,6 +4,8 @@ using namespace NTE;
 
 void Evolver::makeNewGeneration(std::vector<NEAT>& neats, std::vector<NEAT>& oldNeats) {
 
+    mapElites.storeElites(neats);
+
     speciator.speciate(neats);
 
     surprise.addSurpriseFitness(neats);
