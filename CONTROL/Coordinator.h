@@ -3,6 +3,7 @@
 #include <vector>
 #include "../NEATDoubleBuffer.h"
 #include "../Evolver.h"
+#include "IOstuff.h"
 
 #ifndef COORDINATOR_NEAT_H
 #define COORDINATOR_NEAT_H
@@ -17,6 +18,7 @@ namespace NTE {
         NEATDoubleBuffer neatBuffer;
         Evolver evolver;
         int generation;
+        IOstuff ioStuff;
 
         void init(int numIn, int numOut, int numAI);
         void evolve();
@@ -26,6 +28,12 @@ namespace NTE {
         void save(int index, std::string filename);
         void load(std::string filename, int numAI);
 
+        void randomizePopulation(int minNodes, int maxNodes);
+        void randomizePopulationFromElites();
+        void mapElites();
+        void saveElites(std::string foldername = "TREES_ELITE");
+        void loadElites(std::string foldername = "TREES_ELITE");
+        void storeElites();
     };
 }
 #endif

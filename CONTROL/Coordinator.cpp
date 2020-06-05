@@ -22,8 +22,8 @@ void Coordinator::init(int numIn, int numOut, int numAI) {
     (*neatBuffer.neats).clear();
     for (int i = 0; i < numAI; i++)
         (*neatBuffer.neats).push_back(NEAT(numIn, numOut));
-    neatBuffer.setBuffSize(numAI);
 
+    neatBuffer.setBuffSize(numAI);
     evolver.speciator.init(numIn, numOut, numAI);
 }
 
@@ -65,4 +65,33 @@ void Coordinator::load(std::string filename, int numAI) {
     NEAT& neat = saveData.neat;
     initNEATBuffers(neat, numAI);
     Innovator::getInstance().setTakenNodeIDs(saveData.takenNodeIDs);
+}
+
+
+
+
+/////////////////
+
+void Coordinator::randomizePopulation(int minNodes, int maxNodes) {
+    init((*neatBuffer.neats)[0].numIn, (*neatBuffer.neats)[0].numOut, evolver.speciator.numAI);
+}
+
+void Coordinator::randomizePopulationFromElites() {
+    evolver.mapElites.randomElitism((*neatBuffer.neats));
+}
+
+void Coordinator::mapElites() {
+    evolver.mapElites.mapOrStoreElites((*neatBuffer.neats));
+}
+
+void Coordinator::saveElites(std::string foldername) {
+    ioStuff.saveElites(evolver.mapElites.eliteNEATs, foldername);
+}
+
+void Coordinator::loadElites(std::string foldername) {
+    evolver.mapElites.eliteNEATs = ioStuff.loadElites(foldername);
+}
+
+void Coordinator::storeElites() {
+    evolver.mapElites.storeElites((*neatBuffer.neats));
 }
