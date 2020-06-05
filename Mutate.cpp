@@ -15,6 +15,7 @@ float Mutate::newLinkRate = 1.f;
 float Mutate::enableDisableLinkRate = 1.f;
 float Mutate::randomizeLinkRate = 1.f;
 float Mutate::mutateLinkRate = 7.f;
+float Mutate::extraMutationRate = 1.f;
 
 
 bool Mutate::shouldMutate(float chance) {
@@ -103,15 +104,19 @@ void Mutate::pointMutate(NEAT& neat) {
 
 
 void Mutate::allMutations(NEAT& neat) {
-    if (shouldMutate(enableDisableLinkRate))
+    if (shouldMutate(enableDisableLinkRate + extraMutationRate))
         enableDisableMutate(neat);
 
-    if (shouldMutate(mutateLinkRate))
+    if (shouldMutate(mutateLinkRate + extraMutationRate))
         pointMutate(neat);
 
-    if (shouldMutate(newLinkRate))
+    if (shouldMutate(newLinkRate + extraMutationRate))
         linkMutate(neat);
 
-    if (shouldMutate(newNodeRate))
+    if (shouldMutate(newNodeRate + extraMutationRate))
         nodeMutate(neat);
+}
+
+void Mutate::modifyMutationRate(std::vector<NEAT>& neats) {
+    mutationRateControl.modifyMutationRate(extraMutationRate, neats);
 }

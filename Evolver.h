@@ -4,6 +4,7 @@
 #include "Selector.h"
 #include "Surprise.h"
 #include "MapElites.h"
+#include "Mutate.h"
 
 #ifndef EVOLVER_H
 #define EVOLVER_H
@@ -13,6 +14,7 @@ namespace NTE {
 
     public:
 
+        Mutate mutater;
         Surprise surprise;
         Selector selector;
         Breeder breeder;
