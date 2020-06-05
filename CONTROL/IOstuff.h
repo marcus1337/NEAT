@@ -42,6 +42,10 @@ namespace NTE {
         NEAT loadNEAT(int treeIndex, int generation, std::string folderName = "NEATS");
         void saveNEAT(NEAT& neat, int treeIndex, int generation, std::string folderName = "NEATS");
         void saveGeneration(std::vector<NEAT>& neats, int generation, std::string folderName = "NEATS");
+
+
+        std::map<std::tuple<int, int, int>, NEAT> loadElites(std::string folderName = "NEATS_ELITE");
+        void saveElites(std::map<std::tuple<int, int, int>, NEAT>& elites, std::string folderName = "NEATS_ELITE");
     };
 }
 #endif

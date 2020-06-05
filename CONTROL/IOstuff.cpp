@@ -147,3 +147,35 @@ std::ifstream IOstuff::getGenerationInfoInStream(std::string folderName, int gen
     makeFolder(folderNameAndGeneration);
     return std::ifstream(getPath(std::string(folderNameAndGeneration + "//" + info_fileName + ".txt")));
 }
+
+
+std::map<std::tuple<int, int, int>, NEAT> IOstuff::loadElites(std::string folderName) {
+    std::map<std::tuple<int, int, int>, NEAT> result;
+
+    auto stream = std::ifstream(getPath(std::string(folderName + "//" + "elites_info" + ".txt")));
+    size_t numTrees;
+    stream >> numTrees;
+
+    for (size_t i = 0; i < numTrees; i++) {
+        auto stream = std::ifstream(getFilenameWithPath(folderName, (int)i));
+        NEAT neat(stream);
+        result[std::make_tuple(neat.observedBehaviors[0], neat.observedBehaviors[1],
+            neat.observedBehaviors[2])] = neat;
+    }
+
+    return result;
+}
+void IOstuff::saveElites(std::map<std::tuple<int, int, int>, NEAT>& elites, std::string folderName) {
+    makeFolder(folderName);
+    auto stream = std::ofstream(getPath(std::string(folderName + "//" + "elites_info" + ".txt")));
+    stream << elites.size();
+
+    int treeIndex = 0;
+    for (auto& neat : elites)
+    {
+        auto stream = std::ofstream(getFilenameWithPath(folderName, treeIndex));
+        neatInfoToStream(stream, neat.second);
+        treeIndex++;
+    }
+
+}
