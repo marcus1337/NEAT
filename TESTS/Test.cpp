@@ -28,7 +28,7 @@ void Test::crashSaveLoad() {
         std::cout << duration << "\n";
 
         rep(i, (*coordinator.neatBuffer.neats).size()) {
-            (*coordinator.neatBuffer.neats)[i].calculateOutput(inputs.data());
+            (*coordinator.neatBuffer.neats)[i].calculateOutput(inputs);
         }
     }
 }
@@ -43,7 +43,7 @@ void Test::evolveManyGenerations() {
         randomlyEvolveNeats(coordinator, numIn, numOut, numAI, 50);
 
         rep(i, (*coordinator.neatBuffer.neats).size()) {
-            (*coordinator.neatBuffer.neats)[i].calculateOutput(inputs.data());
+            (*coordinator.neatBuffer.neats)[i].calculateOutput(inputs);
         }
     }
 }

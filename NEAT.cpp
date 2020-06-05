@@ -21,7 +21,7 @@ float NEAT::reLu(float value) {
     return std::max<float>(0.0f, value);
 }
 
-void NEAT::calculateOutput(float* inputs) {
+void NEAT::calculateOutput(std::vector<float> inputs) {
     storeInput(inputs);
     std::stack<int> topstack = Utils::topSort(nodes);
     while (!topstack.empty())
@@ -31,7 +31,6 @@ void NEAT::calculateOutput(float* inputs) {
         for (const Genome& genome : nodes[nowID].genomes)
             propagateEdge(genome, nowID);
     }
-
     storeOutput();
     resetNodes();
 }
@@ -46,7 +45,7 @@ void NEAT::propagateEdge(const Genome& genome, int nodeID) {
     nodes[to].value += nodes[nodeID].value*genome.weight;
 }
 
-void NEAT::storeInput(float* inputs) {
+void NEAT::storeInput(std::vector<float> inputs) {
     for (int i = 0; i < numIn; i++)
         nodes[i].value = inputs[i];
 }

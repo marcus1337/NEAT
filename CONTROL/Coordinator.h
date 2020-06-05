@@ -24,8 +24,8 @@ namespace NTE {
 
         void init(int numIn, int numOut, int numAI);
         void evolve();
-        void calcInput(int index, float* inputs);
-        float* getOutput(int index);
+        void calcInput(int index, std::vector<float> inputs);
+        std::vector<float> getOutput(int index);
         void setFitness(int index, int fitness);
         void save(int index, std::string filename);
         void load(std::string filename, int numAI);

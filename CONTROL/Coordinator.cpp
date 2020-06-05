@@ -33,12 +33,12 @@ void Coordinator::evolve() {
     neatBuffer.swapBuffers();
 }
 
-void Coordinator::calcInput(int index, float* inputs) {
+void Coordinator::calcInput(int index, std::vector<float> inputs) {
     (*neatBuffer.neats)[index].calculateOutput(inputs);
 }
 
-float* Coordinator::getOutput(int index) {
-    return (*neatBuffer.neats)[index].outputs.data();
+std::vector<float> Coordinator::getOutput(int index) {
+    return (*neatBuffer.neats)[index].outputs;
 }
 
 void Coordinator::setFitness(int index, int fitness) {

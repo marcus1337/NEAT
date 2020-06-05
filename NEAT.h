@@ -11,7 +11,7 @@ namespace NTE {
     class NEAT {
 
         void storeOutput();
-        void storeInput(float* inputs);
+        void storeInput(std::vector<float> inputs);
         void propagateEdge(const Genome& genome, int nodeID);
 
     public:
@@ -29,7 +29,7 @@ namespace NTE {
         float sigmoidNN(float value);
         float reLu(float value);
 
-        void calculateOutput(float* inputs);
+        void calculateOutput(std::vector<float> inputs);
         void resetNodes();
 
         void copyPointer(const NEAT* np);
