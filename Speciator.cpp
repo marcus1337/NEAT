@@ -53,14 +53,6 @@ void Speciator::adjustDynamicSpecieDelta() {
 
 void Speciator::speciate(std::vector<NEAT>& neats) {
     prepareForNewGeneration(neats);
-    cullSpecies();
-}
-
-int Speciator::totalAvgFit() {
-    int total = 0;
-    for (const auto& s : pool)
-        total += s.averageFitness;
-    return total;
 }
 
 void Speciator::incrementIDIndexes(int& i, int& j, int ID1, int ID2) {
@@ -75,24 +67,6 @@ void Speciator::incrementIDIndexes(int& i, int& j, int ID1, int ID2) {
 }
 
 
-bool Speciator::isWeak(const Specie& specie, int numSpecies, int totalAverageFitness) {
-    return specie.getSpecieStrength(numSpecies, totalAverageFitness) < 0.8f;
-}
-
-void Speciator::removeWeakSpecies() {
-    totAvg = totalAvgFit();
-    Specie backupSpecie = pool[0];
-    pool.erase(std::remove_if(pool.begin(), pool.end(),
-        [&](const Specie& o) { return isWeak(o, specieNum, totAvg); }), pool.end());
-    if (pool.empty())
-        pool.push_back(backupSpecie);
-}
-
-
-void Speciator::removeStaleSpecies() {
-    if (pool.size() >= numAI / 2)
-        pool.erase(pool.begin() + numAI / 2, pool.end());
-}
 
 void Speciator::preparePool() {
     for (Specie& spec : pool)
@@ -113,25 +87,6 @@ void Speciator::sortSpecie(Specie& spec) {
     });
 }
 
-void Speciator::removeWeaksInSpecies() {
-    for (Specie& spec : pool) {
-        std::vector<NEAT*> survivors;
-        int remaining = spec.neats.size() / 2;
-        if (remaining == 0)
-            survivors.push_back(spec.neats[0]);
-        for (int i = 0; i < remaining; i++)
-            survivors.push_back(spec.neats[i]);
-        spec.neats = survivors;
-    }
-    pool.erase(std::remove_if(pool.begin(), pool.end(),
-        [](const Specie& o) { return o.neats.size() == 0; }), pool.end());
-}
-
-void Speciator::cullAllButOneFromSpecies() {
-    for (Specie& spec : pool) {
-        spec.neats = std::vector<NEAT*>({ spec.neats[0] });
-    }
-}
 
 void Speciator::addToSpecies(NEAT& neat) {
     bool foundSpecies = addToExistingSpecie(neat);
@@ -216,10 +171,4 @@ bool Speciator::IDInRange(int _id, std::vector<Genome>& genomeArr) {
 void Speciator::fitnessSharing(std::vector<NEAT>& neats) {
     for (int i = 0; i < numAI; i++)
         adjustFitnessShared(neats, i);
-}
-
-void Speciator::cullSpecies() {
-    removeStaleSpecies();
-    removeWeaksInSpecies();
-    removeWeakSpecies();
 }

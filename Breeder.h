@@ -15,8 +15,6 @@ namespace NTE {
         void inheritNodesFromParents(NEAT& child, NEAT* parent1, NEAT* parent2);
         void inheritGenesFromParents(NEAT& child, NEAT* parent1, NEAT* parent2);
         int getChildIndex(int numKids);
-        int calcNumBreeds(const Specie& specie, int totAvg);
-        int totalAvgFit();
 
     public:
         int specieNum = 1;
@@ -31,12 +29,15 @@ namespace NTE {
         void newGeneration(std::vector<std::future<void>>& futures);
 
         void crossOver(NEAT& child, NEAT* n1, NEAT* n2);
-        void breedChild(Specie& specie, int childIndex);
-        void breedElite(int childIndex);
+        void breedChild(NEAT* g1, NEAT* g2, int childIndex);
+        void breedElite(int childIndex, NEAT* neat);
         void addGeneRandomly(NEAT& child, Genome gene1, Genome gene2);
         void breedFitnessBased(std::vector<std::future<void>>& futures, int numKids);
         void breedElitismOfSpecies(std::vector<std::future<void>>& futures, int numKids);
 
+
+        std::vector<std::pair<NEAT*, NEAT*>> selectedPairs;
+        std::vector<NEAT*> selectedSingles;
     };
 }
 

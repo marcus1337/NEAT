@@ -62,34 +62,15 @@ void Breeder::inheritGenesFromParents(NEAT& child, NEAT* parent1, NEAT* parent2)
     childFromUnequalParents(child, parent1->gencopies, parent2->gencopies);
 }
 
-int Breeder::calcNumBreeds(const Specie& specie, int totAvg) {
-    return specie.getSpecieStrength(specieNum, totAvg)*(specie.neats.size() / 2);
-}
-
-int Breeder::totalAvgFit() {
-    int total = 0;
-    for (const auto& s : *pool)
-        total += s.averageFitness;
-    return total;
-}
-
 void Breeder::breedFitnessBased(std::vector<std::future<void>>& futures, int numKids) {
-    int totAvg = totalAvgFit();
-    int minNumBreeds = 0;
+    int produced = 0;
     while (numKids > 0) {
-        int produced = 0;
-        for (Specie& spec : *pool) {
-            int numBreeds = std::max(calcNumBreeds(spec, totAvg), minNumBreeds);
-            produced += numBreeds;
-            for (int i = 0; i < numBreeds && numKids > 0; i++) {
-                int childIndex = getChildIndex(numKids);
-                futures.push_back(std::async(std::launch::async | std::launch::deferred,
-                    std::bind(&Breeder::breedChild, *this, spec, childIndex)));
-                numKids--;
-            }
-        }
-        if (!produced)
-            minNumBreeds++;
+        int childIndex = getChildIndex(numKids);
+        futures.push_back(std::async(std::launch::async | std::launch::deferred,
+            std::bind(&Breeder::breedChild, *this, selectedPairs[produced].first,
+                selectedPairs[produced].second, childIndex)));
+        numKids--;
+        produced++;
     }
 }
 
@@ -98,23 +79,21 @@ int Breeder::getChildIndex(int numKids) {
 }
 
 void Breeder::breedElitismOfSpecies(std::vector<std::future<void>>& futures, int numKids) {
+    int produced = 0;
     while (numKids > 0) {
         futures.push_back(std::async(std::launch::async | std::launch::deferred,
-            std::bind(&Breeder::breedElite, *this, getChildIndex(numKids))));
+            std::bind(&Breeder::breedElite, *this, getChildIndex(numKids), selectedSingles[produced])));
         numKids--;
+        produced++;
     }
 }
 
-void Breeder::breedElite(int childIndex) {
-    int index = Utils::randi(0, (*pool).size() - 1);
-    Specie& spec = (*pool)[index];
-    (*children)[childIndex] = (*spec.neats[0]);
+void Breeder::breedElite(int childIndex, NEAT* neat) {
+    (*children)[childIndex] = *neat;
     Mutate::allMutations((*children)[childIndex]);
 }
 
-void Breeder::breedChild(Specie& specie, int childIndex) {
-    NEAT* g1 = specie.getRandomNeat();
-    NEAT* g2 = specie.getRandomNeat();
+void Breeder::breedChild(NEAT* g1, NEAT* g2, int childIndex) {
     NEAT child;
     crossOver(child, g1, g2);
     (*children)[childIndex] = child;

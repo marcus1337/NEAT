@@ -18,7 +18,6 @@ namespace NTE {
         static constexpr float c1 = 1.6f;
         static constexpr float c2 = 0.4f;
         static constexpr float c3 = 1.6f;
-        int totAvg = 1;
         std::vector<Specie> pool;
         int specieNum;
         int targetNumSpecies = 3;
@@ -36,15 +35,6 @@ namespace NTE {
 
         void fitnessSharing(std::vector<NEAT>& neats);
         void adjustFitnessShared(std::vector<NEAT>& neats, int index);
-        int totalAvgFit();
-
-        void removeStaleSpecies();
-
-        void cullSpecies();
-        bool isWeak(const Specie& specie, int numSpecies, int totalAverageFitness);
-        void removeWeakSpecies();
-        void removeWeaksInSpecies();
-        void cullAllButOneFromSpecies();
 
         void addToSpecies(NEAT& neat);
         bool addToExistingSpecie(NEAT& neat);
