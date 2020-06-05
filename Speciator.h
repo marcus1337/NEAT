@@ -32,6 +32,7 @@ namespace NTE {
 
         void preparePool();
         void sortSpecie(Specie& spec);
+        void sortSpecies(std::vector<Specie>& species);
 
         void fitnessSharing(std::vector<NEAT>& neats);
         void adjustFitnessShared(std::vector<NEAT>& neats, int index);

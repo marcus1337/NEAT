@@ -46,7 +46,7 @@ namespace NTE {
         bool hasEdge(int from, int to);
         int getNumGenes();
 
-        std::vector<int> observedBehaviors;
+        std::vector<int> observedBehaviors = {0,0,0};
     };
 }
 #endif

@@ -6,6 +6,9 @@ void Evolver::makeNewGeneration(std::vector<NEAT>& neats, std::vector<NEAT>& old
 
     speciator.speciate(neats);
 
+    surprise.addSurpriseFitness(neats);
+    speciator.sortSpecies(speciator.pool);
+
     selector.populationSize = neats.size();
     selector.cullSpecies(speciator.pool);
     breeder.selectedSingles = selector.selectSingleIDs(speciator.pool);

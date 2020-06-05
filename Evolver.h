@@ -2,6 +2,7 @@
 #include "NEAT.h"
 #include "Breeder.h"
 #include "Selector.h"
+#include "Surprise.h"
 
 #ifndef EVOLVER_H
 #define EVOLVER_H
@@ -11,6 +12,7 @@ namespace NTE {
 
     public:
 
+        Surprise surprise;
         Selector selector;
         Breeder breeder;
         Speciator speciator;

@@ -172,3 +172,19 @@ void Speciator::fitnessSharing(std::vector<NEAT>& neats) {
     for (int i = 0; i < numAI; i++)
         adjustFitnessShared(neats, i);
 }
+
+void Speciator::sortSpecies(std::vector<Specie>& species) {
+
+    for (Specie& spec : species) {
+        spec.topFitness = std::numeric_limits<int>::min();
+        for (const auto& tree : spec.neats)
+            spec.topFitness = std::max(spec.topFitness, tree->fitness);
+    }
+
+    std::sort(species.begin(), species.end(), [](const Specie& lhs, const Specie& rhs)
+    { return lhs.topFitness > rhs.topFitness; });
+    for (Specie& spec : species) {
+        sortSpecie(spec);
+        spec.calcAvgFit();
+    }
+}
