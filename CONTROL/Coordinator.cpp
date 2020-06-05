@@ -52,11 +52,11 @@ void Coordinator::save(int index, std::string filename) {
 }
 
 void Coordinator::initNEATBuffers(NEAT& neat, int numAI) {
-    (*neatBuffer.neats).clear();
+    getNEATsRef().clear();
     evolver.speciator.init(neat.numIn, neat.numOut, numAI);
     neatBuffer.setBuffSize(numAI);
     for (int i = 0; i < numAI; i++)
-        (*neatBuffer.neats).push_back(neat);
+        getNEATsRef().push_back(neat);
 }
 
 void Coordinator::load(std::string filename, int numAI) {
@@ -68,7 +68,7 @@ void Coordinator::load(std::string filename, int numAI) {
 }
 
 std::vector<NEAT>& Coordinator::getNEATsRef() {
-    return (*neatBuffer.neats);
+    return getNEATsRef();
 }
 
 
