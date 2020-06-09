@@ -26,6 +26,10 @@ namespace NTE {
         void evolve();
         void calcInput(int index, std::vector<float> inputs);
         std::vector<float> getOutput(int index);
+
+        void calcEliteInput(int index, std::vector<float> inputs);
+        std::vector<float> getEliteOutput(int index);
+
         void setFitness(int index, int fitness);
         void save(int index, std::string filename);
         void load(std::string filename, int numAI);

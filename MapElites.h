@@ -29,7 +29,7 @@ namespace NTE {
         void mapOrStoreElites(std::vector<NEAT>& NEATs);
         bool isNewNEATBetter(std::tuple<int, int, int> key, NEAT& newNEAT);
 
-        std::vector<NEAT> getElitesVector();
+        std::vector<NEAT&> getElitesVector();
 
         void storeElite(NEAT& NEAT);
         void storeElites(std::vector<NEAT>& NEATs);

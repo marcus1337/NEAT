@@ -116,3 +116,13 @@ void Coordinator::storeElites() {
 void Coordinator::setParentFoldername(std::string folderName) {
     ioStuff.allSavesParentFileName = folderName;
 }
+
+void Coordinator::calcEliteInput(int index, std::vector<float> inputs) {
+    auto elites = evolver.mapElites.getElitesVector();
+    elites[index].calculateOutput(inputs);
+}
+
+std::vector<float> Coordinator::getEliteOutput(int index) {
+    auto elites = evolver.mapElites.getElitesVector();
+    return elites[index].outputs;
+}
