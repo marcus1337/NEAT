@@ -64,20 +64,20 @@ void MapElites::storeElites(std::vector<NEAT>& NEATs) {
         storeElite(NEATs[i]);
 }
 
-std::vector<NEAT&> MapElites::getElitesVector() {
-    std::vector<NEAT&> allElites;
+std::vector<NEAT*> MapElites::getElitesVector() {
+    std::vector<NEAT*> allElites;
     std::transform(eliteNEATs.begin(), eliteNEATs.end(), std::back_inserter(allElites),
-        [](auto &kv) { return kv.second; });
+        [](auto &kv) { return &kv.second; });
     return allElites;
 }
 
 void MapElites::randomElitism(std::vector<NEAT>& NEATs) {
     if (eliteNEATs.empty())
         return;
-    std::vector<NEAT&> allElites = getElitesVector();
+    std::vector<NEAT*> allElites = getElitesVector();
     for (size_t i = 0; i < NEATs.size(); i++) {
         int randomEliteIndex = Utils::randi(0, allElites.size() - 1);
-        NEATs[i] = allElites[randomEliteIndex];
+        NEATs[i] = *allElites[randomEliteIndex];
     }
 }
 

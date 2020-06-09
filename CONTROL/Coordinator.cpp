@@ -119,10 +119,10 @@ void Coordinator::setParentFoldername(std::string folderName) {
 
 void Coordinator::calcEliteInput(int index, std::vector<float> inputs) {
     auto elites = evolver.mapElites.getElitesVector();
-    elites[index].calculateOutput(inputs);
+    (*elites[index]).calculateOutput(inputs);
 }
 
 std::vector<float> Coordinator::getEliteOutput(int index) {
     auto elites = evolver.mapElites.getElitesVector();
-    return elites[index].outputs;
+    return (*elites[index]).outputs;
 }
