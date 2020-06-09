@@ -16,8 +16,6 @@
 namespace NTE {
     class MapElites {
 
-        template<typename T> T* getPointer(T& t) { return &t; }
-
     public:
         std::map<std::tuple<int, int, int>, NEAT> eliteNEATs;
 

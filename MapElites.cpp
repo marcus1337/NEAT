@@ -52,13 +52,13 @@ void MapElites::mapOrStoreElites(std::vector<NEAT>& NEATs) {
         mapOrStoreElite(NEATs[i]);
 }
 
-
 void MapElites::storeElite(NEAT& NEAT) {
     auto _key = getKey(NEAT);
     if (!isOccupied(_key) || isNewNEATBetter(_key, NEAT)) {
         eliteNEATs[_key] = NEAT;
     }
 }
+
 void MapElites::storeElites(std::vector<NEAT>& NEATs) {
     for (size_t i = 0; i < NEATs.size(); i++)
         storeElite(NEATs[i]);
