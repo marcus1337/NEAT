@@ -15,7 +15,7 @@ namespace NTE {
     public:
 
         Mutate mutater;
-        Surprise surprise;
+        static Surprise surprise;
         Selector selector;
         Breeder breeder;
         Speciator speciator;

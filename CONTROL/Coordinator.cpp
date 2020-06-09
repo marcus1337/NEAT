@@ -15,6 +15,7 @@
 using namespace NTE;
 
 IOstuff Coordinator::ioStuff;
+Evolver Coordinator::evolver;
 
 void Coordinator::init(int numIn, int numOut, int numAI) {
     generation = 1;

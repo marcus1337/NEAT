@@ -2,6 +2,8 @@
 
 using namespace NTE;
 
+Surprise Evolver::surprise;
+
 void Evolver::makeNewGeneration(std::vector<NEAT>& neats, std::vector<NEAT>& oldNeats) {
 
     mapElites.storeElites(neats);

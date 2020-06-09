@@ -18,7 +18,7 @@ namespace NTE {
         std::vector<NEAT>& getNEATsRef();
 
         NEATDoubleBuffer neatBuffer;
-        Evolver evolver;
+        static Evolver evolver;
         int generation;
         static IOstuff ioStuff;
 
