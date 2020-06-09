@@ -15,6 +15,8 @@ SaveData::SaveData(NEAT& _neat, std::string _fileName, int _generation) :
     neat(_neat), fileName(_fileName), generation(_generation) {}
 
 void IOstuff::neatInfoToStream(std::ofstream& stream, NEAT& neat) {
+    stream << neat.observedBehaviors[0] << " " << neat.observedBehaviors[1] << " " << neat.observedBehaviors[2]
+        << "\n";
     stream << neat.numIn << " " << neat.numOut << "\n";
     stream << neat.fitness << "\n" << neat.gencopies.size() << "\n";
     for (int i = 0; i < neat.gencopies.size(); i++) {

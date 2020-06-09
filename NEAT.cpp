@@ -80,6 +80,10 @@ NEAT::NEAT(const NEAT& _neat) {
 NEAT::NEAT() :numIn(-1), numOut(-1) {}
 
 NEAT::NEAT(std::istream& stream) {
+
+    for (size_t i = 0; i < 3; i++)
+        stream >> observedBehaviors[i];
+
     stream >> numIn >> numOut >> fitness;
     int numGenes;
     stream >> numGenes;

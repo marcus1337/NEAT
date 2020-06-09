@@ -56,8 +56,6 @@ void MapElites::mapOrStoreElites(std::vector<NEAT>& NEATs) {
 }
 
 void MapElites::storeElite(NEAT& neat) {
-    std::cout << "neat: " << neat.fitness << ", " << neat.gencopies.size() << ", " << neat.observedBehaviors[0]
-        << "," << neat.observedBehaviors[1] << "," << neat.observedBehaviors[2] << "\n";
     auto _key = getKey(neat);
     if (!isOccupied(_key) || isNewNEATBetter(_key, neat)) {
         eliteNEATs[_key] = neat;

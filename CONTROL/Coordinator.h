@@ -20,7 +20,7 @@ namespace NTE {
         NEATDoubleBuffer neatBuffer;
         Evolver evolver;
         int generation;
-        IOstuff ioStuff;
+        static IOstuff ioStuff;
 
         void init(int numIn, int numOut, int numAI);
         void evolve();

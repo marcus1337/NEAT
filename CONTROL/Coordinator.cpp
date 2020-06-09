@@ -14,6 +14,8 @@
 
 using namespace NTE;
 
+IOstuff Coordinator::ioStuff;
+
 void Coordinator::init(int numIn, int numOut, int numAI) {
     generation = 1;
     Innovator::getInstance().reset();
