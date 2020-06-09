@@ -17,7 +17,7 @@ namespace NTE {
     class MapElites {
 
     public:
-        std::map<std::tuple<int, int, int>, NEAT> eliteNEATs;
+        static std::map<std::tuple<int, int, int>, NEAT> eliteNEATs;
 
         bool isOccupied(std::tuple<int, int, int> key);
         bool isOccupied(int a, int b, int c);

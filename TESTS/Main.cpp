@@ -21,7 +21,8 @@ using namespace NTE;
 int main(int argc, char *argv[]) {
 
     Test tests;
-    tests.crashSaveLoad();
+    //tests.crashSaveLoad();
+    tests.testElites();
 
     return 0;
 }

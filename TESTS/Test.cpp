@@ -76,3 +76,18 @@ void Test::randomlyEvolveNeats(NTE::Coordinator& coordinator, int numIn, int num
         //    "  nodes: " << Innovator::getInstance().nodeNum << "\n";
     }
 }
+
+void Test::testElites() {
+    Coordinator coordinator;
+    int numIn = 13, numOut = 4, numAI = 50;
+    coordinator.init(numIn, numOut, numAI);
+    std::vector<float> inputs = { 1,2,0,-4,5,3,-4,4,5,2,3,5,4,0,3.4f,3.6f,4.2f };
+    
+    for (int i = 0; i < 50; i++) {
+        coordinator.randomizePopulation(5, 5);
+        coordinator.setFitness(0, 500);
+        coordinator.getNEATsRef()[0].observedBehaviors = { 5,30,10 };
+        coordinator.storeElites();
+        cout << "HEJ: " << i << endl;
+    }
+}

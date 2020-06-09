@@ -17,6 +17,8 @@ public:
     void evolveManyGenerations();
     void printNeatInfo();
 
+    void testElites();
+
 };
 
 #endif

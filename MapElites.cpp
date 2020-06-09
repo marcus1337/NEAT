@@ -5,8 +5,11 @@
 #include <iterator> 
 #include "Utils.h"
 
+#include <iostream>
+
 using namespace NTE;
 
+std::map<std::tuple<int, int, int>, NEAT> MapElites::eliteNEATs;
 
 bool MapElites::isOccupied(std::tuple<int, int, int> key) {
     std::map<std::tuple<int, int, int>, NEAT>::iterator it = eliteNEATs.find(key);
@@ -42,9 +45,9 @@ void MapElites::mapOrStoreElite(NEAT& NEAT) {
         NEAT = eliteNEATs[_key];
 }
 
-bool MapElites::isNewNEATBetter(std::tuple<int, int, int> _key, NEAT& NEAT) {
-    return eliteNEATs[_key].fitness < NEAT.fitness
-        || (eliteNEATs[_key].fitness == NEAT.fitness);
+bool MapElites::isNewNEATBetter(std::tuple<int, int, int> _key, NEAT& neat) {
+    return eliteNEATs[_key].fitness < neat.fitness
+        || (eliteNEATs[_key].fitness == neat.fitness);
 }
 
 void MapElites::mapOrStoreElites(std::vector<NEAT>& NEATs) {
@@ -52,10 +55,12 @@ void MapElites::mapOrStoreElites(std::vector<NEAT>& NEATs) {
         mapOrStoreElite(NEATs[i]);
 }
 
-void MapElites::storeElite(NEAT& NEAT) {
-    auto _key = getKey(NEAT);
-    if (!isOccupied(_key) || isNewNEATBetter(_key, NEAT)) {
-        eliteNEATs[_key] = NEAT;
+void MapElites::storeElite(NEAT& neat) {
+    std::cout << "neat: " << neat.fitness << ", " << neat.gencopies.size() << ", " << neat.observedBehaviors[0]
+        << "," << neat.observedBehaviors[1] << "," << neat.observedBehaviors[2] << "\n";
+    auto _key = getKey(neat);
+    if (!isOccupied(_key) || isNewNEATBetter(_key, neat)) {
+        eliteNEATs[_key] = neat;
     }
 }
 
