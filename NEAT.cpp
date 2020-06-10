@@ -24,6 +24,7 @@ float NEAT::reLu(float value) {
 void NEAT::calculateOutput(std::vector<float> inputs) {
     storeInput(inputs);
     std::stack<int> topstack = Utils::topSort(nodes);
+
     while (!topstack.empty())
     {
         int nowID = topstack.top();

@@ -15,8 +15,6 @@ namespace NTE {
 
     public:
 
-        std::vector<NEAT>& getNEATsRef();
-
         NEATDoubleBuffer neatBuffer;
         static Evolver evolver;
         int generation;

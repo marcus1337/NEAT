@@ -55,11 +55,11 @@ void Coordinator::save(int index, std::string filename) {
 }
 
 void Coordinator::initNEATBuffers(NEAT& neat, int numAI) {
-    getNEATsRef().clear();
+    (*neatBuffer.neats).clear();
     evolver.speciator.init(neat.numIn, neat.numOut, numAI);
     neatBuffer.setBuffSize(numAI);
     for (int i = 0; i < numAI; i++)
-        getNEATsRef().push_back(neat);
+        (*neatBuffer.neats).push_back(neat);
 }
 
 void Coordinator::load(std::string filename, int numAI) {
@@ -70,13 +70,8 @@ void Coordinator::load(std::string filename, int numAI) {
     Innovator::getInstance().setTakenNodeIDs(saveData.takenNodeIDs);
 }
 
-std::vector<NEAT>& Coordinator::getNEATsRef() {
-    return (*neatBuffer.neats);
-}
-
-
 void Coordinator::setBehavior(int index, std::vector<int> behaviors) {
-    getNEATsRef()[index].observedBehaviors = behaviors;
+    (*neatBuffer.neats)[index].observedBehaviors = behaviors;
 }
 void Coordinator::setTargetSpecies(int numTargetSpecies) {
     evolver.speciator.targetNumSpecies = numTargetSpecies;
@@ -85,10 +80,11 @@ void Coordinator::setSurpriseEffect(float effect) {
     evolver.surprise.effect = effect;
 }
 void Coordinator::saveGeneration(std::string filename) {
-    ioStuff.saveGeneration(getNEATsRef(), generation, filename);
+    ioStuff.saveGeneration((*neatBuffer.neats), generation, filename);
 }
 void Coordinator::loadGeneration(std::string filename, int _generation) {
-    getNEATsRef() = ioStuff.loadGeneration(generation, filename);
+    (*neatBuffer.neats) = ioStuff.loadGeneration(generation, filename);
+    generation = _generation;
 }
 
 

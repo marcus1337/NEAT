@@ -86,7 +86,7 @@ void Test::testElites() {
     for (int i = 0; i < 50; i++) {
         coordinator.randomizePopulation(5, 5);
         coordinator.setFitness(0, 500);
-        coordinator.getNEATsRef()[0].observedBehaviors = { 5,30,10 };
+        coordinator.neatBuffer.neats->at(0).observedBehaviors = { 5,30,10 };
         coordinator.storeElites();
         cout << "HEJ: " << i << endl;
     }
