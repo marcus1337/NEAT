@@ -23,26 +23,42 @@ float NEAT::reLu(float value) {
 
 void NEAT::calculateOutput(std::vector<float> inputs) {
     storeInput(inputs);
-    std::stack<int> topstack = Utils::topSort(nodes);
+    propagateRecurrentEdges();
+    processNetworkData();
+    storeOutput();
+    resetNodes();
+}
 
+void NTE::NEAT::processNetworkData()
+{
+    std::stack<int> topstack = Utils::topSort(nodes);
     while (!topstack.empty())
     {
         int nowID = topstack.top();
         topstack.pop();
         for (const Genome& genome : nodes[nowID].genomes)
-            propagateEdge(genome, nowID);
+            propagateEdges(genome, nowID);
     }
-    storeOutput();
-    resetNodes();
 }
 
-void NEAT::propagateEdge(const Genome& genome, int nodeID) {
+void NTE::NEAT::propagateRecurrentEdges()
+{
+    for (auto& node : nodes)
+        for (const Genome& genome : node.second.recurrentGenomes) {
+            if (!genome.enabled)
+                continue;
+            int to = genome.getTo();
+            nodes[to].value += node.second.recurrentValue*genome.weight;
+        }
+}
+
+void NEAT::propagateEdges(const Genome& genome, int nodeID) {
     if (!genome.enabled)
         return;
     int to = genome.getTo();
     if (nodes[nodeID].getType() != Node::INPUT)
         nodes[nodeID].value = sigmoidNN(nodes[nodeID].value);
-
+    nodes[nodeID].recurrentValue = nodes[nodeID].value;
     nodes[to].value += nodes[nodeID].value*genome.weight;
 }
 
@@ -145,7 +161,7 @@ void NEAT::addGene(Genome gene) {
 
 int NEAT::getNumGenes() {
     int result = 0;
-    for (const auto& [key, node] : nodes) {
+    for (const auto&[key, node] : nodes) {
         result += node.genomes.size();
     }
     return result;

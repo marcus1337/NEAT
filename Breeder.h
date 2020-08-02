@@ -29,6 +29,7 @@ namespace NTE {
         void newGeneration(std::vector<std::future<void>>& futures);
 
         void crossOver(NEAT& child, NEAT* n1, NEAT* n2);
+        void removeEmptyNodes(NTE::NEAT & child);
         void breedChild(NEAT* g1, NEAT* g2, int childIndex);
         void breedElite(int childIndex, NEAT* neat);
         void addGeneRandomly(NEAT& child, Genome gene1, Genome gene2);

@@ -107,6 +107,20 @@ void Breeder::crossOver(NEAT& child, NEAT* n1, NEAT* n2) {
 
     inheritNodesFromParents(child, n1, n2);
     inheritGenesFromParents(child, n1, n2);
+    removeEmptyNodes(child);
+}
+
+void NTE::Breeder::removeEmptyNodes(NTE::NEAT & child)
+{
+    auto iter = child.nodes.begin();
+    auto endIter = child.nodes.end();
+    for (; iter != endIter; ++iter)
+    {
+        if (iter->second.genomes.empty())
+            iter = child.nodes.erase(iter);
+        else
+            ++iter;
+    }
 }
 
 void Breeder::newGeneration(std::vector<NEAT>& neats, std::vector<NEAT>& oldNeats, std::vector<Specie>& _pool) {

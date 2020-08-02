@@ -12,7 +12,7 @@ namespace NTE {
 
         void storeOutput();
         void storeInput(std::vector<float> inputs);
-        void propagateEdge(const Genome& genome, int nodeID);
+        void propagateEdges(const Genome& genome, int nodeID);
 
     public:
         int maxGeneNum;
@@ -22,6 +22,7 @@ namespace NTE {
 
         std::map<int, Node> nodes;
 
+        std::vector<Genome> recurrentGeneCopies;
         std::vector<Genome> gencopies;
         std::vector<float> outputs;
 
@@ -30,6 +31,8 @@ namespace NTE {
         float reLu(float value);
 
         void calculateOutput(std::vector<float> inputs);
+        void processNetworkData();
+        void propagateRecurrentEdges();
         void resetNodes();
 
         void copyPointer(const NEAT* np);
