@@ -149,6 +149,11 @@ NEAT::NEAT(int _numIn, int _numOut) : numIn(_numIn), numOut(_numOut), fitness(0)
     initBaseGenes();
 }
 
+void NEAT::addRecurrentGene(Genome gene) {
+    nodes[gene.getFrom()].recurrentGenomes.insert(gene);
+    recurrentGeneCopies.push_back(gene);
+}
+
 void NEAT::addGene(Genome gene) {
     if (!Utils::mapContains<int, Node>(nodes, gene.getFrom()))
         nodes[gene.getFrom()] = Node(gene.getFrom());
