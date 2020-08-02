@@ -96,8 +96,8 @@ void Speciator::addToSpecies(NEAT& neat) {
 
 bool Speciator::addToExistingSpecie(NEAT& neat) {
     for (int i = 0; i < specieNum; i++) {
-        int numNeatsInSpecie = pool[i].neats.size();
-        NEAT& tmpNeat = *pool[i].neats[Utils::randi(0, numNeatsInSpecie - 1)];
+        size_t numNeatsInSpecie = pool[i].neats.size();
+        NEAT& tmpNeat = *pool[i].neats[Utils::randi(0, ((int)numNeatsInSpecie) - 1)];
         if (sameSpecie(neat, tmpNeat)) {
             pool[i].neats.push_back(&neat);
             return true;
@@ -138,7 +138,7 @@ float Speciator::weightDiff(std::vector<Genome>& g1, std::vector<Genome>& g2) {
 
 float Speciator::disjointDiff(std::vector<Genome>& g1, std::vector<Genome>& g2) {
     float res = 0;
-    int N = std::max<int>(g1.size(), g2.size());
+    int N = std::max<int>((int)g1.size(), (int)g2.size());
     int i = 0, j = 0;
     while (i != g1.size() - 1 && j != g2.size() - 1) {
         if (g1[i].getID() != g2[j].getID() && IDInRange(g1[i].getID(), g2) && IDInRange(g2[j].getID(), g1))
@@ -150,12 +150,12 @@ float Speciator::disjointDiff(std::vector<Genome>& g1, std::vector<Genome>& g2) 
 
 float Speciator::excessDiff(std::vector<Genome>& g1, std::vector<Genome>& g2) {
     float res = 0;
-    int N = std::max<int>(g1.size(), g2.size());
-    for (int i = 0; i < g1.size(); i++) {
+    int N = std::max<int>((int)g1.size(), (int)g2.size());
+    for (size_t i = 0; i < g1.size(); i++) {
         if (!IDInRange(g1[i].getID(), g2))
             res++;
     }
-    for (int i = 0; i < g2.size(); i++) {
+    for (size_t i = 0; i < g2.size(); i++) {
         if (!IDInRange(g2[i].getID(), g1))
             res++;
     }

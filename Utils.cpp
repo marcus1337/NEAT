@@ -24,7 +24,7 @@ bool Utils::hasLoop(std::map<int, Node>& nodes) {
     std::set<int> black;
 
     for (size_t i = 0; i < nodes.size(); i++) {
-        white.insert(nodes[i].getID());
+        white.insert(nodes[(int)i].getID());
     }
 
     while (!white.empty()) {
@@ -108,7 +108,7 @@ bool Utils::randomBool() {
 
 float Utils::randf(float LO, float HI) {
     std::uniform_real_distribution<> distr(LO, HI);
-    return distr(Random::mRng);
+    return (float)distr(Random::mRng);
 }
 int Utils::randi(int LO, int HI) {
     std::uniform_int_distribution<> distr(LO, HI);
