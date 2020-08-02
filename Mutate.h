@@ -18,6 +18,10 @@ namespace NTE {
 
         static bool shouldMutate(float chance);
 
+        static void recurrentLinkMutate(NEAT& neat);
+        static void recurrentEnableDisableMutate(NEAT& neat);
+        static void recurrentPointMutate(NEAT& neat);
+
         static void linkMutate(NEAT& neat);
         static void nodeMutate(NEAT& neat);
         static void enableDisableMutate(NEAT& neat);
