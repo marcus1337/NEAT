@@ -102,8 +102,8 @@ NEAT::NEAT(std::istream& stream) {
         stream >> observedBehaviors[i];
 
     stream >> numIn >> numOut >> fitness;
-    int numGenes;
-    stream >> numGenes;
+    int numGenes, numRecurrentGenes;
+    stream >> numGenes >> numRecurrentGenes;
     initBaseNodes();
 
     for (int i = 0; i < numGenes; i++) {
@@ -119,6 +119,17 @@ NEAT::NEAT(std::istream& stream) {
             nodes[to] = Node(to);
         }
         addGene(Genome(from, to, enabled, weight, childnodes));
+    }
+
+    for (int i = 0; i < numRecurrentGenes; i++) {
+        int from, to;
+        bool enabled;
+        float weight;
+        stream >> from >> to >> enabled >> weight;
+        Genome gene(from, to);
+        gene.enabled = enabled;
+        gene.weight = weight;
+        addRecurrentGene(gene);
     }
 }
 
