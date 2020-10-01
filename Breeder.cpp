@@ -117,7 +117,7 @@ void NTE::Breeder::removeEmptyNodes(NTE::NEAT & child)
 {
     auto iter = child.nodes.begin();
     auto endIter = child.nodes.end();
-    for (; iter != endIter; ++iter)
+    for (; iter != endIter; iter)
     {
         if (iter->second.genomes.empty())
             iter = child.nodes.erase(iter);

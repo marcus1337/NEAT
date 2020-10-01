@@ -1,8 +1,11 @@
 #include "Coordinator.h"
-//#pragma GCC optimize ("O3")
-//#pragma GCC target ("avx")
-//#include "mimalloc-override.h"
-//#include "mimalloc-new-delete.h"
+
+#ifdef RELEASE
+    #pragma GCC optimize ("O3")
+    #pragma GCC target ("avx")
+    #include "mimalloc-override.h"
+    #include "mimalloc-new-delete.h"
+#endif
 
 #include <ctime>
 #include "../Innovator.h"

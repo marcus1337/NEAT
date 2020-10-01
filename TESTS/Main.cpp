@@ -1,7 +1,3 @@
-//#pragma GCC optimize ("O3")
-//#pragma GCC target ("avx")
-//#include "mimalloc-override.h"
-//#include "mimalloc-new-delete.h"
 
 #include <iostream>
 #include <fstream>
@@ -21,8 +17,8 @@ using namespace NTE;
 int main(int argc, char *argv[]) {
 
     Test tests;
-    //tests.crashSaveLoad();
-    tests.testElites();
+    tests.crashSaveLoad();
+    //tests.testElites();
 
     return 0;
 }
