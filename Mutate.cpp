@@ -10,12 +10,14 @@ using namespace NTE;
 typedef std::pair<int, int> par;
 
 
-float Mutate::newNodeRate = 1.f;
-float Mutate::newLinkRate = 1.f;
-float Mutate::enableDisableLinkRate = 1.f;
-float Mutate::randomizeLinkRate = 1.f;
-float Mutate::mutateLinkRate = 7.f;
-float Mutate::extraMutationRate = 1.f;
+float Mutate::newNodeRate = 5.f;
+float Mutate::newLinkRate = 10.f;
+float Mutate::enableDisableLinkRate = 10.f;
+float Mutate::randomizeLinkRate = 10.f;
+float Mutate::mutateLinkRate = 10.f;
+float Mutate::extraMutationRate = 10.f;
+
+float Mutate::recurrentMutateDecreaseConstant = 2.0f;
 
 int Mutate::maxNodes = 200;
 
@@ -116,13 +118,14 @@ void Mutate::allMutations(NEAT& neat) {
     if (shouldMutate(newNodeRate + extraMutationRate) && (maxNodes == -1 || neat.nodes.size() <= maxNodes))
         nodeMutate(neat);
 
-    if (shouldMutate(enableDisableLinkRate + extraMutationRate)) {
+    //Recurrent gene mutations
+    if (shouldMutate(enableDisableLinkRate/recurrentMutateDecreaseConstant)) {
         recurrentEnableDisableMutate(neat);
     }
-    if (shouldMutate(newLinkRate / 2.f)) {
+    if (shouldMutate(newLinkRate / recurrentMutateDecreaseConstant)) {
         recurrentLinkMutate(neat);
     }
-    if (shouldMutate(mutateLinkRate + extraMutationRate)) {
+    if (shouldMutate(mutateLinkRate/ recurrentMutateDecreaseConstant)) {
         recurrentPointMutate(neat);
     }
 }

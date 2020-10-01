@@ -12,6 +12,7 @@ namespace NTE {
     public:
 
         static int maxNodes;
+        static float recurrentMutateDecreaseConstant;
 
         static float newNodeRate, newLinkRate;
         static float randomizeLinkRate, mutateLinkRate;
