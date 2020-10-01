@@ -10,6 +10,29 @@ using namespace std;
 #include <chrono>
 using namespace NTE;
 
+
+void Test::loadElites() {
+
+}
+
+void Test::saveLoadElites() {
+    Coordinator coordinator;
+    int numIn = 13, numOut = 4, numAI = 5;
+    coordinator.init(numIn, numOut, numAI);
+    std::string fileName = "NEAT_SAVE1337";
+
+    for(int i = 0 ; i < numAI; i++)
+        coordinator.setFitness(i, 1*i);
+
+    for (int i = 0; i < numAI; i++)
+        coordinator.setBehavior(i, { i,i,i });
+
+    coordinator.evolve();
+
+    coordinator.saveElites(fileName);
+
+}
+
 void Test::crashSaveLoad() {
     Coordinator coordinator;
     int numIn = 13, numOut = 4, numAI = 5;

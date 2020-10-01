@@ -19,6 +19,10 @@ public:
 
     void testElites();
 
+    void saveLoadElites();
+
+    void loadElites();
+
 };
 
 #endif

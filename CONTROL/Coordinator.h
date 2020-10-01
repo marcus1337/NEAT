@@ -46,6 +46,8 @@ namespace NTE {
         void loadGeneration(std::string filename, int _generation);
 
         void setParentFoldername(std::string folderName);
+
+        void setMaxNodes(int _maxNodes);
     };
 }
 #endif

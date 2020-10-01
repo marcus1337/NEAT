@@ -128,3 +128,7 @@ std::vector<float> Coordinator::getEliteOutput(int index) {
     auto elites = evolver.mapElites.getElitesVector();
     return (*elites[index]).outputs;
 }
+
+void Coordinator::setMaxNodes(int _maxNodes) {
+    evolver.mutater.maxNodes = _maxNodes;
+}

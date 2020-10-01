@@ -11,6 +11,8 @@ namespace NTE {
         MutationRateControl mutationRateControl;
     public:
 
+        static int maxNodes;
+
         static float newNodeRate, newLinkRate;
         static float randomizeLinkRate, mutateLinkRate;
         static float enableDisableLinkRate;

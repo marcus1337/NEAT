@@ -17,6 +17,8 @@ float Mutate::randomizeLinkRate = 1.f;
 float Mutate::mutateLinkRate = 7.f;
 float Mutate::extraMutationRate = 1.f;
 
+int Mutate::maxNodes = 200;
+
 
 bool Mutate::shouldMutate(float chance) {
     float r = Utils::randf(0.f, 100.f);
@@ -110,7 +112,8 @@ void Mutate::allMutations(NEAT& neat) {
         pointMutate(neat);
     if (shouldMutate(newLinkRate + extraMutationRate))
         linkMutate(neat);
-    if (shouldMutate(newNodeRate + extraMutationRate))
+
+    if (shouldMutate(newNodeRate + extraMutationRate) && (maxNodes == -1 || neat.nodes.size() <= maxNodes))
         nodeMutate(neat);
 
     if (shouldMutate(enableDisableLinkRate + extraMutationRate)) {
