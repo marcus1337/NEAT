@@ -17,7 +17,7 @@ using namespace NTE;
 int main(int argc, char *argv[]) {
 
     Test tests;
-   // tests.loadElites();
+    tests.loadElites();
     //tests.saveLoadElites();
    // tests.crashSaveLoad();
     //tests.testElites();

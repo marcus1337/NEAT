@@ -12,7 +12,18 @@ using namespace NTE;
 
 
 void Test::loadElites() {
+    Coordinator coordinator;
+    int numIn = 13, numOut = 4, numAI = 5;
+    coordinator.init(numIn, numOut, numAI);
+    std::string fileName = "NEAT_SAVE1337";
+    coordinator.loadElites(fileName);
 
+    std::vector<float> inputs = { 1,2,0,-4,5,3,-4,4,5,2,3,5,4,0,3.4f,3.6f,4.2f };
+    int eliteNum = 5;
+    coordinator.calcEliteInput(eliteNum,inputs);
+    auto tmp = coordinator.getEliteOutput(eliteNum);
+
+    cout << "TEST " << tmp[0] << endl;
 }
 
 void Test::saveLoadElites() {
