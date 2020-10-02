@@ -194,3 +194,7 @@ bool NEAT::hasOppositeEdge(int from, int to) {
 bool NEAT::hasEdge(int from, int to) {
     return hasOppositeEdge(to, from);
 }
+
+int NEAT::getNumHiddenNodes() {
+    return nodes.size() - numIn - numOut;
+}

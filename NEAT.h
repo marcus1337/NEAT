@@ -49,6 +49,7 @@ namespace NTE {
         bool hasOppositeEdge(int from, int to);
         bool hasEdge(int from, int to);
         int getNumGenes();
+        int getNumHiddenNodes();
 
         std::vector<int> observedBehaviors = {0,0,0};
     };

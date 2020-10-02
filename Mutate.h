@@ -11,7 +11,7 @@ namespace NTE {
         MutationRateControl mutationRateControl;
     public:
 
-        static int maxNodes;
+        static int maxHiddenNodes;
         static float recurrentMutateDecreaseConstant;
 
         static float newNodeRate, newLinkRate;

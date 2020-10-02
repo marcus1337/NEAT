@@ -19,7 +19,7 @@ float Mutate::extraMutationRate = 10.f;
 
 float Mutate::recurrentMutateDecreaseConstant = 2.0f;
 
-int Mutate::maxNodes = 200;
+int Mutate::maxHiddenNodes = 200;
 
 
 bool Mutate::shouldMutate(float chance) {
@@ -115,7 +115,7 @@ void Mutate::allMutations(NEAT& neat) {
     if (shouldMutate(newLinkRate + extraMutationRate))
         linkMutate(neat);
 
-    if (shouldMutate(newNodeRate + extraMutationRate) && (maxNodes == -1 || neat.nodes.size() <= maxNodes))
+    if (shouldMutate(newNodeRate + extraMutationRate) && (maxHiddenNodes == -1 || neat.getNumHiddenNodes() <= maxHiddenNodes))
         nodeMutate(neat);
 
     //Recurrent gene mutations

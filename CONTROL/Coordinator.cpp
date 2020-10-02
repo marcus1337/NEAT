@@ -129,6 +129,6 @@ std::vector<float> Coordinator::getEliteOutput(int index) {
     return (*elites[index]).outputs;
 }
 
-void Coordinator::setMaxNodes(int _maxNodes) {
-    evolver.mutater.maxNodes = _maxNodes;
+void Coordinator::setMaxHiddenNodes(int _maxNodes) {
+    evolver.mutater.maxHiddenNodes = _maxNodes;
 }

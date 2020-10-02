@@ -47,7 +47,7 @@ namespace NTE {
 
         void setParentFoldername(std::string folderName);
 
-        void setMaxNodes(int _maxNodes);
+        void setMaxHiddenNodes(int _maxNodes);
     };
 }
 #endif
