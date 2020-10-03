@@ -1,6 +1,6 @@
 #include "Coordinator.h"
 
-#ifdef RELEASE
+#ifdef RELEASE 
     #pragma GCC optimize ("O3")
     #pragma GCC target ("avx")
     #include "mimalloc-override.h"
