@@ -39,6 +39,8 @@ namespace NTE {
         void loadElites(std::string foldername = "NEATS_ELITE");
         void storeElites();
 
+        void insertEliteIntoGeneration(int eliteIndex, int aiIndex);
+
         void setBehavior(int index, std::vector<int> behaviors);
         void setTargetSpecies(int numTargetSpecies);
         void setSurpriseEffect(float effect);

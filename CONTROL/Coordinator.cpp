@@ -1,11 +1,5 @@
 #include "Coordinator.h"
 
-#ifdef RELEASE 
-    #pragma GCC optimize ("O3")
-    #pragma GCC target ("avx")
-    #include "mimalloc-override.h"
-    #include "mimalloc-new-delete.h"
-#endif
 
 #include <ctime>
 #include "../Innovator.h"
@@ -131,4 +125,9 @@ std::vector<float> Coordinator::getEliteOutput(int index) {
 
 void Coordinator::setMaxHiddenNodes(int _maxNodes) {
     evolver.mutater.maxHiddenNodes = _maxNodes;
+}
+
+void Coordinator::insertEliteIntoGeneration(int eliteIndex, int aiIndex) {
+    auto elites = evolver.mapElites.getElitesVector();
+    (*neatBuffer.neats)[aiIndex] = *elites[eliteIndex];
 }
