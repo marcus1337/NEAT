@@ -23,7 +23,7 @@ namespace NTE {
         void init(int numIn, int numOut, int numAI);
         void evolve();
         void calcInput(int index, std::vector<float> inputs);
-        void resetReccurentState(int index);
+        void resetRecurrentState(int index);
         std::vector<float> getOutput(int index);
 
         void calcEliteInput(int index, std::vector<float> inputs);
