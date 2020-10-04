@@ -52,6 +52,7 @@ namespace NTE {
         int getNumHiddenNodes();
 
         std::vector<int> observedBehaviors = {0,0,0};
+        void resetRecurrentState();
     };
 }
 #endif

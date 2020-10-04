@@ -198,3 +198,9 @@ bool NEAT::hasEdge(int from, int to) {
 int NEAT::getNumHiddenNodes() {
     return nodes.size() - numIn - numOut;
 }
+
+
+void NEAT::resetRecurrentState() {
+    for (auto& node : nodes)
+        node.second.recurrentValue = 0.f;
+}

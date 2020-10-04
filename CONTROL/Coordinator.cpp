@@ -131,3 +131,7 @@ void Coordinator::insertEliteIntoGeneration(int eliteIndex, int aiIndex) {
     auto elites = evolver.mapElites.getElitesVector();
     (*neatBuffer.neats)[aiIndex] = *elites[eliteIndex];
 }
+
+void Coordinator::resetReccurentState(int index) {
+    (*neatBuffer.neats)[index].resetRecurrentState();
+}
