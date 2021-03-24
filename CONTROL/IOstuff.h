@@ -41,6 +41,10 @@ namespace NTE {
         std::vector<NEAT> loadGeneration(int generation, std::string folderName = "NEATS");
         NEAT loadNEAT(int treeIndex, int generation, std::string folderName = "NEATS");
         void saveNEAT(NEAT& neat, int treeIndex, int generation, std::string folderName = "NEATS");
+
+        void saveNEAT(NEAT& neat, std::string folderName, std::string fileName);
+        NEAT loadNEAT(std::string folderName, std::string fileName);
+
         void saveGeneration(std::vector<NEAT>& neats, int generation, std::string folderName = "NEATS");
 
 

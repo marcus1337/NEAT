@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <future>
+#include <limits>
 
 using namespace NTE;
 
@@ -97,6 +98,27 @@ void Coordinator::mapElites() {
     evolver.mapElites.mapOrStoreElites((*neatBuffer.neats));
 }
 
+void Coordinator::loadBestElite(std::string fileName, std::string foldername) {
+    NEAT neat = ioStuff.loadNEAT(foldername, fileName);
+    initNEATBuffers(neat, 1);
+}
+
+void Coordinator::saveBestElite(std::string fileName, std::string foldername) {
+    if (evolver.mapElites.eliteNEATs.empty())
+        return;
+    int maxFitness = std::numeric_limits<int>::min();
+    NEAT* bestElite = nullptr;
+
+    for (auto& elite : evolver.mapElites.eliteNEATs) {
+        if (elite.second.fitness > maxFitness) {
+            maxFitness = elite.second.fitness;
+            bestElite = &elite.second;
+        }
+    }
+
+    ioStuff.saveNEAT(*bestElite, foldername, fileName);
+}
+
 void Coordinator::saveElites(std::string foldername) {
     ioStuff.saveElites(evolver.mapElites.eliteNEATs, foldername);
 }
@@ -135,3 +157,4 @@ void Coordinator::insertEliteIntoGeneration(int eliteIndex, int aiIndex) {
 /*void Coordinator::resetRecurrentState(int index) {
     (*neatBuffer.neats)[index].resetRecurrentState();
 }*/
+

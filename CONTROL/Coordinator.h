@@ -36,6 +36,10 @@ namespace NTE {
         void randomizePopulation(int minNodes, int maxNodes);
         void randomizePopulationFromElites();
         void mapElites();
+
+        void loadBestElite(std::string fileName, std::string foldername = "NEATS_ELITE_BEST");
+        void saveBestElite(std::string fileName, std::string foldername = "NEATS_ELITE_BEST");
+
         void saveElites(std::string foldername = "NEATS_ELITE");
         void loadElites(std::string foldername = "NEATS_ELITE");
         void storeElites();

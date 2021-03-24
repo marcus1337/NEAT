@@ -113,6 +113,21 @@ void IOstuff::saveNEAT(NEAT& neat, int treeIndex, int generation, std::string fo
     neatInfoToStream(stream, neat);
 }
 
+void IOstuff::saveNEAT(NEAT& neat, std::string folderName, std::string fileName) {
+    makeFolder(folderName);
+    std::string filePath = std::filesystem::current_path().string();
+    filePath += "\\" + folderName + "\\" + fileName;
+    std::ofstream stream(filePath);
+    neatInfoToStream(stream, neat);
+}
+
+NEAT IOstuff::loadNEAT(std::string folderName, std::string fileName) {
+    std::string filePath = std::filesystem::current_path().string();
+    filePath += "\\" + folderName + "\\" + fileName;
+    std::ifstream stream(filePath);
+    return NEAT(stream);
+}
+
 void IOstuff::makeFolder(std::string folderName) {
     std::string filePath = getPath(folderName);
     if (!fs::exists(filePath))
