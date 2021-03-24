@@ -61,8 +61,8 @@ void Breeder::inheritGenesFromParents(NEAT& child, NEAT* parent1, NEAT* parent2)
         Utils::swap<NEAT*>(parent1, parent2);
 
     childFromUnequalParents(child, parent1->gencopies, parent2->gencopies);
-    for (auto& gene : parent1->recurrentGeneCopies)
-        child.addRecurrentGene(gene);
+    //for (auto& gene : parent1->recurrentGeneCopies)
+    //    child.addRecurrentGene(gene);
 }
 
 void Breeder::breedFitnessBased(std::vector<std::future<void>>& futures, int numKids) {

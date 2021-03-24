@@ -22,7 +22,7 @@ namespace NTE {
 
         std::map<int, Node> nodes;
 
-        std::vector<Genome> recurrentGeneCopies;
+        //std::vector<Genome> recurrentGeneCopies;
         std::vector<Genome> gencopies;
         std::vector<float> outputs;
 
@@ -32,7 +32,7 @@ namespace NTE {
 
         void calculateOutput(std::vector<float> inputs);
         void processNetworkData();
-        void propagateRecurrentEdges();
+       // void propagateRecurrentEdges();
         void resetNodes();
 
         void copyPointer(const NEAT* np);
@@ -44,7 +44,7 @@ namespace NTE {
         void initBaseGenes();
 
         void addGene(Genome gene);
-        void addRecurrentGene(Genome gene);
+        //void addRecurrentGene(Genome gene);
 
         bool hasOppositeEdge(int from, int to);
         bool hasEdge(int from, int to);
@@ -52,7 +52,7 @@ namespace NTE {
         int getNumHiddenNodes();
 
         std::vector<int> observedBehaviors = {0,0,0};
-        void resetRecurrentState();
+        //void resetRecurrentState();
     };
 }
 #endif

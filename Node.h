@@ -11,9 +11,9 @@ namespace NTE {
 
     public:
         static const int INPUT = 1, HIDDEN = 2, OUTPUT = 3;
-        mutable std::set<Genome> genomes, recurrentGenomes;
+        mutable std::set<Genome> genomes;//, recurrentGenomes;
         mutable float value = 0;
-        mutable float recurrentValue = 0;
+        //mutable float recurrentValue = 0;
 
         int getType() const;
         int getID() const;

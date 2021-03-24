@@ -24,7 +24,7 @@ void MutationRateControl::modifyMutationRate(float& mutationChance, std::vector<
         if (shouldDecreaseMutationRate())
             mutationChance /= 2.0f;
         mutationChance = roundf(mutationChance * 1000) / 1000;
-        mutationChance = std::clamp(mutationChance, 5.f, 50.0f);
+        mutationChance = std::clamp(mutationChance, 1.f, 10.0f);
         numSuccesfulGenerations = 0;
     }
 

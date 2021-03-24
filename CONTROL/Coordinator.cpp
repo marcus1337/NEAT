@@ -132,6 +132,6 @@ void Coordinator::insertEliteIntoGeneration(int eliteIndex, int aiIndex) {
     (*neatBuffer.neats)[aiIndex] = *elites[eliteIndex];
 }
 
-void Coordinator::resetRecurrentState(int index) {
+/*void Coordinator::resetRecurrentState(int index) {
     (*neatBuffer.neats)[index].resetRecurrentState();
-}
+}*/

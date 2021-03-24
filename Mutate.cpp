@@ -10,14 +10,14 @@ using namespace NTE;
 typedef std::pair<int, int> par;
 
 
-float Mutate::newNodeRate = 5.f;
-float Mutate::newLinkRate = 10.f;
-float Mutate::enableDisableLinkRate = 10.f;
+float Mutate::newNodeRate = 1.f;
+float Mutate::newLinkRate = 2.f;
+float Mutate::enableDisableLinkRate = 5.f;
 float Mutate::randomizeLinkRate = 10.f;
 float Mutate::mutateLinkRate = 10.f;
 float Mutate::extraMutationRate = 10.f;
 
-float Mutate::recurrentMutateDecreaseConstant = 2.0f;
+//float Mutate::recurrentMutateDecreaseConstant = 2.0f;
 
 int Mutate::maxHiddenNodes = 200;
 
@@ -119,7 +119,7 @@ void Mutate::allMutations(NEAT& neat) {
         nodeMutate(neat);
 
     //Recurrent gene mutations
-    if (shouldMutate(enableDisableLinkRate/recurrentMutateDecreaseConstant)) {
+    /*if (shouldMutate(enableDisableLinkRate/recurrentMutateDecreaseConstant)) {
         recurrentEnableDisableMutate(neat);
     }
     if (shouldMutate(newLinkRate / recurrentMutateDecreaseConstant)) {
@@ -127,14 +127,14 @@ void Mutate::allMutations(NEAT& neat) {
     }
     if (shouldMutate(mutateLinkRate/ recurrentMutateDecreaseConstant)) {
         recurrentPointMutate(neat);
-    }
+    }*/
 }
 
 void Mutate::modifyMutationRate(std::vector<NEAT>& neats) {
     mutationRateControl.modifyMutationRate(extraMutationRate, neats);
 }
 
-void Mutate::recurrentLinkMutate(NEAT& neat) {
+/*void Mutate::recurrentLinkMutate(NEAT& neat) {
 
     std::vector<int> possibleLinks;
     for (const auto& node : neat.nodes) {
@@ -174,4 +174,4 @@ void Mutate::recurrentPointMutate(NEAT& neat) {
     neat.recurrentGeneCopies[randIndex].weight = roundf(weight * 1000) / 1000;
     neat.nodes[neat.recurrentGeneCopies[randIndex].getFrom()].recurrentGenomes.insert(neat.recurrentGeneCopies[randIndex]);
 
-}
+}*/

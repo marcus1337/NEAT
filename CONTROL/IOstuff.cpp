@@ -18,15 +18,15 @@ void IOstuff::neatInfoToStream(std::ofstream& stream, NEAT& neat) {
     stream << neat.observedBehaviors[0] << " " << neat.observedBehaviors[1] << " " << neat.observedBehaviors[2]
         << "\n";
     stream << neat.numIn << " " << neat.numOut << "\n";
-    stream << neat.fitness << "\n" << neat.gencopies.size() << "\n" << neat.recurrentGeneCopies.size() << "\n";
+    stream << neat.fitness << "\n" << neat.gencopies.size() << "\n";
     for (size_t i = 0; i < neat.gencopies.size(); i++) {
         stream << neat.gencopies[i].getFrom() << " " << neat.gencopies[i].getTo() << " " << neat.gencopies[i].enabled
             << " " << neat.gencopies[i].weight << " " << neat.gencopies[i].childNodes << "\n";
     }
-    for (size_t i = 0; i < neat.recurrentGeneCopies.size(); i++) {
+    /*for (size_t i = 0; i < neat.recurrentGeneCopies.size(); i++) {
         stream << neat.recurrentGeneCopies[i].getFrom() << " " << neat.recurrentGeneCopies[i].getTo() << " " << neat.recurrentGeneCopies[i].enabled
             << " " << neat.recurrentGeneCopies[i].weight << "\n";
-    }
+    }*/
 }
 
 void IOstuff::nodeIDsToStream(std::ofstream& stream, std::map<std::tuple<int, int, int>, int>& nodeIDs) {
