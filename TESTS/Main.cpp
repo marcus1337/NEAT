@@ -17,7 +17,11 @@ using namespace NTE;
 int main(int argc, char *argv[]) {
 
     Test tests;
-    tests.loadElites();
+    //tests.loadElites();
+
+
+    std::cout << "TEST 123... \n";
+    tests.randomEvolutionAndRandomizeFromElites();
     //tests.saveLoadElites();
    // tests.crashSaveLoad();
     //tests.testElites();

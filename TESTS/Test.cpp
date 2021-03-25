@@ -125,3 +125,47 @@ void Test::testElites() {
         cout << "HEJ: " << i << endl;
     }
 }
+
+std::vector<float> Test::getRandomFloatArray(int arrLen) {
+    std::vector<float> result(arrLen);
+    for (int i = 0; i < arrLen; i++) {
+        result[i] = (float)Utils::randi(0, 1);
+    }
+    return result;
+}
+
+void Test::randomEvolutionAndRandomizeFromElites() {
+    int numIn = 200, numOut = 5, numAI = 200;
+
+    for (int i = 0; i < 3; i++) {
+        Coordinator coordinator;
+        coordinator.init(numIn, numOut, numAI);
+        coordinator.setMaxHiddenNodes(170);
+        coordinator.setSurpriseEffect(0.07);
+        std::cout << "STARTING TEST...\n";
+        testRandomizationOfElites(numAI, numIn, coordinator);
+    }
+
+
+}
+
+void Test::testRandomizationOfElites(int numAI, int numIn, NTE::Coordinator &coordinator)
+{
+    for (int n = 0; n < 50; n++) {
+        for (int j = 0; j < numAI; j++) {
+            std::vector<float> inputs = getRandomFloatArray(numIn);
+            coordinator.calcInput(j, inputs);
+            coordinator.getOutput(j);
+            coordinator.setFitness(j, Utils::randi(0, 1000));
+            std::vector<int> behaves = { Utils::randi(0, 100), Utils::randi(0, 100), Utils::randi(0, 100) };
+            coordinator.setBehavior(j, behaves);
+        }
+        std::cout << "GENERATION: " << n << std::endl;
+        if (n % 3 == 0) {
+            coordinator.storeElites();
+        }
+        if (n % 5 == 0) {
+            coordinator.randomizePopulationFromElites();
+        }
+    }
+}

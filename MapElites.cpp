@@ -78,6 +78,7 @@ void MapElites::randomElitism(std::vector<NEAT>& NEATs) {
     if (eliteNEATs.empty())
         return;
     std::vector<NEAT*> allElites = getElitesVector();
+    std::cout << "NUM ELITES: " << allElites.size() << std::endl;
     for (size_t i = 0; i < NEATs.size(); i++) {
         int randomEliteIndex = Utils::randi(0, allElites.size() - 1);
         NEATs[i] = *allElites[randomEliteIndex];

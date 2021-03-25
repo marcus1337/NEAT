@@ -23,6 +23,10 @@ public:
 
     void loadElites();
 
+    void randomEvolutionAndRandomizeFromElites();
+    void testRandomizationOfElites(int numAI, int numIn, NTE::Coordinator &coordinator);
+    std::vector<float> getRandomFloatArray(int arrLen);
+
 };
 
 #endif
