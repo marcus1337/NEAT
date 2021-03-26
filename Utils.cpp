@@ -90,7 +90,7 @@ void Utils::topologicalSortUtil(int v, std::vector<bool>& visited, std::stack<in
 }
 
 std::stack<int> Utils::topSort(std::map<int, Node>& nodes) {
-    std::stack<int> topstack;
+    std::stack<int> topstack; //This function is fragile and may break if loading NEATs from file...
     std::vector<bool> visited(Innovator::getInstance().nodeNum+1, false);
 
     for (const auto& n : nodes)

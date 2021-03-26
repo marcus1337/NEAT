@@ -102,6 +102,12 @@ void Coordinator::mapElites() {
 void Coordinator::loadBestElite(std::string fileName, std::string foldername) {
     NEAT neat = ioStuff.loadNEAT(foldername, fileName);
     initNEATBuffers(neat, 1);
+    
+    int maxVal = 0;//THIS IS A QUICK-FIX FOR THESIS----
+    for (const auto& nod : neat.nodes) {
+        maxVal = std::max<int>(maxVal, nod.first);
+    }
+    Innovator::getInstance().nodeNum = maxVal+2; //THIS IS A QUICK-FIX FOR THESIS----
 }
 
 void Coordinator::saveBestElite(std::string fileName, std::string foldername) {
