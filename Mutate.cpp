@@ -15,7 +15,8 @@ float Mutate::newLinkRate = 2.f;
 float Mutate::enableDisableLinkRate = 5.f;
 float Mutate::randomizeLinkRate = 10.f;
 float Mutate::mutateLinkRate = 10.f;
-float Mutate::extraMutationRate = 10.f;
+float Mutate::extraMutationRateScalar = 1.0f;
+bool  Mutate::isExtraMutationActive = false;
 
 //float Mutate::recurrentMutateDecreaseConstant = 2.0f;
 
@@ -108,14 +109,14 @@ void Mutate::pointMutate(NEAT& neat) {
 
 
 void Mutate::allMutations(NEAT& neat) {
-    if (shouldMutate(enableDisableLinkRate + extraMutationRate))
+    if (shouldMutate(enableDisableLinkRate * extraMutationRateScalar))
         enableDisableMutate(neat);
-    if (shouldMutate(mutateLinkRate + extraMutationRate))
+    if (shouldMutate(mutateLinkRate * extraMutationRateScalar))
         pointMutate(neat);
-    if (shouldMutate(newLinkRate + extraMutationRate))
+    if (shouldMutate(newLinkRate * extraMutationRateScalar))
         linkMutate(neat);
 
-    if (shouldMutate(newNodeRate + extraMutationRate) && (maxHiddenNodes == -1 || neat.getNumHiddenNodes() <= maxHiddenNodes))
+    if (shouldMutate(newNodeRate * extraMutationRateScalar) && (maxHiddenNodes == -1 || neat.getNumHiddenNodes() <= maxHiddenNodes))
         nodeMutate(neat);
 
     //Recurrent gene mutations
@@ -131,7 +132,8 @@ void Mutate::allMutations(NEAT& neat) {
 }
 
 void Mutate::modifyMutationRate(std::vector<NEAT>& neats) {
-    mutationRateControl.modifyMutationRate(extraMutationRate, neats);
+    if(isExtraMutationActive)
+        mutationRateControl.modifyMutationRate(extraMutationRateScalar, neats);
 }
 
 /*void Mutate::recurrentLinkMutate(NEAT& neat) {

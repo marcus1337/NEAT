@@ -17,7 +17,9 @@ namespace NTE {
         static float newNodeRate, newLinkRate;
         static float randomizeLinkRate, mutateLinkRate;
         static float enableDisableLinkRate;
-        static float extraMutationRate;
+        static float extraMutationRateScalar;
+
+        static bool isExtraMutationActive;
 
         static bool shouldMutate(float chance);
 

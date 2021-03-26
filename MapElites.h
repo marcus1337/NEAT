@@ -17,6 +17,12 @@ namespace NTE {
     class MapElites {
 
     public:
+       
+        int getNumElites();
+        int getNumElitesOfUniqueDimensionValue(int dimension);
+        int getNumElitesOfDimensionWithValue(int dimension, int value);
+        int getNumElitesOfDimensionWithinThreshold(int dimension, int low, int high);
+
         static std::map<std::tuple<int, int, int>, NEAT> eliteNEATs;
 
         bool isOccupied(std::tuple<int, int, int> key);

@@ -4,7 +4,7 @@
 #include <functional>
 #include <iterator> 
 #include "Utils.h"
-
+#include <algorithm> 
 #include <iostream>
 
 using namespace NTE;
@@ -78,7 +78,6 @@ void MapElites::randomElitism(std::vector<NEAT>& NEATs) {
     if (eliteNEATs.empty())
         return;
     std::vector<NEAT*> allElites = getElitesVector();
-    std::cout << "NUM ELITES: " << allElites.size() << std::endl;
     for (size_t i = 0; i < NEATs.size(); i++) {
         int randomEliteIndex = Utils::randi(0, allElites.size() - 1);
         NEATs[i] = *allElites[randomEliteIndex];
@@ -90,4 +89,51 @@ std::tuple<int, int, int> MapElites::getKey(NEAT& NEAT) {
     int b = NEAT.observedBehaviors[1];
     int c = NEAT.observedBehaviors[2];
     return std::make_tuple(a, b, c);
+}
+
+
+int MapElites::getNumElites() {
+    return eliteNEATs.size();
+}
+
+int MapElites::getNumElitesOfUniqueDimensionValue(int dimension) {
+    if (dimension > 2 || dimension < 0)
+        return -1;
+    std::set<int> foundKeys;
+    for (const auto& elite : eliteNEATs) {
+        if (dimension == 0)
+            foundKeys.insert(std::get<0>(elite.first));
+        if (dimension == 1)
+            foundKeys.insert(std::get<1>(elite.first));
+        if(dimension == 2)
+            foundKeys.insert(std::get<2>(elite.first));
+    }
+    return foundKeys.size();
+}
+
+int MapElites::getNumElitesOfDimensionWithValue(int dimension, int value) {
+    if (dimension > 2 || dimension < 0)
+        return -1;
+    return std::count_if(std::begin(eliteNEATs),
+        std::end(eliteNEATs),
+        [dimension, value](std::pair<std::tuple<int, int, int>, NEAT> const &p) {
+        if(dimension == 0)
+            return std::get<0>(p.first) == value;
+        if (dimension == 1)
+            return std::get<1>(p.first) == value;
+        return std::get<2>(p.first) == value;
+    });
+}
+int MapElites::getNumElitesOfDimensionWithinThreshold(int dimension, int low, int high) {
+    if (dimension > 2 || dimension < 0)
+        return -1;
+    return std::count_if(std::begin(eliteNEATs),
+        std::end(eliteNEATs),
+        [dimension, low, high](std::pair<std::tuple<int, int, int>, NEAT> const &p) {
+        if (dimension == 0)
+            return std::get<0>(p.first) >= low && std::get<0>(p.first) <= high;
+        if (dimension == 1)
+            return std::get<1>(p.first) >= low && std::get<1>(p.first) <= high;
+        return std::get<2>(p.first) >= low && std::get<2>(p.first) <= high;
+    });
 }

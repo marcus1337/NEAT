@@ -159,3 +159,43 @@ void Coordinator::insertEliteIntoGeneration(int eliteIndex, int aiIndex) {
     (*neatBuffer.neats)[index].resetRecurrentState();
 }*/
 
+int Coordinator::getNumElites() {
+    return evolver.mapElites.getNumElites();
+}
+int Coordinator::getNumElitesOfUniqueDimensionValue(int dimension) {
+    return evolver.mapElites.getNumElitesOfUniqueDimensionValue(dimension);
+}
+int Coordinator::getNumElitesOfDimensionWithValue(int dimension, int value) {
+    return evolver.mapElites.getNumElitesOfDimensionWithValue(dimension, value);
+}
+int Coordinator::getNumElitesOfDimensionWithinThreshold(int dimension, int low, int high) {
+    return evolver.mapElites.getNumElitesOfDimensionWithinThreshold(dimension, low, high);
+}
+
+std::vector<int> Coordinator::getBestEliteBehavior() {
+    std::vector<int> result;
+    if (evolver.mapElites.eliteNEATs.empty())
+        return result;
+    int maxFitness = std::numeric_limits<int>::min();
+    NEAT* bestElite = nullptr;
+    result = std::vector<int>(3);
+    for (auto& elite : evolver.mapElites.eliteNEATs) {
+        if (elite.second.fitness > maxFitness) {
+            maxFitness = elite.second.fitness;
+            bestElite = &elite.second;
+            result[0] = std::get<0>(elite.first);
+            result[1] = std::get<1>(elite.first);
+            result[2] = std::get<2>(elite.first);
+        }
+    }
+    return result;
+}
+
+void Coordinator::setMutationRates(float newNodeRate, float newLinkRate, float randomizeLinkRate, float mutateLinkRate, float enableDisableLinkRate, bool enableExtraMutationRate) {
+    evolver.mutater.enableDisableLinkRate = enableDisableLinkRate;
+    evolver.mutater.newNodeRate = newNodeRate;
+    evolver.mutater.newLinkRate = newLinkRate;
+    evolver.mutater.randomizeLinkRate = randomizeLinkRate;
+    evolver.mutater.mutateLinkRate = mutateLinkRate;
+    evolver.mutater.isExtraMutationActive = enableExtraMutationRate;
+}

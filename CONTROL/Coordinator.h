@@ -55,6 +55,14 @@ namespace NTE {
         void setParentFoldername(std::string folderName);
 
         void setMaxHiddenNodes(int _maxNodes);
+
+        int getNumElites();
+        int getNumElitesOfUniqueDimensionValue(int dimension);
+        int getNumElitesOfDimensionWithValue(int dimension, int value);
+        int getNumElitesOfDimensionWithinThreshold(int dimension, int low, int high);
+        std::vector<int> getBestEliteBehavior();
+
+        void setMutationRates(float newNodeRate, float newLinkRate, float randomizeLinkRate, float mutateLinkRate, float enableDisableLinkRate, bool enableExtraMutationRate = false);
     };
 }
 #endif
