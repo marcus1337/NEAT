@@ -21,7 +21,8 @@ int main(int argc, char *argv[]) {
 
 
     std::cout << "TEST 123... \n";
-    tests.randomEvolutionAndRandomizeFromElites();
+    tests.testSavedEliteRemainTheSameAfterLoad();
+    //tests.randomEvolutionAndRandomizeFromElites();
     //tests.saveLoadElites();
    // tests.crashSaveLoad();
     //tests.testElites();

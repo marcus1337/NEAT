@@ -27,6 +27,8 @@ public:
     void testRandomizationOfElites(int numAI, int numIn, NTE::Coordinator &coordinator);
     std::vector<float> getRandomFloatArray(int arrLen);
 
+    void testSavedEliteRemainTheSameAfterLoad();
+
     void testSuspicousEliteFile();
 
 };

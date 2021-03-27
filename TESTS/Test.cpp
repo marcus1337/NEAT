@@ -169,3 +169,69 @@ void Test::testRandomizationOfElites(int numAI, int numIn, NTE::Coordinator &coo
         }
     }
 }
+
+
+void Test::testSavedEliteRemainTheSameAfterLoad() {
+    int numIn = 2, numOut = 2, numAI = 200;
+    Coordinator coordinator;
+    coordinator.init(numIn, numOut, numAI);
+
+    coordinator.setFitness(0, 100);
+    coordinator.setBehavior(0, { 1,1,1 });
+    coordinator.storeElites();
+
+
+    std::string filename = "blubb1.file";
+    std::string fileDir = "blubbdirectory1";
+    NEAT oldNEAT = (*coordinator.neatBuffer.neats)[0];
+    coordinator.saveBestElite(filename, fileDir);
+    coordinator.loadBestElite(filename, fileDir);
+   /* NEAT newNEAT;
+    for (const auto& elites : coordinator.evolver.mapElites.eliteNEATs) {
+        if (elites.second.fitness == 100) {
+            std::cout << "found something...\n";
+            newNEAT = elites.second;
+            break;
+        }
+    }*/
+
+    NEAT newNEAT = (*coordinator.neatBuffer.neats)[0];
+    cout << "FITNESS: " << newNEAT.fitness << endl;
+
+    //int,node
+    std::vector<std::pair<int, Node>> nodes1;
+    std::vector<std::pair<int, Node>> nodes2;
+
+    for (const auto& nod : oldNEAT.nodes) {
+        nodes1.push_back(nod);
+    }
+    for (const auto& nod : newNEAT.nodes) {
+        nodes2.push_back(nod);
+    }
+
+    std::cout << "SIZE 1: " << newNEAT.gencopies.size() << std::endl;
+    std::cout << "SIZE 2: " << oldNEAT.gencopies.size() << std::endl;
+
+    for (int i = 0; i < newNEAT.gencopies.size(); i++) {
+        std::cout << "{" << newNEAT.gencopies[i].getID() << "," << newNEAT.gencopies[i].getFrom()
+            << "," << newNEAT.gencopies[i].getTo() << "}";
+        std::cout << "{" << oldNEAT.gencopies[i].getID() << "," << oldNEAT.gencopies[i].getFrom()
+            << "," << oldNEAT.gencopies[i].getTo() << "}";
+        std::cout << " -_- " << newNEAT.gencopies[i].weight << " -_- " << oldNEAT.gencopies[i].weight;
+
+
+        std::cout << std::endl;
+    }
+
+    for (int i = 0; i < nodes1.size(); i++) {
+        if (nodes1[i].first != nodes2[i].first || nodes1[i].second.getID() != nodes2[i].second.getID() ||
+            nodes1[i].second.genomes.size() != nodes2[i].second.genomes.size()) {
+            std::cout << "ERROR....... " << i << "\n\n";
+            std::cout << nodes1[i].first << " _ " << nodes2[i].first << std::endl;
+            std::cout << nodes1[i].second.getID() << " _ " << nodes2[i].second.getID() << std::endl;
+            std::cout << nodes1[i].second.genomes.size() << " _ " << nodes2[i].second.genomes.size() << std::endl;
+            exit(EXIT_FAILURE);
+        }
+    }
+
+}

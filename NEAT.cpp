@@ -103,7 +103,7 @@ NEAT::NEAT(std::istream& stream) {
 
     stream >> numIn >> numOut >> fitness;
     int numGenes, numRecurrentGenes;
-    stream >> numGenes >> numRecurrentGenes;
+    stream >> numGenes; //>> numRecurrentGenes;
     initBaseNodes();
 
     for (int i = 0; i < numGenes; i++) {

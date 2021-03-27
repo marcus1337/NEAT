@@ -46,8 +46,7 @@ void MapElites::mapOrStoreElite(NEAT& NEAT) {
 }
 
 bool MapElites::isNewNEATBetter(std::tuple<int, int, int> _key, NEAT& neat) {
-    return eliteNEATs[_key].fitness < neat.fitness
-        || (eliteNEATs[_key].fitness == neat.fitness);
+    return eliteNEATs[_key].fitness < neat.fitness;
 }
 
 void MapElites::mapOrStoreElites(std::vector<NEAT>& NEATs) {
