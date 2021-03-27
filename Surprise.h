@@ -28,6 +28,7 @@ namespace NTE {
 
         float effect = 0.2f;
         void addSurpriseFitness(std::vector<NEAT>& NEATs);
+        void reset();
     };
 }
 

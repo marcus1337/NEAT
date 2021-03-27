@@ -18,6 +18,7 @@ Evolver Coordinator::evolver;
 void Coordinator::init(int numIn, int numOut, int numAI) {
     evolver.mapElites.eliteNEATs.clear();
     generation = 1;
+    evolver.surprise.reset();
     Innovator::getInstance().reset();
     Innovator::getInstance().nodeNum = numIn + numOut + 1;
 

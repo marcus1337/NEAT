@@ -20,6 +20,10 @@ Behavior<float> Surprise::getMean(std::vector<NEAT>& NEATs) {
     return result;
 }
 
+void Surprise::reset() {
+    mean = Behavior<float>();
+}
+
 void Surprise::updateMean(std::vector<NEAT>& NEATs) {
     if (mean.empty())
         initMean(NEATs);
