@@ -36,6 +36,7 @@ namespace NTE {
         bool isNewNEATBetter(std::tuple<int, int, int> key, NEAT& newNEAT);
 
         std::vector<NEAT*> getElitesVector();
+        std::vector<NEAT> getElitesVectorCopy();
 
         void storeElite(NEAT& NEAT);
         void storeElites(std::vector<NEAT>& NEATs);

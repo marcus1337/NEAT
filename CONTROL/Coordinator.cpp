@@ -144,13 +144,26 @@ void Coordinator::setParentFoldername(std::string folderName) {
 }
 
 void Coordinator::calcEliteInput(int index, std::vector<float> inputs) {
-    auto elites = evolver.mapElites.getElitesVector();
-    (*elites[index]).calculateOutput(inputs);
+    (*eliteVector[index]).calculateOutput(inputs);
 }
 
 std::vector<float> Coordinator::getEliteOutput(int index) {
-    auto elites = evolver.mapElites.getElitesVector();
-    return (*elites[index]).outputs;
+    return (*eliteVector[index]).outputs;
+}
+
+void Coordinator::storeElitesInVector() {
+    eliteVector = evolver.mapElites.getElitesVector();
+}
+
+void Coordinator::changeEliteFitnessAndBehvaior(int index, int newFitness, std::vector<int> behaviors) {
+    (*eliteVector[index]).fitness = newFitness;
+    (*eliteVector[index]).observedBehaviors = behaviors;
+}
+
+void Coordinator::refactorEliteMapping() {
+    std::vector<NEAT> tmpNEATs = evolver.mapElites.getElitesVectorCopy();
+    evolver.mapElites.eliteNEATs.clear();
+    evolver.mapElites.storeElites(tmpNEATs);
 }
 
 void Coordinator::setMaxHiddenNodes(int _maxNodes) {

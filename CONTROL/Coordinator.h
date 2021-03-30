@@ -28,6 +28,10 @@ namespace NTE {
 
         void calcEliteInput(int index, std::vector<float> inputs);
         std::vector<float> getEliteOutput(int index);
+        std::vector<NEAT*> eliteVector;
+        void storeElitesInVector();
+        void changeEliteFitnessAndBehvaior(int index, int newFitness, std::vector<int> behaviors);
+        void refactorEliteMapping();
 
         void setFitness(int index, int fitness);
         void save(int index, std::string filename);

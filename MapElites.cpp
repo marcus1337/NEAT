@@ -73,6 +73,14 @@ std::vector<NEAT*> MapElites::getElitesVector() {
     return allElites;
 }
 
+std::vector<NEAT> MapElites::getElitesVectorCopy() {
+    std::vector<NEAT> allElites;
+    allElites.reserve(eliteNEATs.size());
+    for (const auto& elite : eliteNEATs)
+        allElites.push_back(elite.second);
+    return allElites;
+}
+
 void MapElites::randomElitism(std::vector<NEAT>& NEATs) {
     if (eliteNEATs.empty())
         return;
