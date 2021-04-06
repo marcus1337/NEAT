@@ -14,6 +14,9 @@ namespace NTE {
         void storeInput(std::vector<float> inputs);
         void propagateEdges(const Genome& genome, int nodeID);
 
+    protected:
+        void deleteUnusedNodes(); //Used for examining temporary NEAT
+
     public:
         int maxGeneNum;
 
@@ -53,6 +56,9 @@ namespace NTE {
 
         std::vector<int> observedBehaviors = {0,0,0};
         //void resetRecurrentState();
+
+
+        std::vector<int> getUsedNodeIDs();
     };
 }
 #endif

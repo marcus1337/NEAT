@@ -89,7 +89,13 @@ void Coordinator::loadGeneration(std::string filename, int _generation) {
 
 
 void Coordinator::randomizePopulation(int minNodes, int maxNodes) {
-    init((*neatBuffer.neats)[0].numIn, (*neatBuffer.neats)[0].numOut, evolver.speciator.numAI);
+    int numIn = (*neatBuffer.neats)[0].numIn;
+    int numOut = (*neatBuffer.neats)[0].numOut;
+    int numAI = evolver.speciator.numAI;
+    (*neatBuffer.neats).clear();
+    for (int i = 0; i < numAI; i++)
+        (*neatBuffer.neats).push_back(NEAT(numIn, numOut));
+    neatBuffer.setBuffSize(numAI);
 }
 
 void Coordinator::randomizePopulationFromElites() {

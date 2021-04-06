@@ -66,6 +66,7 @@ namespace NTE {
         int getNumElitesOfDimensionWithinThreshold(int dimension, int low, int high);
         std::vector<int> getBestEliteBehavior();
         void setMutationRates(float newNodeRate, float newLinkRate, float randomizeLinkRate, float mutateLinkRate, float enableDisableLinkRate, bool enableExtraMutationRate = false);
+    
     };
 }
 #endif

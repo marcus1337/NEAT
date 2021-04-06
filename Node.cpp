@@ -17,3 +17,15 @@ bool Node::operator< (const Node &right) const
     return id < right.id;
 }
 bool Node::operator==(const Node& rhs) const { return this->id == rhs.id; }
+
+
+void Node::removeDisabledGenes() {
+    for (auto it = genomes.begin(); it != genomes.end(); ) {
+        if ((*it).enabled == false) {
+            it = genomes.erase(it);
+        }
+        else {
+            ++it;
+        }
+    }
+}

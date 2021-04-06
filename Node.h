@@ -25,6 +25,8 @@ namespace NTE {
         bool operator< (const Node &right) const;
         bool operator==(const Node& rhs) const;
 
+        void removeDisabledGenes();
+
     protected:
 
     };

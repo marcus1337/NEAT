@@ -31,6 +31,8 @@ public:
 
     void testSuspicousEliteFile();
 
+    void printNEATInfo(int ID);
+
 };
 
 #endif

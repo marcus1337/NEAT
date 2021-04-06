@@ -235,3 +235,13 @@ void Test::testSavedEliteRemainTheSameAfterLoad() {
     }
 
 }
+
+
+void Test::printNEATInfo(int ID) {
+    Coordinator coordinator;
+    std::string filename = "ELITE_" + std::to_string(ID);
+    coordinator.loadBestElite(filename);
+    auto usedIDs = (*coordinator.neatBuffer.neats)[0].getUsedNodeIDs();
+    std::cout << "NUM USED HIDDEN NODES: " << usedIDs.size() << std::endl;
+    
+}

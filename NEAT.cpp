@@ -204,3 +204,54 @@ int NEAT::getNumHiddenNodes() {
     for (auto& node : nodes)
         node.second.recurrentValue = 0.f;
 }*/
+
+
+std::vector<int> NEAT::getUsedNodeIDs() {
+    std::vector<int> result;
+    
+    NEAT copy(*this);
+
+    for (auto& node : copy.nodes)
+        node.second.removeDisabledGenes();
+    copy.deleteUnusedNodes();
+
+    std::stack<int> used = Utils::topSort(copy.nodes);
+
+    while (!used.empty()) {
+        int id = used.top();
+        if(nodes[id].getType() == Node::HIDDEN)
+            result.push_back(used.top());
+        used.pop();
+    }
+
+    return result;
+}
+
+void NEAT::deleteUnusedNodes() {
+
+    bool nodeWasDeleted = true;
+    while (nodeWasDeleted) {
+        nodeWasDeleted = false;
+        std::vector<int> nodesToDelete;
+        for (auto& node : nodes) {
+            if (node.second.getType() == Node::OUTPUT)
+                continue;
+            bool hasConnection = false;
+            for (auto& gene : node.second.genomes) {
+                if (Utils::mapContains(nodes, gene.getTo())) {
+                    hasConnection = true;
+                    break;
+                }
+            }
+            if (!hasConnection) {
+                nodesToDelete.push_back(node.first);
+                nodeWasDeleted = true;
+            }
+        }
+
+        for (auto id : nodesToDelete) {
+            nodes.erase(id);
+        }
+
+    }
+}
