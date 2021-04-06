@@ -171,6 +171,10 @@ void NEAT::addGene(Genome gene) {
     if (!Utils::mapContains<int, Node>(nodes, gene.getTo()))
         nodes[gene.getTo()] = Node(gene.getTo());
 
+    const bool alreadyHaveGene = nodes[gene.getFrom()].genomes.find(gene) != nodes[gene.getFrom()].genomes.end();
+    if(alreadyHaveGene)
+        return;
+
     nodes[gene.getFrom()].genomes.insert(gene);
     gencopies.push_back(gene);
 }
