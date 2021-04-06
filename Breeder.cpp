@@ -99,7 +99,14 @@ void Breeder::breedElite(int childIndex, NEAT* neat) {
 void Breeder::breedChild(NEAT* g1, NEAT* g2, int childIndex) {
     NEAT child;
     crossOver(child, g1, g2);
-    (*children)[childIndex] = child;
+    if(child.getNumHiddenNodes() <= Mutate::maxHiddenNodes)
+        (*children)[childIndex] = child;
+    else {
+        if (Utils::randomBool())
+            (*children)[childIndex] = *g1;
+        else
+            (*children)[childIndex] = *g2;
+    }
     Mutate::allMutations((*children)[childIndex]);
 }
 
