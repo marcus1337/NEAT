@@ -59,6 +59,7 @@ namespace NTE {
 
 
         std::vector<int> getUsedNodeIDs();
+        std::vector<Genome> getUsedGenomes();
     };
 }
 #endif

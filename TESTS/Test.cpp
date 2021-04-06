@@ -243,5 +243,9 @@ void Test::printNEATInfo(int ID) {
     coordinator.loadBestElite(filename);
     auto usedIDs = (*coordinator.neatBuffer.neats)[0].getUsedNodeIDs();
     std::cout << "NUM USED HIDDEN NODES: " << usedIDs.size() << std::endl;
+    std::cout << "TOTAL NUM HIDDEN NODES: " << (*coordinator.neatBuffer.neats)[0].getNumGenes() - (*coordinator.neatBuffer.neats)[0].numIn - (*coordinator.neatBuffer.neats)[0].numOut << std::endl;
+    auto usedGenes = (*coordinator.neatBuffer.neats)[0].getUsedGenomes();
+    std::cout << "NUM USED GENES: " << usedGenes.size() << std::endl;
+    std::cout << "TOTAL NUM GENES: " << (*coordinator.neatBuffer.neats)[0].gencopies.size() << std::endl;
     
 }

@@ -206,6 +206,25 @@ int NEAT::getNumHiddenNodes() {
 }*/
 
 
+std::vector<Genome> NEAT::getUsedGenomes() {
+    std::vector<Genome> result;
+
+    NEAT copy(*this);
+    for (auto& node : copy.nodes)
+        node.second.removeDisabledGenes();
+    copy.deleteUnusedNodes();
+
+    std::stack<int> used = Utils::topSort(copy.nodes);
+
+    while (!used.empty()) {
+        for (auto gene : copy.nodes[used.top()].genomes)
+            result.push_back(gene);
+        used.pop();
+    }
+
+    return result;
+}
+
 std::vector<int> NEAT::getUsedNodeIDs() {
     std::vector<int> result;
     
@@ -220,7 +239,7 @@ std::vector<int> NEAT::getUsedNodeIDs() {
     while (!used.empty()) {
         int id = used.top();
         if(nodes[id].getType() == Node::HIDDEN)
-            result.push_back(used.top());
+            result.push_back(id);
         used.pop();
     }
 

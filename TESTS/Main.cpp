@@ -17,7 +17,7 @@ using namespace NTE;
 int main(int argc, char *argv[]) {
 
     Test tests;
-    tests.printNEATInfo(11);
+    tests.printNEATInfo(2);
     //tests.loadElites();
 
 
