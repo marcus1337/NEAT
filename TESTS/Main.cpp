@@ -17,9 +17,10 @@ using namespace NTE;
 int main(int argc, char *argv[]) {
 
     Test tests;
-    tests.printNEATInfo(2);
+    tests.evolveManyGenerations();
+    //tests.printNEATInfo(5);
     //tests.loadElites();
-
+    
 
     //std::cout << "TEST 123... \n";
     //tests.testSavedEliteRemainTheSameAfterLoad();

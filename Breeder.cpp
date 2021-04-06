@@ -55,10 +55,6 @@ void Breeder::inheritNodesFromParents(NEAT& child, NEAT* parent1, NEAT* parent2)
 }
 
 void Breeder::inheritGenesFromParents(NEAT& child, NEAT* parent1, NEAT* parent2) {
-    if (parent1->fitness == parent2->fitness && Utils::randomBool())
-        Utils::swap<NEAT*>(parent1, parent2);
-    if (parent2->fitness > parent1->fitness)
-        Utils::swap<NEAT*>(parent1, parent2);
 
     childFromUnequalParents(child, parent1->gencopies, parent2->gencopies);
     //for (auto& gene : parent1->recurrentGeneCopies)
@@ -96,17 +92,25 @@ void Breeder::breedElite(int childIndex, NEAT* neat) {
     Mutate::allMutations((*children)[childIndex]);
 }
 
+#include <iostream>
+
 void Breeder::breedChild(NEAT* g1, NEAT* g2, int childIndex) {
     NEAT child;
     crossOver(child, g1, g2);
-    if(child.getNumHiddenNodes() <= Mutate::maxHiddenNodes)
+
+    if (child.getNumHiddenNodes() < Mutate::maxHiddenNodes) {
         (*children)[childIndex] = child;
+    }
     else {
         if (Utils::randomBool())
             (*children)[childIndex] = *g1;
         else
             (*children)[childIndex] = *g2;
     }
+    /*if ((*children)[childIndex].getNumHiddenNodes() > Mutate::maxHiddenNodes) {
+        std::cout << "NUM: " << (*children)[childIndex].getNumHiddenNodes() << std::endl;
+        exit(EXIT_FAILURE);
+    }*/
     Mutate::allMutations((*children)[childIndex]);
 }
 
@@ -115,9 +119,14 @@ void Breeder::crossOver(NEAT& child, NEAT* n1, NEAT* n2) {
     child.numOut = numOut;
     child.gencopies.reserve(std::max(n1->gencopies.size(), n2->gencopies.size()));
 
-    inheritNodesFromParents(child, n1, n2);
+    if (n1->fitness == n2->fitness && Utils::randomBool())
+        Utils::swap<NEAT*>(n1, n2);
+    if (n2->fitness > n1->fitness)
+        Utils::swap<NEAT*>(n1, n2);
+
+    //inheritNodesFromParents(child, n1, n2);
     inheritGenesFromParents(child, n1, n2);
-    removeEmptyNodes(child);
+    //removeEmptyNodes(child);
 }
 
 void NTE::Breeder::removeEmptyNodes(NTE::NEAT & child)

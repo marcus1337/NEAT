@@ -116,7 +116,7 @@ void Mutate::allMutations(NEAT& neat) {
     if (shouldMutate(newLinkRate * extraMutationRateScalar))
         linkMutate(neat);
 
-    if (shouldMutate(newNodeRate * extraMutationRateScalar) && (maxHiddenNodes == -1 || neat.getNumHiddenNodes() <= maxHiddenNodes))
+    if (shouldMutate(newNodeRate * extraMutationRateScalar) && (maxHiddenNodes == -1 || neat.getNumHiddenNodes() < maxHiddenNodes))
         nodeMutate(neat);
 
     //Recurrent gene mutations

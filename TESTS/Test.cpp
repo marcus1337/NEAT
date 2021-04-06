@@ -69,16 +69,25 @@ void Test::crashSaveLoad() {
 
 void Test::evolveManyGenerations() {
     Coordinator coordinator;
-    int numIn = 13, numOut = 4, numAI = 50;
+
+    coordinator.setMutationRates(99.f, 99.f, 99.f, 99.f, 99.f);
+    int numIn = 2, numOut = 2, numAI = 20;
     coordinator.init(numIn, numOut, numAI);
+    coordinator.setMaxHiddenNodes(10);
     std::vector<float> inputs = { 1,2,0,-4,5,3,-4,4,5,2,3,5,4,0,3.4f,3.6f,4.2f };
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 50; i++) {
 
-        randomlyEvolveNeats(coordinator, numIn, numOut, numAI, 50);
+        randomlyEvolveNeats(coordinator, numIn, numOut, numAI, 1);
 
-        rep(i, (*coordinator.neatBuffer.neats).size()) {
+        /*rep(i, (*coordinator.neatBuffer.neats).size()) {
             (*coordinator.neatBuffer.neats)[i].calculateOutput(inputs);
-        }
+        }*/
+        std::cout << "TEST: " << i << std::endl;
+    }
+
+    for (int i = 0; i < numAI; i++) {
+        std::cout << "NUM GENES:" << (*coordinator.neatBuffer.neats)[i].gencopies.size() << std::endl;
+        std::cout << "NUM HIDDEN NODES:" << (*coordinator.neatBuffer.neats)[i].getNumHiddenNodes() << std::endl;
     }
 }
 
@@ -103,9 +112,9 @@ void Test::randomlyEvolveNeats(NTE::Coordinator& coordinator, int numIn, int num
         }
 
         coordinator.evolve(); 
-        rep(i, (*coordinator.neatBuffer.neats).size()) {
+        /*rep(i, (*coordinator.neatBuffer.neats).size()) {
             (*coordinator.neatBuffer.neats)[i].fitness += Utils::randi(-2, 2);
-        }
+        }*/
         //cout << "TEST " << (*coordinator.neatBuffer.neats)[0].nodes.size() << " e " << (*coordinator.neatBuffer.neats)[0].getNumGenes() <<
         //    "  nodes: " << Innovator::getInstance().nodeNum << "\n";
     }
@@ -241,11 +250,11 @@ void Test::printNEATInfo(int ID) {
     Coordinator coordinator;
     std::string filename = "ELITE_" + std::to_string(ID);
     coordinator.loadBestElite(filename);
-    auto usedIDs = (*coordinator.neatBuffer.neats)[0].getUsedNodeIDs();
-    std::cout << "NUM USED HIDDEN NODES: " << usedIDs.size() << std::endl;
-    std::cout << "TOTAL NUM HIDDEN NODES: " << (*coordinator.neatBuffer.neats)[0].getNumGenes() - (*coordinator.neatBuffer.neats)[0].numIn - (*coordinator.neatBuffer.neats)[0].numOut << std::endl;
-    auto usedGenes = (*coordinator.neatBuffer.neats)[0].getUsedGenomes();
-    std::cout << "NUM USED GENES: " << usedGenes.size() << std::endl;
+   // auto usedIDs = (*coordinator.neatBuffer.neats)[0].getUsedNodeIDs();
+  //  std::cout << "NUM USED HIDDEN NODES: " << usedIDs.size() << std::endl;
+    std::cout << "TOTAL NUM HIDDEN NODES: " << (*coordinator.neatBuffer.neats)[0].getNumHiddenNodes() << std::endl;
+   // auto usedGenes = (*coordinator.neatBuffer.neats)[0].getUsedGenomes();
+   // std::cout << "NUM USED GENES: " << usedGenes.size() << std::endl;
     std::cout << "TOTAL NUM GENES: " << (*coordinator.neatBuffer.neats)[0].gencopies.size() << std::endl;
     
 }
