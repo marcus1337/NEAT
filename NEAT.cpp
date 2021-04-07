@@ -13,7 +13,9 @@ void NEAT::updateGene(Genome updatedGene) {
     nowNode.genomes.insert(updatedGene);
 }
 
-float NEAT::sigmoidNN(float value) {
+
+
+float NEAT::sigmoid(float value) {
     return (1.0f / (1.0f + exp2f(-value)));
 }
 
@@ -45,7 +47,7 @@ void NEAT::propagateEdges(const Genome& genome, int nodeID) {
         return;
     int to = genome.getTo();
     if (nodes[nodeID].getType() != Node::INPUT)
-        nodes[nodeID].value = sigmoidNN(nodes[nodeID].value);
+        nodes[nodeID].value = reLu(nodes[nodeID].value);
 
     nodes[to].value += nodes[nodeID].value*genome.weight;
 }
@@ -59,7 +61,7 @@ void NEAT::storeOutput() {
     outputs = std::vector<float>(numOut, 0);
     for (int i = numIn; i < numIn + numOut; i++) {
         outputs[i - numIn] = nodes[i].value;
-        outputs[i - numIn] = sigmoidNN(outputs[i - numIn]);
+        outputs[i - numIn] = sigmoid(outputs[i - numIn]);
     }
 }
 
