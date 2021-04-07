@@ -71,11 +71,11 @@ void Test::evolveManyGenerations() {
     Coordinator coordinator;
 
     coordinator.setMutationRates(99.f, 99.f, 99.f, 99.f, 99.f);
-    int numIn = 2, numOut = 2, numAI = 20;
+    int numIn = 237, numOut = 5, numAI = 5;
     coordinator.init(numIn, numOut, numAI);
     coordinator.setMaxHiddenNodes(2);
     std::vector<float> inputs = { 1,2,0,-4,5,3,-4,4,5,2,3,5,4,0,3.4f,3.6f,4.2f };
-    for (int i = 0; i < 50; i++) {
+    for (int i = 0; i < 20; i++) {
 
         randomlyEvolveNeats(coordinator, numIn, numOut, numAI, 1);
 
@@ -88,14 +88,14 @@ void Test::evolveManyGenerations() {
     for (int i = 0; i < numAI; i++) {
         std::cout << "NUM GENES:" << (*coordinator.neatBuffer.neats)[i].gencopies.size() << std::endl;
         std::cout << "NUM HIDDEN NODES:" << (*coordinator.neatBuffer.neats)[i].getNumHiddenNodes() << std::endl;
-        if ((*coordinator.neatBuffer.neats)[i].gencopies.size() > 13) {
+        /*if ((*coordinator.neatBuffer.neats)[i].gencopies.size() > 13) {
             for (int j = 0; j < (*coordinator.neatBuffer.neats)[i].gencopies.size(); j++) {
                 std::cout << "FROM: " << (*coordinator.neatBuffer.neats)[i].gencopies[j].getFrom() << "  TO: "
                     << (*coordinator.neatBuffer.neats)[i].gencopies[j].getTo() << std::endl;
 
             }
             return;
-        }
+        }*/
     }
 }
 

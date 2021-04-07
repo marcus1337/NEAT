@@ -18,7 +18,7 @@ int main(int argc, char *argv[]) {
 
     Test tests;
     tests.evolveManyGenerations();
-    //tests.printNEATInfo(1);
+    //tests.printNEATInfo(2);
     //tests.loadElites();
 
     //std::cout << "TEST 123... \n";
