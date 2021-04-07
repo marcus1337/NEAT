@@ -32,7 +32,12 @@ void NEAT::calculateOutput(std::vector<float> inputs) {
 
 void NTE::NEAT::processNetworkData()
 {
-    std::stack<int> topstack = Utils::topSort(nodes);
+    if (!isTopStackComputed) {
+        preComputedTopStack = Utils::topSort(nodes);
+        isTopStackComputed = true;
+    }
+
+    std::stack<int> topstack = preComputedTopStack;
     while (!topstack.empty())
     {
         int nowID = topstack.top();
@@ -73,6 +78,7 @@ void NEAT::resetNodes() {
 void NEAT::copyPointer(const NEAT* np) {
     if (np == nullptr)
         return;
+    isTopStackComputed = false;
     nodes = np->nodes;
     gencopies = np->gencopies;
     numIn = np->numIn;
@@ -150,6 +156,7 @@ void NEAT::addGene(Genome gene) {
     if(alreadyHaveGene)
         return;
 
+    isTopStackComputed = false;
     nodes[gene.getFrom()].genomes.insert(gene);
     gencopies.push_back(gene);
 }
@@ -220,7 +227,7 @@ std::vector<int> NEAT::getUsedNodeIDs() {
 }
 
 void NEAT::deleteUnusedNodes() {
-
+    isTopStackComputed = false;
     bool nodeWasDeleted = true;
     while (nodeWasDeleted) {
         nodeWasDeleted = false;

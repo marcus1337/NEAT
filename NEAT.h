@@ -4,6 +4,7 @@
 #include "Node.h"
 
 #include <array>
+#include <stack>
 
 #ifndef NEAT_H
 #define NEAT_H
@@ -14,10 +15,13 @@ namespace NTE {
         void storeInput(std::vector<float> inputs);
         void propagateEdges(const Genome& genome, int nodeID);
 
+        std::stack<int> preComputedTopStack;
+
     protected:
         void deleteUnusedNodes(); //Used for examining temporary NEAT
 
     public:
+        bool isTopStackComputed = false;
         int maxGeneNum;
 
         int numIn, numOut;
