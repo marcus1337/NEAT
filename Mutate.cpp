@@ -18,8 +18,6 @@ float Mutate::mutateLinkRate = 10.f;
 float Mutate::extraMutationRateScalar = 1.0f;
 bool  Mutate::isExtraMutationActive = false;
 
-//float Mutate::recurrentMutateDecreaseConstant = 2.0f;
-
 int Mutate::maxHiddenNodes = 200;
 
 
@@ -118,62 +116,9 @@ void Mutate::allMutations(NEAT& neat) {
 
     if (shouldMutate(newNodeRate * extraMutationRateScalar) && (maxHiddenNodes == -1 || neat.getNumHiddenNodes() < maxHiddenNodes))
         nodeMutate(neat);
-
-    //Recurrent gene mutations
-    /*if (shouldMutate(enableDisableLinkRate/recurrentMutateDecreaseConstant)) {
-        recurrentEnableDisableMutate(neat);
-    }
-    if (shouldMutate(newLinkRate / recurrentMutateDecreaseConstant)) {
-        recurrentLinkMutate(neat);
-    }
-    if (shouldMutate(mutateLinkRate/ recurrentMutateDecreaseConstant)) {
-        recurrentPointMutate(neat);
-    }*/
 }
 
 void Mutate::modifyMutationRate(std::vector<NEAT>& neats) {
     if(isExtraMutationActive)
         mutationRateControl.modifyMutationRate(extraMutationRateScalar, neats);
 }
-
-/*void Mutate::recurrentLinkMutate(NEAT& neat) {
-
-    std::vector<int> possibleLinks;
-    for (const auto& node : neat.nodes) {
-        if (!node.second.recurrentGenomes.empty())
-            possibleLinks.push_back(node.first);
-    }
-    if (possibleLinks.empty())
-        return;
-
-    int randCrossIndex = Utils::randi(0, possibleLinks.size() - 1);
-    int crossID = possibleLinks[randCrossIndex];
-    neat.addRecurrentGene(Genome(crossID, crossID));
-
-}
-void Mutate::recurrentEnableDisableMutate(NEAT& neat) {
-    if (neat.recurrentGeneCopies.empty())
-        return;
-
-    int randIndex = Utils::randi(0, neat.recurrentGeneCopies.size() - 1);
-    neat.recurrentGeneCopies[randIndex].enabled = !neat.recurrentGeneCopies[randIndex].enabled;
-    neat.nodes[neat.recurrentGeneCopies[randIndex].getFrom()].recurrentGenomes.insert(neat.recurrentGeneCopies[randIndex]);
-
-}
-void Mutate::recurrentPointMutate(NEAT& neat) {
-    if (neat.recurrentGeneCopies.empty())
-        return;
-
-    int randIndex = Utils::randi(0, neat.recurrentGeneCopies.size() - 1);
-
-    float weight = neat.recurrentGeneCopies[randIndex].weight;
-    if (shouldMutate(randomizeLinkRate))
-        weight = Utils::randf(-2.f, 2.f);
-    else {
-        weight += Utils::randf(-0.3f, 0.3f);
-        weight = std::clamp(weight, -2.f, 2.f);
-    }
-    neat.recurrentGeneCopies[randIndex].weight = roundf(weight * 1000) / 1000;
-    neat.nodes[neat.recurrentGeneCopies[randIndex].getFrom()].recurrentGenomes.insert(neat.recurrentGeneCopies[randIndex]);
-
-}*/

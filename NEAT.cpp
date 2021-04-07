@@ -23,7 +23,6 @@ float NEAT::reLu(float value) {
 
 void NEAT::calculateOutput(std::vector<float> inputs) {
     storeInput(inputs);
-    //propagateRecurrentEdges();
     processNetworkData();
     storeOutput();
     resetNodes();
@@ -41,24 +40,13 @@ void NTE::NEAT::processNetworkData()
     }
 }
 
-/*void NTE::NEAT::propagateRecurrentEdges()
-{
-    for (auto& node : nodes)
-        for (const Genome& genome : node.second.recurrentGenomes) {
-            if (!genome.enabled)
-                continue;
-            int to = genome.getTo();
-            nodes[to].value += node.second.recurrentValue*genome.weight;
-        }
-}*/
-
 void NEAT::propagateEdges(const Genome& genome, int nodeID) {
     if (!genome.enabled)
         return;
     int to = genome.getTo();
     if (nodes[nodeID].getType() != Node::INPUT)
         nodes[nodeID].value = sigmoidNN(nodes[nodeID].value);
-    //nodes[nodeID].recurrentValue = nodes[nodeID].value;
+
     nodes[to].value += nodes[nodeID].value*genome.weight;
 }
 
@@ -103,7 +91,7 @@ NEAT::NEAT(std::istream& stream) {
 
     stream >> numIn >> numOut >> fitness;
     int numGenes, numRecurrentGenes;
-    stream >> numGenes; //>> numRecurrentGenes;
+    stream >> numGenes; 
     initBaseNodes();
 
     for (int i = 0; i < numGenes; i++) {
@@ -121,16 +109,6 @@ NEAT::NEAT(std::istream& stream) {
         addGene(Genome(from, to, enabled, weight, childnodes));
     }
 
-  /*  for (int i = 0; i < numRecurrentGenes; i++) {
-        int from, to;
-        bool enabled;
-        float weight;
-        stream >> from >> to >> enabled >> weight;
-        Genome gene(from, to);
-        gene.enabled = enabled;
-        gene.weight = weight;
-        addRecurrentGene(gene);
-    }*/
 }
 
 void NEAT::initBaseNodes() {
@@ -159,11 +137,6 @@ NEAT::NEAT(int _numIn, int _numOut) : numIn(_numIn), numOut(_numOut), fitness(0)
     initBaseNodes();
     initBaseGenes();
 }
-
-/*void NEAT::addRecurrentGene(Genome gene) {
-    nodes[gene.getFrom()].recurrentGenomes.insert(gene);
-    recurrentGeneCopies.push_back(gene);
-}*/
 
 void NEAT::addGene(Genome gene) {
     if (!Utils::mapContains<int, Node>(nodes, gene.getFrom()))
@@ -202,12 +175,6 @@ bool NEAT::hasEdge(int from, int to) {
 int NEAT::getNumHiddenNodes() {
     return nodes.size() - numIn - numOut;
 }
-
-
-/*void NEAT::resetRecurrentState() {
-    for (auto& node : nodes)
-        node.second.recurrentValue = 0.f;
-}*/
 
 
 std::vector<Genome> NEAT::getUsedGenomes() {

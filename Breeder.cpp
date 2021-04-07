@@ -55,10 +55,7 @@ void Breeder::inheritNodesFromParents(NEAT& child, NEAT* parent1, NEAT* parent2)
 }
 
 void Breeder::inheritGenesFromParents(NEAT& child, NEAT* parent1, NEAT* parent2) {
-
     childFromUnequalParents(child, parent1->gencopies, parent2->gencopies);
-    //for (auto& gene : parent1->recurrentGeneCopies)
-    //    child.addRecurrentGene(gene);
 }
 
 void Breeder::breedFitnessBased(std::vector<std::future<void>>& futures, int numKids) {
@@ -107,10 +104,6 @@ void Breeder::breedChild(NEAT* g1, NEAT* g2, int childIndex) {
         else
             (*children)[childIndex] = *g2;
     }
-    /*if ((*children)[childIndex].getNumHiddenNodes() > Mutate::maxHiddenNodes) {
-        std::cout << "NUM: " << (*children)[childIndex].getNumHiddenNodes() << std::endl;
-        exit(EXIT_FAILURE);
-    }*/
     Mutate::allMutations((*children)[childIndex]);
 }
 
@@ -124,9 +117,7 @@ void Breeder::crossOver(NEAT& child, NEAT* n1, NEAT* n2) {
     if (n2->fitness > n1->fitness)
         Utils::swap<NEAT*>(n1, n2);
 
-    //inheritNodesFromParents(child, n1, n2);
     inheritGenesFromParents(child, n1, n2);
-    //removeEmptyNodes(child);
 }
 
 void NTE::Breeder::removeEmptyNodes(NTE::NEAT & child)

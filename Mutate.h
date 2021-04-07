@@ -12,7 +12,6 @@ namespace NTE {
     public:
 
         static int maxHiddenNodes;
-        //static float recurrentMutateDecreaseConstant;
 
         static float newNodeRate, newLinkRate;
         static float randomizeLinkRate, mutateLinkRate;
@@ -22,10 +21,6 @@ namespace NTE {
         static bool isExtraMutationActive;
 
         static bool shouldMutate(float chance);
-
-        //static void recurrentLinkMutate(NEAT& neat);
-        //static void recurrentEnableDisableMutate(NEAT& neat);
-        //static void recurrentPointMutate(NEAT& neat);
 
         static void linkMutate(NEAT& neat);
         static void nodeMutate(NEAT& neat);
